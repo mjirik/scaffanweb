@@ -1,6 +1,14 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.template import loader
+from .forms import ImageQuatroForm
+from pathlib import Path
+import sys
+pth = str(Path(__file__).parent.parent.parent / "scaffan")
+# print(f"local scaffan path={pth}")
+sys.path.insert(0, pth)
+# print(f"PATH={sys.path}")
+import scaffan
 
 from .models import ServerDataFileName
 
@@ -23,3 +31,18 @@ def detail(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
     # return HttpResponse("You're looking at question %s." % question_id)
+
+
+def model_form_upload(request):
+    if request.method == 'POST':
+        form = ImageQuatroForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            # from . import imageprocessing
+            # imageprocessing.quatrofile_processing()
+            return redirect('/dataimport/')
+    else:
+        form = ImageQuatroForm()
+    return render(request, 'dataimport/model_form_upload.html', {
+        'form': form
+    })

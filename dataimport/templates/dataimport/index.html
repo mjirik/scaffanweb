@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
-{% block body%}
+{% block body %}
+    <h1>Image List</h1>
+    <ul>
+        <li>
+            <a href="{% url 'dataimport:model_form_upload' %}">Upload new data</a>
+        </li>
+    </ul>
+    <br>
   {% if latest_filenames %}
   <ul>
       {% for server_filename in latest_filenames %}

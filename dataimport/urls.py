@@ -8,4 +8,5 @@ urlpatterns = [
 
     # ex: /polls/5/
     path('<int:filename_id>/', views.detail, name='detail'),
+    path('upload/', views.model_form_upload, name='model_form_upload'),
 ]
