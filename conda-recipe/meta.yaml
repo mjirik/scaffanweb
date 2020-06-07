@@ -40,10 +40,12 @@ requirements:
   build:
     - python
     - setuptools
+    - django-allauth
     # - { pin_compatible('imma', max_pin='x.x') }
 
   run:
     - python
+    - django-allauth
     # - { pin_compatible('imma', max_pin='x.x') }
     # - numpy
     # - pyqt 4.11.* # [not win]
