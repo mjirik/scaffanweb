@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block body%}
+  {% if serverfile %}
+  <ul>
+    ahoj
+    {{ serverfile.file_path}}
+  </ul>
+  {% else %}
+  <p>No polls are available.</p>
+  {% endif %}
+{% endblock %}

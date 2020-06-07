@@ -2,9 +2,10 @@ from django.urls import path
 
 from . import views
 
+app_name = 'dataimport'
 urlpatterns = [
     path('', views.index, name='index'),
 
     # ex: /polls/5/
-    path('<int:question_id>/', views.detail, name='detail'),
+    path('<int:filename_id>/', views.detail, name='detail'),
 ]

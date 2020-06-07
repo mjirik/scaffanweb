@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 
@@ -19,5 +19,7 @@ def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")
 
 
-def detail(request, question_id):
-    return HttpResponse("You're looking at question %s." % question_id)
+def detail(request, filename_id):
+    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+    return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
+    # return HttpResponse("You're looking at question %s." % question_id)

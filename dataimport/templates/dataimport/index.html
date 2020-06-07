@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>My test page</title>
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block body%}
   {% if latest_filenames %}
   <ul>
       {% for server_filename in latest_filenames %}
-      <li><a href="/polls/{{ server_filename.id }}/">{{ server_filename.processed_in_version}}</a></li>
+      <li><a href="{% url 'dataimport:detail' server_filename.id %}">{{ server_filename.processed_in_version}}</a></li>
       {% endfor %}
   </ul>
   {% else %}
   <p>No polls are available.</p>
   {% endif %}
-  </body>
-</html>
-
+{% endblock %}
