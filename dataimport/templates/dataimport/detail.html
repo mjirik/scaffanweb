@@ -4,8 +4,14 @@
     {% if serverfile %}
     <ul>
       ahoj
-      {{ serverfile.imagefile}}
-      {{ serverfile.annotationfile}}
+      <li> {{ serverfile.imagefile}} </li>
+      <li> {{ serverfile.annotationfile}} </li>
+      <li> {{ serferfile.thumbnail.name}} </li>
+      <li> {{ serferfile.thumbnail.path }} </li>
+      <li> {{ serferfile.thumbnail.url }} </li>
+      <div class="container">
+        <img id="multicellimg" class="multicella" src="{{serverfile.thumbnail.url}}">
+      </div>
     </ul>
     {% else %}
     <p>No polls are available.</p>

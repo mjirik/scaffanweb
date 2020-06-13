@@ -4,6 +4,7 @@ from django.template import loader
 from .models import get_output_dir
 from .forms import ImageQuatroForm
 from pathlib import Path
+from django.conf import settings
 import sys
 # pth = str(Path(__file__).parent.parent.parent / "scaffan")
 # print(f"local scaffan path={pth}")
@@ -11,6 +12,9 @@ import sys
 # print(f"PATH={sys.path}")
 import scaffan
 import scaffan.algorithm
+import scaffan.image
+import os.path as op
+from loguru import logger
 
 from .models import ServerDataFileName
 
@@ -18,7 +22,8 @@ from .models import ServerDataFileName
 
 def index(request):
     # latest_question_list = ServerDataFileName.objects.order_by('-pub_date')[:5]
-    latest_filenames = ServerDataFileName.objects.all()
+    # latest_filenames = ServerDataFileName.objects.all()
+    latest_filenames = ServerDataFileName.objects.filter(owner=request.user)
     # template = loader.get_template('dataimport/index.html')
     context = {
         'latest_filenames': latest_filenames,
@@ -37,9 +42,18 @@ def detail(request, filename_id):
 
 def model_form_upload(request):
     if request.method == 'POST':
-        form = ImageQuatroForm(request.POST, request.FILES)
+        form = ImageQuatroForm(request.POST, request.FILES,
+                               # owner=request.user
+                               )
         if form.is_valid():
-            form.save()
+            serverfile = form.save()
+            # form.save()
+            print(f"user id={request.user.id}")
+            serverfile.owner = request.user
+            serverfile.save()
+            make_thumbnail(serverfile)
+            # mainapp = scaffan.algorithm.Scaffan()
+            # mainapp.set_input_file(serverfile.imagefile.path)
             # from . import imageprocessing
             # imageprocessing.quatrofile_processing()
             return redirect('/dataimport/')
@@ -69,3 +83,29 @@ def run_processing(request, pk):
     serverfile.processed = True
     serverfile.save()
     return redirect('/dataimport/')
+
+
+def make_thumbnail(serverfile:ServerDataFileName):
+
+    nm = str(Path(serverfile.imagefile.path).name)
+    anim = scaffan.image.AnnotatedImage(serverfile.imagefile.path)
+
+
+    full_view = anim.get_view(
+        location=[0, 0], level=0, size_on_level=anim.get_slide_size()[::-1]
+    )
+    # pxsz_mm = float(self.get_parameter("Processing;Preview Pixelsize")) * 1000
+    pxsz_mm = 0.1
+    view_corner = full_view.to_pixelsize(pixelsize_mm=[pxsz_mm, pxsz_mm])
+    img = view_corner.get_region_image(as_gray=False)
+    pth = serverfile.outputdir + nm + ".thumbnail.jpg"
+    # pth = serverfile.imagefile.path + ".thumbnail.jpg"
+    logger.debug("thumbnail path")
+    logger.debug(pth)
+    pth_rel = op.relpath(pth, settings.MEDIA_ROOT)
+    logger.debug(pth_rel)
+    serverfile.thumbnail = pth_rel
+    import skimage.io
+    skimage.io.imsave(pth, img[:,:,:3])
+    serverfile.save()
+

@@ -2,7 +2,10 @@ from django.db import models
 # import io3d
 from datetime import datetime
 from django.urls import reverse
+from django.conf import settings
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 # Create your models here.
 
 # pth = io3d.datasets.join_path(get_root=True)
@@ -12,13 +15,10 @@ pth = Path("~/data/medical/orig/Scaffan-analysis").expanduser()
 def get_output_dir():
     #
     import datetime
-    from django.conf import settings
     import os.path as op
     # OUTPUT_DIRECTORY_PATH = "~/cellid_data"
     OUTPUT_DIRECTORY_PATH = settings.MEDIA_ROOT
     filename = op.join(op.expanduser(OUTPUT_DIRECTORY_PATH), datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f"))
-    #     print ("getnow")
-    #     print (filename)
     return filename
 
 class ServerDatasetPath(models.Model):
@@ -27,13 +27,23 @@ class ServerDatasetPath(models.Model):
 
 
 class ServerDataFileName(models.Model):
+
     # server_dataset_path= models.ForeignKey(ServerDatasetPath, on_delete=models.CASCADE)
     # choice_text = models.CharField(max_length=200)
     processed = models.BooleanField(default=False)
+    owner = models.ForeignKey(
+        # settings.AUTH_USER_MODEL,
+        User,
+        on_delete=models.CASCADE, null=True
+        # blank=True
+    )
+    # users = models.ManyToManyField(Publication)
     processed_in_version = models.CharField(max_length=200)
-    imagefile_path = models.FilePathField("File Path",path=str(pth), allow_files=True, allow_folders=False, recursive=True, blank=True)
-    imagefile = models.FileField("Uploaded File", upload_to="documents/", blank=True)
-    annotationfile = models.FileField("Annotation File", upload_to="documents/", blank=True)
+    # imagefile_path = models.FilePathField("File Path",path=str(pth), allow_files=True, allow_folders=False, recursive=True, blank=True)
+    imagefile = models.FileField("Uploaded File", upload_to="documents/", blank=True, null=True)
+    annotationfile = models.FileField("Annotation File", upload_to="documents/", blank=True, null=True)
+    # thumbnail = models.CharField("Thumbnail File", max_length=255, blank=True)
+    thumbnail = models.ImageField(upload_to="cellimage/", blank=True)
     description = models.CharField(max_length=255, blank=True)
     # multicell_dapi = models.FileField(upload_to='documents/')
     # multicell_fitc = models.FileField(upload_to='documents/')
@@ -45,7 +55,7 @@ class ServerDataFileName(models.Model):
         default=datetime.now
     )
     outputdir = models.CharField(max_length=255, blank=True, default=get_output_dir)
-    image_preview = models.ImageField(upload_to="image_preview/", blank=True)
+    # image_preview = models.ImageField(upload_to="image_preview/", blank=True)
     # votes = models.IntegerField(default=0)
 
     def __str__(self):
@@ -59,3 +69,4 @@ class ServerDataFileName(models.Model):
     #     print("models get_absolute_url()")
     #     print(self.id)
     #     return reverse('imviewer:image-detail', args=[str(self.id)])
+
