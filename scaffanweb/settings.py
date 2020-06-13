@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SITE_ID = 1
+SITE_ID = 2 # because in my database is in table Sites my 127.0.0.1 on second place
 LOGIN_REDIRECT_URL = '/'
 
 # Application definition
@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     # 'social_app',  # <--
-    # 'allauth',  # <--
-    # 'allauth.account',  # <--
-    # 'allauth.socialaccount',  # <--
-    # 'allauth.socialaccount.providers.google',  # <--
+    'allauth',  # <--
+    'allauth.account',  # <--
+    'allauth.socialaccount',  # <--
+    'allauth.socialaccount.providers.google',  # <--
 ]
 
 MIDDLEWARE = [
@@ -129,3 +129,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+AUTHENTICATION_BACKENDS = (
+ 'django.contrib.auth.backends.ModelBackend',
+ 'allauth.account.auth_backends.AuthenticationBackend',
+ )
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
