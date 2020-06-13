@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
 {% block body%}
-<div class="containder">
-    <h1>Upload</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-    <button type="submit">Upload</button>
-    </form>
-</div>
+    {% if user.is_authenticated %}
+    <div class="containder">
+        <h1>Upload</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+        <button type="submit">Upload</button>
+        </form>
+    </div>
+    {% endif %}
 
 {% endblock %}

@@ -1,31 +1,33 @@
 {% extends 'base.html' %}
 {% block body %}
-    <h1>Image List</h1>
-    <ul>
-        <li>
-            <a href="{% url 'dataimport:model_form_upload' %}">Upload new data</a>
-        </li>
-    </ul>
-    <br>
-  {% if latest_filenames %}
-  <ul>
-      {% for server_filename in latest_filenames %}
-      <li>
-          {% if server_filename.imagefile %}
-              {{ server_filename.imagefile }}
-              <a href="{% url 'dataimport:detail' server_filename.id %}"> {{ server_filename.imagefile}} </a>
-              {% if server_filename.processed %}
-              processed
-              {% else %}
-              <a href="{% url 'dataimport:run_processing' server_filename.id %}">Run processing</a>
-              {% endif %}
-          {% else %}
-            No file
-          {% endif %}
-      </li>
-      {% endfor %}
-  </ul>
-  {% else %}
-  <p>No polls are available.</p>
-  {% endif %}
+    {% if user.is_authenticated %}
+        <h1>Image List</h1>
+        <ul>
+            <li>
+                <a href="{% url 'dataimport:model_form_upload' %}">Upload new data</a>
+            </li>
+        </ul>
+        <br>
+        {% if latest_filenames %}
+        <ul>
+            {% for server_filename in latest_filenames %}
+            <li>
+                {% if server_filename.imagefile %}
+                    {{ server_filename.imagefile }}
+                    <a href="{% url 'dataimport:detail' server_filename.id %}"> {{ server_filename.imagefile}} </a>
+                    {% if server_filename.processed %}
+                    processed
+                    {% else %}
+                    <a href="{% url 'dataimport:run_processing' server_filename.id %}">Run processing</a>
+                    {% endif %}
+                {% else %}
+                  No file
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No polls are available.</p>
+        {% endif %}
+    {% endif %}
 {% endblock %}

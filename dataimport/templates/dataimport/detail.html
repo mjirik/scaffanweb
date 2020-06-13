@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 {% block body%}
-  {% if serverfile %}
-  <ul>
-    ahoj
-    {{ serverfile.imagefile}}
-    {{ serverfile.annotationfile}}
-  </ul>
-  {% else %}
-  <p>No polls are available.</p>
+  {% if user.is_authenticated %}
+    {% if serverfile %}
+    <ul>
+      ahoj
+      {{ serverfile.imagefile}}
+      {{ serverfile.annotationfile}}
+    </ul>
+    {% else %}
+    <p>No polls are available.</p>
+    {% endif %}
   {% endif %}
 {% endblock %}
