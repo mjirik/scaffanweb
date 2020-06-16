@@ -20,8 +20,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from . import secrets
-SECRET_KEY = secrets.SECRET_KEY
+from pathlib import Path
+scpath = Path("secretkey.txt")
+if scpath.exists():
+    with open(scpath) as f:
+        SECRET_KEY = f.read().strip()
+else:
+    with open(scpath, "w") as f:
+        from django.core.management.utils import get_random_secret_key
+
+        SECRET_KEY = f.write(
+            get_random_secret_key()
+        )
+# from . import secrets
+# SECRET_KEY = secrets.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
