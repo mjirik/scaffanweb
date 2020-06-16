@@ -9,23 +9,35 @@
         </ul>
         <br>
         {% if latest_filenames %}
-        <ul>
+        <table>
+
             {% for server_filename in latest_filenames %}
-            <li>
+            <tr>
                 {% if server_filename.imagefile %}
-                    {{ server_filename.imagefile }}
+                    <td>
+                        {% if server_filename.thumbnail %}
+                            <div class="container2">
+                                <img id="multicellimg" class="multicella" src='{{server_filename.thumbnail.url}}' width="50">
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>
                     <a href="{% url 'dataimport:detail' server_filename.id %}"> {{ server_filename.imagefile}} </a>
+                    </td>
+                    <td>
+
                     {% if server_filename.processed %}
                     processed
                     {% else %}
                     <a href="{% url 'dataimport:run_processing' server_filename.id %}">Run processing</a>
                     {% endif %}
+                    </td>
                 {% else %}
                   No file
                 {% endif %}
-            </li>
+            </tr>
             {% endfor %}
-        </ul>
+        </table>
         {% else %}
         <p>No polls are available.</p>
         {% endif %}
