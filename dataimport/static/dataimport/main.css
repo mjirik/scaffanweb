@@ -3,7 +3,6 @@ img.cellzoom {
   max-height:100%;
   width:90%;
 }
-
 #previewimg{
-  width:50%;
+  /* width:100%; */
 };

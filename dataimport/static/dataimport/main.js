@@ -22,24 +22,32 @@
 $(document).ready(function() {
 //    $("img").on("click", function(event) {
 //    document.getElementById(imageid).addEventListener('click', function (event) {
-    $("#previewimg").on("click", function(event) {
+//    $("#previewimg").on("click", function(event) {
+    moveCanvas();
+    $("#previewcanvas").on("click", function(event) {
 //    document.getElementById("previewimg").on("click", function(event) {
-        bounds=this.getBoundingClientRect();
+
+        imgobj = $("#previewimg")[0]
+        bounds=$("#previewimg")[0].getBoundingClientRect();
+//        bounds=this.getBoundingClientRect();
+        console.log("bounds " + bounds.left)
         var left=bounds.left;
         var top=bounds.top;
         var x = event.pageX - left;
         var y = event.pageY - top;
-        var cw=this.clientWidth
-        var ch=this.clientHeight
-        var iw=this.naturalWidth
-        var ih=this.naturalHeight
+        var cw=imgobj.clientWidth
+        var ch=imgobj.clientHeight
+        var iw=imgobj.naturalWidth
+        var ih=imgobj.naturalHeight
         var px=x/cw*iw
         var py=y/ch*ih
-//        alert("click on "+this.tagName+" at pixel ("+px+","+py+") mouse pos ("+x+"," + y+ ") relative to boundingClientRect at ("+left+","+top+") client image size: "+cw+" x "+ch+" natural image size: "+iw+" x "+ih );
+        console.log("x=" + x + " event.pageX=" + event.pageX)
+        console.log("click on "+this.tagName+" at pixel ("+px+","+py+") mouse pos ("+x+"," + y+ ") relative to boundingClientRect at ("+left+","+top+") client image size: "+cw+" x "+ch+" natural image size: "+iw+" x "+ih );
 //        alert(window.location.href)
 //        alert(window.location.pathname)
 //        makeAjaxPost(px, py, window.location.pathname)
         addHiddenInput(px, py)
+        drawPoint(x, y)
     });
 });
 
@@ -58,6 +66,34 @@ function addHiddenInput(px, py) {
     //append to form element that you want .
     document.getElementById("lobulepoints").appendChild(inputy);
 
+}
+
+function moveCanvas(){
+  var img = document.getElementById("previewimg");
+  var cnvs = document.getElementById("previewcanvas");
+
+  cnvs.style.position = "absolute";
+  cnvs.style.left = img.offsetLeft + "px";
+  cnvs.style.top = img.offsetTop + "px";
+}
+
+function drawPoint(x, y){
+  var img = document.getElementById("previewimg");
+  var cnvs = document.getElementById("previewcanvas");
+
+//  cnvs.style.position = "absolute";
+//  cnvs.style.left = img.offsetLeft + "px";
+//  cnvs.style.top = img.offsetTop + "px";
+
+  console.log("new point" + x +", " + y)
+  var ctx = cnvs.getContext("2d");
+  ctx.beginPath();
+  ctx.arc(x, y, 2, 0, 2 * Math.PI, false);
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#00ff00';
+  ctx.closePath();
+  ctx.stroke();
+  console.log("end")
 }
 
 function makeAjaxPost(px, py, href) {

@@ -52,7 +52,8 @@ def detail(request, filename_id):
             y_mm = float(xystr[1]) * serverfile.preview_pixelsize_mm
             coords = LobuleCoordinates(x_mm=x_mm, y_mm=y_mm, server_datafile=serverfile)
             coords.save()
-        return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
+        # return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
+        return redirect('/dataimport/')
     else:
         return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
     # return HttpResponse("You're looking at question %s." % question_id)

@@ -2,28 +2,26 @@
 {% block body%}
     {% if user.is_authenticated %}
     {% if serverfile %}
-    <ul>
-        ahoj
-        <li> {{ serverfile.imagefile}} </li>
-        <li> {{ serverfile.annotationfile}} </li>
-        <li> {{ serferfile.thumbnail.name}} </li>
-        <li> {{ serferfile.thumbnail.path }} </li>
-        <li> {{ serferfile.thumbnail.url }} </li>
-          {% csrf_token %}
+    <h1>{{ serverfile.imagefile}}</h1>
+<!--    <ul>-->
+<!--        <li> {{ serverfile.imagefile}} </li>-->
+<!--        <li> {{ serverfile.annotationfile}} </li>-->
+<!--        <li> {{ serferfile.thumbnail.name}} </li>-->
+<!--        <li> {{ serferfile.thumbnail.path }} </li>-->
+<!--        <li> {{ serferfile.thumbnail.url }} </li>-->
+        <form method="post" id="lobulepoints">{% csrf_token %}
+            <input type="submit" value="Save points">
+        </form>
         <div class="container">
-          <img name="previewimg" id="previewimg" class="multicella" src="{{serverfile.preview.url}}">
+            <img name="previewimg" id="previewimg" class="multicella" src="{{serverfile.preview.url}}">
+<!--            <canvas id="previewcanvas"></canvas>-->
+            <canvas id="previewcanvas" width="1050" height="1050"></canvas>
         </div>
-          <form method="post" id="lobulepoints">{% csrf_token %}
-<!--              <input name="pokus" value="4">-->
-<!--              <input type="hidden" id="custId" name="custId" value="3487">-->
-              <input type="submit" value="OK">
-
-          </form>
-    </ul>
+<!--    </ul>-->
 
     <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>-->
 
-    <img id="imageid" src="https://upload.wikimedia.org/wikipedia/commons/7/77/Avatar_cat.png" height="256" width="256" alt="kitten">
+<!--    <img id="imageid" src="https://upload.wikimedia.org/wikipedia/commons/7/77/Avatar_cat.png" height="256" width="256" alt="kitten">-->
 
     {% else %}
     <p>No polls are available.</p>
