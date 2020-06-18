@@ -15,9 +15,9 @@
             <tr>
                 {% if server_filename.imagefile %}
                     <td>
-                        {% if server_filename.thumbnail %}
+                        {% if server_filename.preview %}
                             <div class="container2">
-                                <img id="multicellimg" class="multicella" src='{{server_filename.thumbnail.url}}' width="50">
+                                <img id="multicellimg" class="multicella" src='{{server_filename.preview.url}}' width="50">
                             </div>
                         {% endif %}
                     </td>

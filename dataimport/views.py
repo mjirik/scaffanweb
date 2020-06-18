@@ -16,7 +16,7 @@ import scaffan.image
 import os.path as op
 from loguru import logger
 
-from .models import ServerDataFileName
+from .models import ServerDataFileName, LobuleCoordinates
 
 # Create your views here.
 
@@ -36,7 +36,25 @@ def index(request):
 
 def detail(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
-    return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
+    if request.method == 'POST':
+        LobuleCoordinates.objects.filter(server_datafile=serverfile).delete()
+        print("post recived")
+        print(request.POST)
+        postDict = dict(request.POST)
+        xstrs = postDict["x"]
+        ystrs = postDict["y"]
+        xystrs = zip(xstrs, ystrs)
+        print(f"xstrs={xstrs}")
+        print(f"ystrs={ystrs}")
+        print(list(xystrs))
+        for xystr in xystrs:
+            x_mm = float(xystr[0]) * serverfile.preview_pixelsize_mm
+            y_mm = float(xystr[1]) * serverfile.preview_pixelsize_mm
+            coords = LobuleCoordinates(x_mm=x_mm, y_mm=y_mm, server_datafile=serverfile)
+            coords.save()
+        return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
+    else:
+        return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
     # return HttpResponse("You're looking at question %s." % question_id)
 
 
@@ -68,11 +86,10 @@ def run_processing(request, pk):
     scaffan
     mainapp = scaffan.algorithm.Scaffan()
 
-
     mainapp.set_input_file(serverfile.imagefile.path)
-    serverfile.outputdir.path = get_output_dir()
+    serverfile.outputdir = get_output_dir()
     serverfile.save()
-    mainapp.set_output_dir(serverfile.outputdir.path)
+    mainapp.set_output_dir(serverfile.outputdir)
     # mainapp.init_run()
     # mainapp.set_annotation_color_selection("#FF00FF") # magenta -> cyan
     # mainapp.set_annotation_color_selection("#00FFFF")
@@ -95,17 +112,19 @@ def make_thumbnail(serverfile:ServerDataFileName):
         location=[0, 0], level=0, size_on_level=anim.get_slide_size()[::-1]
     )
     # pxsz_mm = float(self.get_parameter("Processing;Preview Pixelsize")) * 1000
-    pxsz_mm = 0.1
+    pxsz_mm = 0.02
     view_corner = full_view.to_pixelsize(pixelsize_mm=[pxsz_mm, pxsz_mm])
     img = view_corner.get_region_image(as_gray=False)
-    pth = serverfile.outputdir + nm + ".thumbnail.jpg"
+    pth = serverfile.outputdir + nm + ".preview.jpg"
     # pth = serverfile.imagefile.path + ".thumbnail.jpg"
     logger.debug("thumbnail path")
     logger.debug(pth)
     pth_rel = op.relpath(pth, settings.MEDIA_ROOT)
     logger.debug(pth_rel)
-    serverfile.thumbnail = pth_rel
+    serverfile.preview = pth_rel
+    serverfile.preview_pixelsize_mm = pxsz_mm
     import skimage.io
     skimage.io.imsave(pth, img[:,:,:3])
+
     serverfile.save()
 

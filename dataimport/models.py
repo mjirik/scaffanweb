@@ -26,6 +26,7 @@ class ServerDatasetPath(models.Model):
     server_dataset_path = models.FilePathField("Path to dataset on server", path=str(pth), allow_files=False, allow_folders=True)
 
 
+
 class ServerDataFileName(models.Model):
 
     # server_dataset_path= models.ForeignKey(ServerDatasetPath, on_delete=models.CASCADE)
@@ -43,7 +44,8 @@ class ServerDataFileName(models.Model):
     imagefile = models.FileField("Uploaded File", upload_to="documents/", blank=True, null=True)
     annotationfile = models.FileField("Annotation File", upload_to="documents/", blank=True, null=True)
     # thumbnail = models.CharField("Thumbnail File", max_length=255, blank=True)
-    thumbnail = models.ImageField(upload_to="cellimage/", blank=True)
+    preview = models.ImageField(upload_to="cellimage/", blank=True)
+    preview_pixelsize_mm = models.FloatField("Preview Pixelsize [mm]", blank=True, null=True)
     description = models.CharField(max_length=255, blank=True)
     # multicell_dapi = models.FileField(upload_to='documents/')
     # multicell_fitc = models.FileField(upload_to='documents/')
@@ -61,6 +63,11 @@ class ServerDataFileName(models.Model):
     def __str__(self):
         return self.description
 
+
+class LobuleCoordinates(models.Model):
+    server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)
+    x_mm = models.FloatField("X [mm]")
+    y_mm = models.FloatField("Y [mm]")
 
     # def get_absolute_url(self):
     #     """
