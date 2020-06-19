@@ -46,6 +46,7 @@ class ServerDataFileName(models.Model):
     annotationfile = models.FileField("Annotation File", upload_to="documents/", blank=True, null=True)
     # thumbnail = models.CharField("Thumbnail File", max_length=255, blank=True)
     preview = models.ImageField(upload_to="cellimage/", blank=True)
+    zip_file = models.ImageField(upload_to="cellimage/", blank=True)
     preview_pixelsize_mm = models.FloatField("Preview Pixelsize [mm]", blank=True, null=True)
     description = models.CharField(max_length=255, blank=True)
     # multicell_dapi = models.FileField(upload_to='documents/')

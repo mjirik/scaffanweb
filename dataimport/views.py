@@ -111,10 +111,12 @@ def run_processing(request, pk):
     # mainapp.set_annotation_color_selection("#FF0000")
 
     mainapp.run_lobuluses(seeds_mm=centers_mm)
+    nm = str(Path(serverfile.imagefile.path).name)
+    # prepare output zip file path
+    pth_zip = serverfile.outputdir + nm + ".zip"
 
     import shutil
-    shutil.make_archive(serverfile.outputdir, "zip", serverfile.outputdir)
-
+    shutil.make_archive(pth_zip, "zip", serverfile.outputdir)
 
     serverfile.processed = True
 
@@ -137,6 +139,7 @@ def make_thumbnail(serverfile:ServerDataFileName):
     view_corner = full_view.to_pixelsize(pixelsize_mm=[pxsz_mm, pxsz_mm])
     img = view_corner.get_region_image(as_gray=False)
     pth = serverfile.outputdir + nm + ".preview.jpg"
+
     # pth = serverfile.imagefile.path + ".thumbnail.jpg"
     logger.debug("thumbnail path")
     logger.debug(pth)

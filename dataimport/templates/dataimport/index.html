@@ -25,11 +25,12 @@
                         {% endif %}
                     </td>
                     <td>
-                    <a href="{% url 'dataimport:detail' server_filename.id %}"> Set lobules manually {{ n_pts }} </a>
+                        <a href="{% url 'dataimport:detail' server_filename.id %}"> Set lobules manually <br> ({{ n_pts }} points) </a>
                     </td>
                     <td>
 
                     {% if server_filename.processed %}
+                    <a href="{% url 'dataimport:run_processing' server_filename.id %}">Run processing</a>
                     processed
                     {% else %}
                     <a href="{% url 'dataimport:run_processing' server_filename.id %}">Run processing</a>
