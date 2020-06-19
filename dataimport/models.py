@@ -4,6 +4,7 @@ from datetime import datetime
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from . import scaffanweb_tools
 
 User = get_user_model()
 # Create your models here.
@@ -18,7 +19,7 @@ def get_output_dir():
     import os.path as op
     # OUTPUT_DIRECTORY_PATH = "~/cellid_data"
     OUTPUT_DIRECTORY_PATH = settings.MEDIA_ROOT
-    filename = op.join(op.expanduser(OUTPUT_DIRECTORY_PATH), datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f"))
+    filename = op.join(op.expanduser(OUTPUT_DIRECTORY_PATH), datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f") + "_" + scaffanweb_tools.randomString(8))
     return filename
 
 class ServerDatasetPath(models.Model):

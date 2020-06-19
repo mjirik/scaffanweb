@@ -15,6 +15,7 @@ import scaffan.algorithm
 import scaffan.image
 import os.path as op
 from loguru import logger
+import numpy as np
 
 from .models import ServerDataFileName, LobuleCoordinates
 
@@ -24,9 +25,14 @@ def index(request):
     # latest_question_list = ServerDataFileName.objects.order_by('-pub_date')[:5]
     # latest_filenames = ServerDataFileName.objects.all()
     latest_filenames = ServerDataFileName.objects.filter(owner=request.user)
+    number_of_points = [
+        len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
+        for serverfile in latest_filenames
+    ]
     # template = loader.get_template('dataimport/index.html')
     context = {
-        'latest_filenames': latest_filenames,
+        'latest_filenames': zip(latest_filenames, number_of_points),
+        # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
     return render(request, 'dataimport/index.html', context)
@@ -43,15 +49,17 @@ def detail(request, filename_id):
         postDict = dict(request.POST)
         xstrs = postDict["x"]
         ystrs = postDict["y"]
-        xystrs = zip(xstrs, ystrs)
+        xystrs = list(zip(xstrs, ystrs))
         print(f"xstrs={xstrs}")
         print(f"ystrs={ystrs}")
-        print(list(xystrs))
+        logger.debug(xystrs)
         for xystr in xystrs:
+            logger.debug(f"Addeding new point" )
             x_mm = float(xystr[0]) * serverfile.preview_pixelsize_mm
             y_mm = float(xystr[1]) * serverfile.preview_pixelsize_mm
             coords = LobuleCoordinates(x_mm=x_mm, y_mm=y_mm, server_datafile=serverfile)
             coords.save()
+            logger.debug(f"Added new point={x_mm},{y_mm}")
         # return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
         return redirect('/dataimport/')
     else:
@@ -84,21 +92,33 @@ def model_form_upload(request):
 
 def run_processing(request, pk):
     serverfile:ServerDataFileName = get_object_or_404(ServerDataFileName, pk=pk)
-    scaffan
-    mainapp = scaffan.algorithm.Scaffan()
 
+    mainapp = scaffan.algorithm.Scaffan()
     mainapp.set_input_file(serverfile.imagefile.path)
+
+    coords = LobuleCoordinates.objects.filter(server_datafile=serverfile)
+    centers_mm = [[coord.x_mm, coord.y_mm] for coord in coords]
+    logger.debug(coords)
     serverfile.outputdir = get_output_dir()
     serverfile.save()
     mainapp.set_output_dir(serverfile.outputdir)
+    # _, ann_ids = mainapp.prepare_circle_annotations_from_points_mm(centers_mm)
     # mainapp.init_run()
     # mainapp.set_annotation_color_selection("#FF00FF") # magenta -> cyan
     # mainapp.set_annotation_color_selection("#00FFFF")
     # cyan causes memory fail
-    mainapp.set_parameter("Input;Lobulus Selection Method", "Color")
-    mainapp.set_annotation_color_selection("#FF0000")
-    mainapp.run_lobuluses()
+    # mainapp.set_parameter("Input;Lobulus Selection Method", "Color")
+    # mainapp.set_annotation_color_selection("#FF0000")
+
+    mainapp.run_lobuluses(seeds_mm=centers_mm)
+
+    import shutil
+    shutil.make_archive(serverfile.outputdir, "zip", serverfile.outputdir)
+
+
     serverfile.processed = True
+
+
     serverfile.save()
     return redirect('/dataimport/')
 
@@ -125,6 +145,9 @@ def make_thumbnail(serverfile:ServerDataFileName):
     serverfile.preview = pth_rel
     serverfile.preview_pixelsize_mm = pxsz_mm
     import skimage.io
+    logger.debug(f"img max: {np.max(img)}, img.dtype={img.dtype}")
+    if img.dtype != np.uint8:
+        img = (img*255).astype(np.uint8)
     skimage.io.imsave(pth, img[:,:,:3])
 
     serverfile.save()
