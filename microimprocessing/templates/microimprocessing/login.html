@@ -4,9 +4,11 @@
     <title>Google Registration</title>
   </head>
   <body>
-  <h1>My Google Login Project</h1>
   {% if user.is_authenticated %}
+  <h1>My Google Login Project</h1>
   <p>Welcome, {{ user.username }} !</p>
+  <a href="{% url 'microimprocessing:index' %}">Go to your images</a>
+
 
   {% else %}
   <h1>My Google Login Project</h1>
