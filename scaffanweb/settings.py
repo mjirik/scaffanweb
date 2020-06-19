@@ -53,7 +53,7 @@ STATICFILES_DIRS = (
 # Application definition
 
 INSTALLED_APPS = [
-    "dataimport.apps.DataimportConfig",
+    "microimprocessing.apps.DataimportConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

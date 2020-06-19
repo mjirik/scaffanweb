@@ -4,7 +4,7 @@
         <h1>Image List</h1>
         <ul>
             <li>
-                <a href="{% url 'dataimport:model_form_upload' %}">Upload new data</a>
+                <a href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
             </li>
         </ul>
         <br>
@@ -25,10 +25,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'dataimport:detail' server_filename.id %}"> Set lobules manually <br> ({{ n_pts }} points) </a>
+                        <a href="{% url 'microimprocessing:detail' server_filename.id %}"> Set lobules manually <br> ({{ n_pts }} points) </a>
                     </td>
                     <td>
-                        <a href="{% url 'dataimport:run_processing' server_filename.id %}">Run processing</a>
+                        <a href="{% url 'microimprocessing:run_processing' server_filename.id %}">Run processing</a>
                     </td>
                     <td>
 

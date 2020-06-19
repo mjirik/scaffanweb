@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataimport', '0002_auto_20200530_1241'),
+        ('microimprocessing', '0002_auto_20200530_1241'),
     ]
 
     operations = [
@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='serverdatafilename',
             name='server_dataset_path',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataimport.ServerDatasetPath'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='microimprocessing.ServerDatasetPath'),
         ),
     ]

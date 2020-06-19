@@ -21,8 +21,8 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='dataimport/login.html')), # <--I
-    path('dataimport/', include('dataimport.urls')),
+    path('', TemplateView.as_view(template_name='microimprocessing/login.html')), # <--I
+    path('microimprocessing/', include('microimprocessing.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')), # <--
 ]

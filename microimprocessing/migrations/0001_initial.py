@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('choice_text', models.CharField(max_length=200)),
                 ('processed', models.BooleanField()),
                 ('processed_in_version', models.CharField(max_length=200)),
-                ('server_dataset_path', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataimport.ServerDatasetPath')),
+                ('server_dataset_path', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='microimprocessing.ServerDatasetPath')),
             ],
         ),
     ]

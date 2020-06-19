@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataimport', '0006_auto_20200530_2236'),
+        ('microimprocessing', '0006_auto_20200530_2236'),
     ]
 
     operations = [

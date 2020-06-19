@@ -29,13 +29,13 @@ def index(request):
         len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
         for serverfile in latest_filenames
     ]
-    # template = loader.get_template('dataimport/index.html')
+    # template = loader.get_template('microimprocessing/index.html')
     context = {
         'latest_filenames': zip(latest_filenames, number_of_points),
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
-    return render(request, 'dataimport/index.html', context)
+    return render(request, 'microimprocessing/index.html', context)
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -60,10 +60,10 @@ def detail(request, filename_id):
             coords = LobuleCoordinates(x_mm=x_mm, y_mm=y_mm, server_datafile=serverfile)
             coords.save()
             logger.debug(f"Added new point={x_mm},{y_mm}")
-        # return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
-        return redirect('/dataimport/')
+        # return render(request, 'microimprocessing/detail.html', {'serverfile': serverfile})
+        return redirect('/microimprocessing/')
     else:
-        return render(request, 'dataimport/detail.html', {'serverfile': serverfile})
+        return render(request, 'microimprocessing/detail.html', {'serverfile': serverfile})
     # return HttpResponse("You're looking at question %s." % question_id)
 
 
@@ -83,10 +83,10 @@ def model_form_upload(request):
             # mainapp.set_input_file(serverfile.imagefile.path)
             # from . import imageprocessing
             # imageprocessing.quatrofile_processing()
-            return redirect('/dataimport/')
+            return redirect('/microimprocessing/')
     else:
         form = ImageQuatroForm()
-    return render(request, 'dataimport/model_form_upload.html', {
+    return render(request, 'microimprocessing/model_form_upload.html', {
         'form': form
     })
 
@@ -122,7 +122,7 @@ def run_processing(request, pk):
 
 
     serverfile.save()
-    return redirect('/dataimport/')
+    return redirect('/microimprocessing/')
 
 
 def make_thumbnail(serverfile:ServerDataFileName):
