@@ -7,7 +7,12 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-        <button type="submit">Upload</button>
+        <button class="btn btn-primary has-spinner" id="btnUpload" type="submit">
+<!--            <span class="spinner-border spinner-border-sm"></span>-->
+            <span class="spinner"><i class="fa fa-refresh fa-spin"></i></span>
+            Upload
+        </button>
+
         </form>
     </div>
     {% endif %}

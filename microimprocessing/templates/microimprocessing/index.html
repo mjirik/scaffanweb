@@ -4,12 +4,12 @@
         <h1>Image List</h1>
         <ul>
             <li>
-                <a href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
+                <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
             </li>
         </ul>
         <br>
         {% if latest_filenames %}
-        <table>
+        <table class="table">
 
             {% for server_filename, n_pts in latest_filenames %}
             <tr>
@@ -20,20 +20,21 @@
                     <td>
                         {% if server_filename.preview %}
                             <div class="container2">
-                                <img id="multicellimg" class="multicella" src='{{server_filename.preview.url}}' width="50">
+<!--                                <img id="multicellimg" class="multicella" src='{{server_filename.preview.url}}' width="50">-->
+                                <img id="multicellimg" class="rounded" src='{{server_filename.preview.url}}' width="100">
                             </div>
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'microimprocessing:detail' server_filename.id %}"> Set lobules manually <br> ({{ n_pts }} points) </a>
+                        <a class="btn btn-secondary" href="{% url 'microimprocessing:detail' server_filename.id %}"> Set lobules manually <br> ({{ n_pts }} points) </a>
                     </td>
                     <td>
-                        <a href="{% url 'microimprocessing:run_processing' server_filename.id %}">Run processing</a>
+                        <a class="btn btn-secondary" href="{% url 'microimprocessing:run_processing' server_filename.id %}">Run processing</a>
                     </td>
                     <td>
 
                     {% if server_filename.processed %}
-                    <a href="{{ server_filename.zip_filename.url }}">Download</a>
+                    <a class="btn btn-secondary" href="{{ server_filename.zip_filename.url }}">Download</a>
                     {% else %}
                     {% endif %}
                     </td>
