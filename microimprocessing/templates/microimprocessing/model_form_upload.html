@@ -4,6 +4,7 @@
     {% if user.is_authenticated %}
     <div class="containder">
         <h1>Upload</h1>
+
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
@@ -12,6 +13,7 @@
             <span class="spinner"><i class="fa fa-refresh fa-spin"></i></span>
             Upload
         </button>
+            <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Cancel</a>
 
         </form>
     </div>

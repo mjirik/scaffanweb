@@ -1,19 +1,22 @@
+{% extends 'base.html' %}
 {% load socialaccount %}
-<html>
-  <head>
-    <title>Google Registration</title>
-  </head>
-  <body>
+
+{% block body %}
+<!--<html>-->
+<!--  <head>-->
+<!--    <title>Google Registration</title>-->
+<!--  </head>-->
+<!--  <body>-->
   {% if user.is_authenticated %}
-  <h1>My Google Login Project</h1>
+  <h1>Scaffan</h1>
   <p>Welcome, {{ user.username }} !</p>
-  <a href="{% url 'microimprocessing:index' %}">Go to your images</a>
+  <a class="btn btn-primary" href="{% url 'microimprocessing:index' %}">Go to your images</a>
 
 
   {% else %}
-  <h1>My Google Login Project</h1>
-  <a href="{% provider_login_url 'google' %}">Login with Google</a>
+  <h1>ScaffAn</h1>
+  <a class="btn btn-primary" href="{% provider_login_url 'google' %}">Login with Google</a>
   {% endif %}
-
-  </body>
-</html>
+{% endblock %}
+<!--  </body>-->
+<!--</html>-->

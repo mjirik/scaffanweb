@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.template import loader
+from django.contrib.auth import logout
 from .models import get_output_dir
 from .forms import ImageQuatroForm
 from pathlib import Path
@@ -155,3 +156,7 @@ def make_thumbnail(serverfile:ServerDataFileName):
 
     serverfile.save()
 
+def logout_view(request):
+    logout(request)
+    # Redirect to a success page.
+    return redirect('/')
