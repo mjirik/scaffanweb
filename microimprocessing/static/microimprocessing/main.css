@@ -3,9 +3,9 @@ img.cellzoom {
   max-height:100%;
   width:90%;
 }
-#previewimg{
+#previewimg {
   /* width:100%; */
-};
+}
 
 table {
   width: 100%;
@@ -15,3 +15,56 @@ th, td {
   padding: 5px;
   text-align: left;
 }
+/*
+div.container-fluid {
+  background-color: yellow;
+}
+*/
+
+#scaffanlogo {
+    width:100px;
+}
+
+#appbody {
+    opacity:;
+}
+#backgroundbody {
+    z-index: 5;
+}
+
+#backgroundbody::before {
+    z-index: -1;
+    background: url("/static/microimprocessing/logo_fav.png"), url("/static/microimprocessing/logo_lfp.png");
+    background-position: right bottom, left bottom;
+    background-repeat: no-repeat, no-repeat;
+    opacity: 0.5;
+}
+
+
+#myDiv {
+
+  z-index: 5;
+  /*
+  position: relative;
+  height: 250px;
+  width: 300px;
+  color: #000;
+  font-size: 400%;
+  padding: 20px;
+  */
+}
+
+#myDiv::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url("/static/microimprocessing/logo_fav.png"), url("/static/microimprocessing/logo_lfp.png");
+    background-position: right bottom, left bottom;
+    background-repeat: no-repeat, no-repeat;
+    opacity: .3;
+}
+

@@ -12,7 +12,6 @@
 
     <!-- ajax-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://kit.fontawesome.com/yourcode.js"></script>
 
 <!--    icons-->
     <meta name='viewport' content='width=device-width, initial-scale=1'>
@@ -32,61 +31,30 @@
     {% endblock %}
 </head>
 <body>
-    <div class="jumbotron">
-        <h1>ScaffAn</h1>
+    <div class="jumbotron p-0">
+        <img id="scaffanlogo" class="m-0" src="{% static 'microimprocessing/scaffan_icon512.png' %}" alt="ScaffAn">
+<!--        <h1>ScaffAn</h1>-->
         <a class="button" href="#"><i class="fas fa-sign-out-alt" aria-hidden="true"></i></a>
     </div>
-    <!-- Grey with black text -->
-    <div class="container">
-        <i class="fas fa-band-aid"></i>
-<i class="fas fa-cat"></i>
-<i class="fas fa-dragon"></i>
-<i class="far fa-clock"></i>
-<i class="fas fa-clock"></i>
-<!--    <nav class="navbar navbar-expand-sm bg-light navbar-light">-->
-<!--        <h2>ScaffAn</h2>-->
-<!--      <ul class="navbar-nav">-->
-<!--        <li class="nav-item active">-->
-<!--          <a class="nav-link" href="#">Active</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item">-->
-<!--          <a class="nav-link" href="#">Link</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item">-->
-<!--          <a class="nav-link" href="#">Link</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item">-->
-<!--          <a class="nav-link disabled" href="#">Disabled</a>-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </nav>-->
 
-<!--        <div class="container">-->
-<!--            &lt;!&ndash; Static navbar &ndash;&gt;-->
-<!--          <nav class="navbar navbar-default">-->
-<!--            <div class="container-fluid">-->
-<!--              <div class="navbar-header">-->
-<!--                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">-->
-<!--                  <span class="sr-only">ScaffAn</span>-->
-<!--                  <span class="icon-bar"></span>-->
-<!--                  <span class="icon-bar"></span>-->
-<!--                  <span class="icon-bar"></span>-->
-<!--                </button>-->
-<!--                <a class="navbar-brand" href="#">ScaffAn</a>-->
-<!--              </div>-->
-<!--              <div id="navbar" class="navbar-collapse collapse">-->
-<!--                <ul class="nav navbar-nav navbar-right">-->
-<!--                    <li><a href="">Login</a></li>-->
-<!--                </ul>-->
-<!--              </div>&lt;!&ndash;/.nav-collapse &ndash;&gt;-->
-<!--            </div>&lt;!&ndash;/.container-fluid &ndash;&gt;-->
-<!--          </nav>-->
-<!--        </div>-->
-        <div class="container">
-            {% block body %}
-            {% endblock %}
-            {% block content %}
-            {% endblock %}
+        <!-- A vertical navbar -->
+<!--    <div id="backgroundbody" class="container-fluid" >-->
+    <div id="myDiv" class="container-fluid" >
+    <!-- Grey with black text -->
+        <div id="appbody" class="container">
+
+<!--            <i class="fas fa-band-aid"></i>-->
+<!--            <i class="fas fa-cat"></i>-->
+<!--            <i class="fas fa-dragon"></i>-->
+<!--            <i class="far fa-clock"></i>-->
+<!--            <i class="fas fa-clock"></i>-->
+
+            <div class="container">
+                {% block body %}
+                {% endblock %}
+                {% block content %}
+                {% endblock %}
+            </div>
         </div>
     </div>
     <!-- Optional JavaScript -->

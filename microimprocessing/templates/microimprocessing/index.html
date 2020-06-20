@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 {% block body %}
     {% if user.is_authenticated %}
-        <h1>Image List</h1>
-        <ul>
-            <li>
-                <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
-            </li>
-        </ul>
-        <br>
+        <h2>Image List</h2>
+<div class="container">
+    <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
+</div>
+<!--        <ul>-->
+<!--            <li>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--        <br>-->
         {% if latest_filenames %}
         <table class="table">
 
