@@ -32,26 +32,37 @@
 </head>
 <body>
 <!-- A grey horizontal navbar that becomes vertical on small screens -->
+<!--    <div class="jumbotron p-1">-->
+<!--<nav class="navbar navbar-expand-sm bg-light">-->
 <nav class="navbar navbar-expand-sm bg-light">
+<!--        <div class="float-left">-->
     <a href="{% url 'microimprocessing:index' %}" >
         <img id="scaffanlogo" class="m-0" src="{% static 'microimprocessing/scaffan_icon512.png' %}" alt="ScaffAn">
     </a>
 
+<!--        </div>-->
+
     <!-- Links -->
+<!--        <div class="float-right">-->
+
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link 1</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link 2</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link 3</a>
-      </li>
-        <a class="btn btn-secondary" href="{% url 'microimprocessing:logout_view' %}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i></a>
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="#">Link 1</a>-->
+<!--      </li>-->
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="#">Link 2</a>-->
+<!--      </li>-->
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="#">Link 3</a>-->
+<!--      </li>-->
+        <li class="nav-item">
+            <a class="btn btn-secondary" href="{% url 'microimprocessing:logout_view' %}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i></a>
+        </li>
     </ul>
+<!--        </div>-->
 
 </nav>
+<!--    </div>-->
 
 <!--<nav class="navbar navbar-default">-->
 <!--  <div class="container-fluid">-->
