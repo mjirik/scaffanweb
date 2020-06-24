@@ -23,12 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from pathlib import Path
 scpath = Path("secretkey.txt")
 if scpath.exists():
-    with open(scpath) as f:
+    with open(scpath, "r") as f:
         SECRET_KEY = f.read().strip()
 else:
     with open(scpath, "w") as f:
         from django.core.management.utils import get_random_secret_key
-
         SECRET_KEY = f.write(
             get_random_secret_key()
         )

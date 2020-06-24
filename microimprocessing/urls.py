@@ -14,4 +14,5 @@ urlpatterns = [
     path('<int:pk>/run_processing/', views.run_processing, name='run_processing'),
     path('logout/', views.logout_view, name='logout_view'),
     path('add_example_data/', views.add_example_data, name='add_example_data'),
+    path('<int:filename_id>/delete_file/', views.delete_file, name='delete_file'),
 ]

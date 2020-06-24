@@ -19,13 +19,17 @@ def get_output_dir():
     import os.path as op
     # OUTPUT_DIRECTORY_PATH = "~/cellid_data"
     OUTPUT_DIRECTORY_PATH = settings.MEDIA_ROOT
-    filename = op.join(op.expanduser(OUTPUT_DIRECTORY_PATH), datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f") + "_" + scaffanweb_tools.randomString(8))
+    datetimestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f")
+    filename = op.join(
+        op.expanduser(OUTPUT_DIRECTORY_PATH),
+        datetimestr + "_" + scaffanweb_tools.randomString(8),
+        datetimestr
+    )
     return filename
 
 class ServerDatasetPath(models.Model):
     comment = models.CharField(max_length=200)
     server_dataset_path = models.FilePathField("Path to dataset on server", path=str(pth), allow_files=False, allow_folders=True)
-
 
 
 class ServerDataFileName(models.Model):

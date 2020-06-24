@@ -26,11 +26,14 @@ from .models import ServerDataFileName, LobuleCoordinates, ExampleData
 def index(request):
     # latest_question_list = ServerDataFileName.objects.order_by('-pub_date')[:5]
     # latest_filenames = ServerDataFileName.objects.all()
-    latest_filenames = ServerDataFileName.objects.filter(owner=request.user)
+    latest_filenames = ServerDataFileName.objects.filter(owner=request.user).order_by("-uploaded_at")
     number_of_points = [
         len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
         for serverfile in latest_filenames
     ]
+    # latest_filenames_short = [
+    #     Path(fn.imagefile.path).name for fn in latest_filenames
+    #     ]
     # template = loader.get_template('microimprocessing/index.html')
     context = {
         'latest_filenames': zip(latest_filenames, number_of_points),
@@ -40,6 +43,12 @@ def index(request):
     return render(request, 'microimprocessing/index.html', context)
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")
+
+
+def delete_file(request, filename_id):
+    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+    serverfile.delete()
+    return redirect('/microimprocessing/')
 
 
 def detail(request, filename_id):
@@ -165,17 +174,18 @@ def add_example_data(request):
         logger.debug("add data")
         sdf = sample_image.server_datafile
         # sample_image.image
-        logger.debug(f"{sdf}")
+        logger.debug(f"add data as a copy of {sdf}")
         new_sdf = ServerDataFileName(
             owner=request.user,
-            imagefile=sdf.imagefile,
+            # imagefile=sdf.,
             preview=sdf.preview,
             description="Sample data",
             # preview=ContentFile(sdf.preview.read()),
         )
-        logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
+        # logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
         # new_sdf.owner=request.user
-        new_sdf.imagefile = ContentFile(sdf.imagefile.read())
+        new_sdf.imagefile.save(Path(sdf.imagefile.name).name, ContentFile(sdf.imagefile.read()))
+        make_thumbnail(new_sdf)
         # new_sdf.save()
         logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
 

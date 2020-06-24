@@ -18,7 +18,8 @@
             <tr>
                 {% if server_filename.imagefile %}
                     <td>
-                        {{ server_filename.imagefile}}
+<!--                        {{ server_filename.imagefile}}-->
+                        {{ server_filename}}
                     </td>
                     <td>
                         {% if server_filename.preview %}
@@ -35,7 +36,6 @@
                         <a class="btn btn-secondary" href="{% url 'microimprocessing:run_processing' server_filename.id %}">Run processing</a>
                     </td>
                     <td>
-
                     {% if server_filename.processed %}
                     <a class="btn btn-secondary" href="{{ server_filename.zip_filename.url }}">Download</a>
                     {% else %}
@@ -44,6 +44,9 @@
                 {% else %}
                 <td>No file</td>
                 {% endif %}
+                <td>
+                    <a class="btn btn-warning" href="{% url 'microimprocessing:delete_file' server_filename.id %}">Delete</a>
+                </td>
             </tr>
             {% endfor %}
         </table>
