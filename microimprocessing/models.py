@@ -63,7 +63,7 @@ class ServerDataFileName(models.Model):
     # votes = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.description
+        return f"{Path(self.imagefile.path).name} {self.description}"
 
 
 class LobuleCoordinates(models.Model):
@@ -79,3 +79,6 @@ class LobuleCoordinates(models.Model):
     #     print(self.id)
     #     return reverse('imviewer:image-detail', args=[str(self.id)])
 
+
+class ExampleData(models.Model):
+    server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)

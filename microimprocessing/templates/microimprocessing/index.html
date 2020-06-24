@@ -4,6 +4,7 @@
         <h2>Image List</h2>
 <div class="container">
     <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
+    <a class="btn btn-secondary" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
 </div>
 <!--        <ul>-->
 <!--            <li>-->
@@ -41,7 +42,7 @@
                     {% endif %}
                     </td>
                 {% else %}
-                  No file
+                <td>No file</td>
                 {% endif %}
             </tr>
             {% endfor %}

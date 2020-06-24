@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth import logout
+from django.core.files.base import ContentFile
 from .models import get_output_dir
 from .forms import ImageQuatroForm
 from pathlib import Path
@@ -18,7 +19,7 @@ import os.path as op
 from loguru import logger
 import numpy as np
 
-from .models import ServerDataFileName, LobuleCoordinates
+from .models import ServerDataFileName, LobuleCoordinates, ExampleData
 
 # Create your views here.
 
@@ -155,6 +156,33 @@ def make_thumbnail(serverfile:ServerDataFileName):
     skimage.io.imsave(pth, img[:,:,:3])
 
     serverfile.save()
+
+
+def add_example_data(request):
+    logger.debug("add example data")
+    all = ExampleData.objects.all()
+    for sample_image in all:
+        logger.debug("add data")
+        sdf = sample_image.server_datafile
+        # sample_image.image
+        logger.debug(f"{sdf}")
+        new_sdf = ServerDataFileName(
+            owner=request.user,
+            imagefile=sdf.imagefile,
+            preview=sdf.preview,
+            description="Sample data",
+            # preview=ContentFile(sdf.preview.read()),
+        )
+        logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
+        # new_sdf.owner=request.user
+        new_sdf.imagefile = ContentFile(sdf.imagefile.read())
+        # new_sdf.save()
+        logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
+
+    return redirect('/microimprocessing/')
+
+
+    # latest_filenames = ServerDataFileName.objects.filter(owner=request.user)
 
 def logout_view(request):
     logout(request)

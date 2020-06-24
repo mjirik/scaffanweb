@@ -13,5 +13,5 @@ urlpatterns = [
     path('upload/', views.model_form_upload, name='model_form_upload'),
     path('<int:pk>/run_processing/', views.run_processing, name='run_processing'),
     path('logout/', views.logout_view, name='logout_view'),
-
+    path('add_example_data/', views.add_example_data, name='add_example_data'),
 ]
