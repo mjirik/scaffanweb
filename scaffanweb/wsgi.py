@@ -13,4 +13,6 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'scaffanweb.settings')
 
+print("we are in python now")
 application = get_wsgi_application()
+print("after get_wsgi_application()")
