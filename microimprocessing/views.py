@@ -137,6 +137,7 @@ def run_processing(request, pk):
 
 
 def make_thumbnail(serverfile:ServerDataFileName):
+    logger.debug(f"serverfile={serverfile}")
 
     nm = str(Path(serverfile.imagefile.path).name)
     anim = scaffan.image.AnnotatedImage(serverfile.imagefile.path)
@@ -149,7 +150,8 @@ def make_thumbnail(serverfile:ServerDataFileName):
     pxsz_mm = 0.02
     view_corner = full_view.to_pixelsize(pixelsize_mm=[pxsz_mm, pxsz_mm])
     img = view_corner.get_region_image(as_gray=False)
-    pth = serverfile.outputdir + nm + ".preview.jpg"
+    pth = str(Path(settings.MEDIA_ROOT) / (nm + ".preview.jpg"))
+    # pth = serverfile.outputdir + nm + ".preview.jpg"
 
     # pth = serverfile.imagefile.path + ".thumbnail.jpg"
     logger.debug("thumbnail path")

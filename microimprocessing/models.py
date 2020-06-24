@@ -22,8 +22,8 @@ def get_output_dir():
     datetimestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f")
     filename = op.join(
         op.expanduser(OUTPUT_DIRECTORY_PATH),
-        datetimestr + "_" + scaffanweb_tools.randomString(8),
-        datetimestr
+        "SA_" + datetimestr + "_" + scaffanweb_tools.randomString(8),
+        "SA_" + datetimestr
     )
     return filename
 
