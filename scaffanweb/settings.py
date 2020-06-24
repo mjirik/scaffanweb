@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 from pathlib import Path
-scpath = Path("secretkey.txt")
+scpath = Path(__file__).parent / "secretkey.txt"
 if scpath.exists():
     with open(scpath, "r") as f:
         SECRET_KEY = f.read().strip()
