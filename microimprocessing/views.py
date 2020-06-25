@@ -12,9 +12,6 @@ import sys
 # print(f"local scaffan path={pth}")
 # sys.path.insert(0, pth)
 # print(f"PATH={sys.path}")
-import scaffan
-import scaffan.algorithm
-import scaffan.image
 import os.path as op
 from loguru import logger
 import numpy as np
@@ -102,6 +99,9 @@ def model_form_upload(request):
     })
 
 def run_processing(request, pk):
+    import scaffan
+    import scaffan.algorithm
+    import scaffan.image
     serverfile:ServerDataFileName = get_object_or_404(ServerDataFileName, pk=pk)
 
     mainapp = scaffan.algorithm.Scaffan()
@@ -137,6 +137,9 @@ def run_processing(request, pk):
 
 
 def make_thumbnail(serverfile:ServerDataFileName):
+    import scaffan
+    import scaffan.algorithm
+    import scaffan.image
     logger.debug(f"serverfile={serverfile}")
 
     nm = str(Path(serverfile.imagefile.path).name)
