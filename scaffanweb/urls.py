@@ -19,6 +19,7 @@ from django.views.generic import TemplateView # <--
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from loguru import logger
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='microimprocessing/wellcome.html')), # <--I
@@ -28,6 +29,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')), # <--
 ]
-urlpatterns += staticfiles_urlpatterns()
+# urlpatterns += staticfiles_urlpatterns() # this is almost equal with fallowing line but this should be used for development only
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 # print (static(settings.MEDIA_URL))
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
