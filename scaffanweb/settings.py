@@ -41,6 +41,7 @@ ALLOWED_HOSTS = [
     # "0.0.0.0:8000",
     "147.228.47.162",
     "127.0.0.1",
+    "*",
 ]
 
 SITE_ID = 2 # because in my database is in table Sites my 127.0.0.1 on second place
