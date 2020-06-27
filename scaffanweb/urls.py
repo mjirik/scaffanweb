@@ -22,9 +22,9 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from loguru import logger
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='microimprocessing/wellcome.html')), # <--I
+    path('wellcome/', TemplateView.as_view(template_name='microimprocessing/wellcome.html')), # <--I
     # path('', TemplateView.as_view(template_name='microimprocessing/login.html')), # <--I
-    path('login/', TemplateView.as_view(template_name='microimprocessing/login.html')), # <--I
+    path('', TemplateView.as_view(template_name='microimprocessing/login.html')), # <--I
     path('microimprocessing/', include('microimprocessing.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')), # <--

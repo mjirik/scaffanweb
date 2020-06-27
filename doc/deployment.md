@@ -20,9 +20,11 @@ Fill tables in admin
 [Tutorial](https://medium.com/@whizzoe/in-5-mins-set-up-google-login-to-sign-up-users-on-django-e71d5c38f5d5)
 
 
-# Apache
+# Auth
 
-[Tutorial](https://medium.com/faun/how-to-set-up-conda-virtual-environments-with-apache-mod-wsgi-flask-c2043711223e)
+[SocialApps Tutorial](https://medium.com/faun/how-to-set-up-conda-virtual-environments-with-apache-mod-wsgi-flask-c2043711223e)
+
+# Apache
 
 sudo apt-get install libapache2-mod-wsgi-py3
 
@@ -33,4 +35,16 @@ sudo apt-get install libapache2-mod-wsgi-py3
 # SocialApp matching query does not exist.
 
 [set APP_ID=2](https://stackoverflow.com/questions/15409366/django-socialapp-matching-query-does-not-exist)
+
+You can check your app ids from shell:
+
+```bash
+conda activate scaffan
+python manage.py shell
+```
+from django.contrib.sites.models import Site
+sorted([(site.id,site.name) for site in Site.objects.all()])
+```python
+
+```
 
