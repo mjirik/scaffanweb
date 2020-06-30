@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'allauth.account',  # <--
     'allauth.socialaccount',  # <--
     'allauth.socialaccount.providers.google',  # <--
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -96,6 +97,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'scaffanweb.wsgi.application'
+
+if os.name == "nt":
+    # windows
+    CONDA_EXECUTABLE=r"C:\Users\Jirik\Miniconda3\Scripts\conda.exe"
+# elif os.name == "posix": #linux
+else:
+    CONDA_EXECUTABLE="/home/mjirik/miniconda/envs/scaffanweb/bin/conda"
 
 
 # Database
@@ -173,4 +181,53 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         }
     }
+}
+
+# Q_CLUSTER = {
+#     'name': 'DjangoORM',
+#     'timeout': 1200,	# Timeout in secs for a task
+#     'save_limit': 10,	# Store latest 10 results only
+#     'catch_up': False,	# Ignore un-run scheduled tasks
+#     'orm': 'default'	# Django database connection
+# }
+# # In django_demo/settings.py
+# CACHES = {
+#     'default': {
+# 		'BACKEND': \
+# 			'django.core.cache.backends.locmem.LocMemCache',
+#         'LOCATION': 'djangoq-localmem',
+#     }
+# }
+# Q_CLUSTER = {'orm': 'default', 'sync': True}
+
+# Q_CLUSTER = {
+#     'name': 'myproject',
+#     'workers': 8,
+#     'recycle': 500,
+#     'timeout': 60,
+#     'compress': True,
+#     'cpu_affinity': 1,
+#     'save_limit': 250,
+#     'queue_limit': 500,
+#     'label': 'Django Q',
+#     'redis': {
+#         'host': '127.0.0.1',
+#         'port': 6379,
+#         'db': 0, }
+# }
+
+
+Q_CLUSTER = {
+    'name': 'foo',
+    'workers': 1,
+    'cpu_affinity': 1,
+    'sync': True,
+    'timeout': 60,
+    'catch_up': True,
+    'recycle': 20,
+    'compress': False,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'label': 'Django Q',
+    'orm': 'default',
 }

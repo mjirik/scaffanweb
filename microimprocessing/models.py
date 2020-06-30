@@ -17,9 +17,9 @@ def get_output_dir():
     #
     import datetime
     import os.path as op
-    # OUTPUT_DIRECTORY_PATH = "~/cellid_data"
     OUTPUT_DIRECTORY_PATH = settings.MEDIA_ROOT
-    datetimestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f")
+    # datetimestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f")
+    datetimestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     filename = op.join(
         op.expanduser(OUTPUT_DIRECTORY_PATH),
         "SA_" + datetimestr + "_" + scaffanweb_tools.randomString(8),
@@ -37,6 +37,7 @@ class ServerDataFileName(models.Model):
     # server_dataset_path= models.ForeignKey(ServerDatasetPath, on_delete=models.CASCADE)
     # choice_text = models.CharField(max_length=200)
     processed = models.BooleanField(default=False)
+    process_started = models.BooleanField(default=False)
     owner = models.ForeignKey(
         # settings.AUTH_USER_MODEL,
         User,

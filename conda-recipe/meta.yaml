@@ -46,6 +46,7 @@ requirements:
   run:
     - python
     - django-allauth
+    - redis
     # - { pin_compatible('imma', max_pin='x.x') }
     # - numpy
     # - pyqt 4.11.* # [not win]

@@ -2,16 +2,20 @@
 {% block body%}
     {% if user.is_authenticated %}
     {% if serverfile %}
-    <h1>{{ serverfile.imagefile}}</h1>
+    <h1>{{ serverfile}}</h1>
 <!--    <ul>-->
 <!--        <li> {{ serverfile.imagefile}} </li>-->
 <!--        <li> {{ serverfile.annotationfile}} </li>-->
 <!--        <li> {{ serferfile.thumbnail.name}} </li>-->
 <!--        <li> {{ serferfile.thumbnail.path }} </li>-->
 <!--        <li> {{ serferfile.thumbnail.url }} </li>-->
-        <form method="post" id="lobulepoints">{% csrf_token %}
-            <input type="submit" value="Save points">
-        </form>
+        <div class="form-group">
+            <form method="post" id="lobulepoints">{% csrf_token %}
+                <input class="btn btn-primary" type="submit" value="Save points">
+                <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Cancel</a>
+            </form>
+
+        </div>
         <div class="container">
             <img name="previewimg" id="previewimg" class="multicella" src="{{serverfile.preview.url}}">
 <!--            <canvas id="previewcanvas"></canvas>-->

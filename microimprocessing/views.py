@@ -28,12 +28,25 @@ def index(request):
         len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
         for serverfile in latest_filenames
     ]
+    output_exists = [
+        Path(serverfile.outputdir).exists()
+        for serverfile in latest_filenames
+    ]
+
+    for serverfile in latest_filenames:
+        if Path(serverfile.outputdir).exists():
+            logger.debug(f"output exists: {serverfile.outputdir}")
+            if not Path(get_zip_fn(serverfile)).exists():
+                make_zip(serverfile)
+                serverfile.process_started = False
+                serverfile.save()
+
     # latest_filenames_short = [
     #     Path(fn.imagefile.path).name for fn in latest_filenames
     #     ]
     # template = loader.get_template('microimprocessing/index.html')
     context = {
-        'latest_filenames': zip(latest_filenames, number_of_points),
+        'latest_filenames': zip(latest_filenames, number_of_points, output_exists),
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
@@ -99,41 +112,74 @@ def model_form_upload(request):
     })
 
 def run_processing(request, pk):
-    import scaffan
-    import scaffan.algorithm
-    import scaffan.image
+    from django_q.tasks import async_task, result
+    # import scaffan
+    # import scaffan.algorithm
+    # import scaffan.image
     serverfile:ServerDataFileName = get_object_or_404(ServerDataFileName, pk=pk)
 
-    mainapp = scaffan.algorithm.Scaffan()
-    mainapp.set_input_file(serverfile.imagefile.path)
 
     coords = LobuleCoordinates.objects.filter(server_datafile=serverfile)
     centers_mm = [[coord.x_mm, coord.y_mm] for coord in coords]
+
     logger.debug(coords)
     serverfile.outputdir = get_output_dir()
+    serverfile.process_started = True
     serverfile.save()
-    mainapp.set_output_dir(serverfile.outputdir)
-    # _, ann_ids = mainapp.prepare_circle_annotations_from_points_mm(centers_mm)
-    # mainapp.init_run()
-    # mainapp.set_annotation_color_selection("#FF00FF") # magenta -> cyan
-    # mainapp.set_annotation_color_selection("#00FFFF")
-    # cyan causes memory fail
-    # mainapp.set_parameter("Input;Lobulus Selection Method", "Color")
-    # mainapp.set_annotation_color_selection("#FF0000")
 
-    mainapp.run_lobuluses(seeds_mm=centers_mm)
+    cli_params = [
+        settings.CONDA_EXECUTABLE, "run", "-n", "scaffanweb", "python", "-m", "scaffan", "nogui",
+        "-i", str(serverfile.imagefile.path),
+        "-o", str(serverfile.outputdir),
+    ]
+    for coord in coords:
+        cli_params.append("--seeds_mm")
+        cli_params.append(str(coord.x_mm))
+        cli_params.append(str(coord.y_mm))
+
+
+
+    logger.debug(f"adding task to queue CLI params: {' '.join(cli_params)}")
+    import subprocess
+    myProc = subprocess.Popen(cli_params)
+    # subprocess.run(cli_params)
+
+
+    # to capture the output we'll need a pipe
+    # from subprocess import PIPE
+    # tid = async_task("subprocess.run", cli_params, stdout=PIPE)
+
+    # logger.debug("before results")
+    # res = result(tid, 500)
+    # print the output
+    # logger.debug(res)
+    # settings.CONDA_EXECUTABLE
+
+        # logger.warning("running python directly. set settings.PYTHON_EXECUTABLE")
+        # mainapp = scaffan.algorithm.Scaffan()
+        # mainapp.set_input_file(serverfile.imagefile.path)
+        # mainapp.set_output_dir(serverfile.outputdir)
+        # mainapp.run_lobuluses(seeds_mm=centers_mm)
+    return redirect('/microimprocessing/')
+
+def get_zip_fn(serverfile:ServerDataFileName):
     nm = str(Path(serverfile.imagefile.path).name)
     # prepare output zip file path
     pth_zip = serverfile.outputdir + nm + ".zip"
+    return pth_zip
 
+def make_zip(serverfile:ServerDataFileName):
+    pth_zip = get_zip_fn(serverfile)
     import shutil
-    shutil.make_archive(pth_zip, "zip", serverfile.outputdir)
+    # remove last letters.because of .zip is added by make_archive
+    shutil.make_archive(pth_zip[:-4], "zip", serverfile.outputdir)
 
     serverfile.processed = True
+    pth_rel = op.relpath(pth_zip, settings.MEDIA_ROOT)
+    serverfile.zip_file = pth_rel
 
 
     serverfile.save()
-    return redirect('/microimprocessing/')
 
 
 def make_thumbnail(serverfile:ServerDataFileName):

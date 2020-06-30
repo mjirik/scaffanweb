@@ -6,7 +6,8 @@
 # with testserver
 
 ```bash
-conda create -n scaffanweb -c conda-forge -c mjirik -c bioconda scaffan django django-allauth google-auth -y
+conda create -n scaffanweb -c conda-forge -c mjirik -c bioconda scaffan django django-allauth google-auth pip redis-y
+pip install django-q
 
 python manage.py makemigrations
 python manage.py migrate

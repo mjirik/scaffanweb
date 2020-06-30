@@ -2,19 +2,21 @@
 {% block body %}
     {% if user.is_authenticated %}
         <h2>Image List</h2>
-<div class="container">
-    <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
-    <a class="btn btn-secondary" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
-</div>
+        <div class="container">
+            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
+            <a class="btn btn-secondary" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
+            <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Refresh</a>
+        </div>
 <!--        <ul>-->
 <!--            <li>-->
 <!--            </li>-->
 <!--        </ul>-->
 <!--        <br>-->
         {% if latest_filenames %}
-        <table class="table">
+        <div class="containger">
+        <table class="table table-hover">
 
-            {% for server_filename, n_pts in latest_filenames %}
+            {% for server_filename, n_pts, output_exists in latest_filenames %}
             <tr>
                 {% if server_filename.imagefile %}
                     <td>
@@ -30,16 +32,21 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a class="btn btn-secondary" href="{% url 'microimprocessing:detail' server_filename.id %}"> Set lobules manually <br> ({{ n_pts }} points) </a>
+                        <a class="btn btn-primary" href="{% url 'microimprocessing:detail' server_filename.id %}"> Set lobules manually <br> ({{ n_pts }} points) </a>
                     </td>
                     <td>
-                        <a class="btn btn-secondary" href="{% url 'microimprocessing:run_processing' server_filename.id %}">Run processing</a>
+                        <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}">Run processing</a>
                     </td>
                     <td>
-                    {% if server_filename.processed %}
-                    <a class="btn btn-secondary" href="{{ server_filename.zip_filename.url }}">Download</a>
-                    {% else %}
-                    {% endif %}
+                        {% if output_exists %}
+                            <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}">Download</a>
+                        {% else %}
+                            {% if server_filename.process_started%}
+                                running
+                            {% else %}
+                            {% endif %}
+                        {% endif %}
+
                     </td>
                 {% else %}
                 <td>No file</td>
@@ -50,8 +57,9 @@
             </tr>
             {% endfor %}
         </table>
+        </div>
         {% else %}
-        <p>No polls are available.</p>
+        <p>No data available.</p>
         {% endif %}
     {% endif %}
 {% endblock %}
