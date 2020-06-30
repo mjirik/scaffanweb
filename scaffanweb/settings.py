@@ -103,7 +103,7 @@ if os.name == "nt":
     CONDA_EXECUTABLE=r"C:\Users\Jirik\Miniconda3\Scripts\conda.exe"
 # elif os.name == "posix": #linux
 else:
-    CONDA_EXECUTABLE="/home/mjirik/miniconda/envs/scaffanweb/bin/conda"
+    CONDA_EXECUTABLE="/home/mjirik/miniconda/condabin/conda"
 
 
 # Database
