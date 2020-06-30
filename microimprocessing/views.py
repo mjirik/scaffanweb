@@ -34,7 +34,7 @@ def index(request):
     ]
 
     for serverfile in latest_filenames:
-        if Path(serverfile.outputdir).exists():
+        if (Path(serverfile.outputdir) / "data.xlsx").exists():
             logger.debug(f"output exists: {serverfile.outputdir}")
             if not Path(get_zip_fn(serverfile)).exists():
                 make_zip(serverfile)
