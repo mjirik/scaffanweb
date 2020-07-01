@@ -68,7 +68,10 @@ class ServerDataFileName(models.Model):
     # votes = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{Path(self.imagefile.path).name} {self.description}"
+        if self.imagefile:
+            return f"{Path(self.imagefile.path).name} {self.description}"
+        else:
+            return self.description
 
 
 class LobuleCoordinates(models.Model):
