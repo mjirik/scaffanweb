@@ -63,6 +63,8 @@ def delete_file(request, filename_id):
 
 def detail(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+    if not serverfile.preview:
+        make_thumbnail(serverfile)
     if request.method == 'POST':
         LobuleCoordinates.objects.filter(server_datafile=serverfile).delete()
         print("post recived")
