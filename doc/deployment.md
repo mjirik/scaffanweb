@@ -1,16 +1,23 @@
 # Scaffanweb deployment
 
-* git clone
-* 
-
-
-
-# with testserver
+Get the repository
 
 ```bash
-conda create -n scaffanweb -c conda-forge -c mjirik -c bioconda scaffan django django-allauth google-auth pip redis-y
-pip install django-q
+git clone
+```
 
+Install requirements
+ 
+```bash
+conda create -n scaffanweb -c conda-forge -c mjirik -c bioconda scaffan openslide-python django django-allauth google-auth pip redis-y
+pip install django-q
+```
+ 
+Init authentification setup in database by copiing `db.sqlite3` and `secretkey.txt`
+
+
+Or manually:
+```bash
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
@@ -18,14 +25,12 @@ python manage.py runserver 0.0.0.0:8000
 ```
 
 
+
 Fill tables in admin
 
-[Googl login: 5 minutes tutorial](https://medium.com/@whizzoe/in-5-mins-set-up-google-login-to-sign-up-users-on-django-e71d5c38f5d5)
+[Google login: 5 minutes tutorial](https://medium.com/@whizzoe/in-5-mins-set-up-google-login-to-sign-up-users-on-django-e71d5c38f5d5)
 
 
-# Auth
-
-[SocialApps Tutorial](https://medium.com/faun/how-to-set-up-conda-virtual-environments-with-apache-mod-wsgi-flask-c2043711223e)
 
 # Deploy
 
@@ -78,10 +83,6 @@ sudo service nginx restart
 ```
 
 
-## Apache
-We used apache before but now we moved our infrastructure to `nginx` and `gunicorn`.
-
-sudo apt-get install libapache2-mod-wsgi-py3
 
 
 # Final touch
@@ -89,6 +90,15 @@ sudo apt-get install libapache2-mod-wsgi-py3
 Sample data - uplad new data and in admin you can select which data would 
 be used as sample data.
 
+
+# Usefull links
+
+## Apache
+We used apache before but now we moved our infrastructure to `nginx` and `gunicorn`.
+
+sudo apt-get install libapache2-mod-wsgi-py3
+
+[Conda virtual env with Apache](https://medium.com/faun/how-to-set-up-conda-virtual-environments-with-apache-mod-wsgi-flask-c2043711223e)
 
 
 # Troubleshooting
