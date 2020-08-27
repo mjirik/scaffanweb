@@ -173,8 +173,6 @@ def make_zip(serverfile:ServerDataFileName):
     serverfile.save()
 
 
-
-
 def add_example_data(request):
     logger.debug("add example data")
     all = ExampleData.objects.all()
