@@ -104,7 +104,7 @@ if os.name == "nt":
 # elif os.name == "posix": #linux
 else:
     # CONDA_EXECUTABLE="/home/mjirik/miniconda/condabin/conda"
-    CONDA_EXECUTABLE="/webapps/miniconda/condabin/conda"
+    CONDA_EXECUTABLE="/webapps/scaffanweb_django/miniconda/condabin/conda"
 
 
 # Database
