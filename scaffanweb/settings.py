@@ -232,18 +232,62 @@ SOCIALACCOUNT_PROVIDERS = {
 #     'label': 'Django Q',
 #     'orm': 'default',
 # }
-Q_CLUSTER = {
-    'name': 'foo',
-    'workers': 1,
-    'cpu_affinity': 1,
-    # 'sync': True,
-    'sync': True,
-    'timeout': 3600,
-    'catch_up': True,
-    'recycle': 20,
-    'compress': False,
-    'save_limit': 250,
-    'queue_limit': 500,
-    'label': 'Django Q',
-    'orm': 'default',
-}
+
+# works - tested
+# Q_CLUSTER = {
+#     'name': 'foo',
+#     'workers': 1,
+#     'cpu_affinity': 1,
+#     # 'sync': True,
+#     'sync': True,
+#     'timeout': 3600,
+#     'catch_up': True,
+#     'recycle': 20,
+#     'compress': False,
+#     'save_limit': 250,
+#     'queue_limit': 500,
+#     'label': 'Django Q',
+#     'orm': 'default',
+# }
+
+# example ORM broker connection
+# Q_CLUSTER = {
+#     'name': 'DjangORM',
+#     'workers': 4,
+#     'timeout': 90,
+#     'retry': 120,
+#     'queue_limit': 50,
+#     'bulk': 10,
+#     'orm': 'default'
+# }
+
+if os.name == "nt":
+    # windows
+    Q_CLUSTER = {
+        'name': 'foo',
+        'workers': 1,
+        'cpu_affinity': 1,
+        # 'sync': True,
+        'sync': True,
+        'timeout': 3600,
+        'catch_up': True,
+        'recycle': 20,
+        'compress': False,
+        'save_limit': 250,
+        'queue_limit': 500,
+        'label': 'Django Q',
+        'orm': 'default',
+    }
+else:
+    Q_CLUSTER = {
+        'redis': {
+            'host': 'localhost',
+            'port': 6379,
+            'db': 0,
+            'password': None,
+            'socket_timeout': None,
+            'charset': 'utf-8',
+            'errors': 'strict',
+            'unix_socket_path': None
+        }
+    }

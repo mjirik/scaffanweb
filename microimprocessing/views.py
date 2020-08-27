@@ -127,34 +127,18 @@ def run_processing(request, pk):
     serverfile:ServerDataFileName = get_object_or_404(ServerDataFileName, pk=pk)
 
 
-    coords = LobuleCoordinates.objects.filter(server_datafile=serverfile)
-    centers_mm = [[coord.x_mm, coord.y_mm] for coord in coords]
-
-    logger.debug(coords)
-    serverfile.outputdir = get_output_dir()
-    serverfile.process_started = True
-    serverfile.save()
-
-    cli_params = [
-        settings.CONDA_EXECUTABLE, "run", "-n", "scaffanweb", "python", "-m", "scaffan", "-lf", str(Path(serverfile.outputdir) / 'scaffan.log'), "nogui",
-        "-i", str(serverfile.imagefile.path),
-        "-o", str(serverfile.outputdir),
-    ]
-    for coord in coords:
-        cli_params.append("--seeds_mm")
-        cli_params.append(str(coord.x_mm))
-        cli_params.append(str(coord.y_mm))
-
-
-
-    logger.debug(f"adding task to queue CLI params: {' '.join(cli_params)}")
-    import subprocess
+    # import subprocess
     # myProc = subprocess.Popen(cli_params)
 
 
     # to capture the output we'll need a pipe
     # from subprocess import PIPE
-    tid = async_task("subprocess.run", cli_params, hook="microimprocessing.views.make_thumbnail")
+    # tid = async_task("subprocess.run", cli_params, hook="microimprocessing.views.make_thumbnail")
+
+    tid = async_task('microimprocessing.tasks.run_processing', serverfile
+                     # hook="microimprocessing.views.make_thumbnail"
+               # hook='tasks.email_report'
+               )
 
     # logger.debug("before results")
     # res = result(tid, 500)

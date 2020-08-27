@@ -2,6 +2,7 @@ from loguru import logger
 from pathlib import Path
 import numpy as np
 from .models import ServerDataFileName, LobuleCoordinates, ExampleData
+from .models import get_output_dir
 import os.path as op
 from scaffanweb import settings
 
@@ -47,3 +48,36 @@ def make_thumbnail(serverfile:ServerDataFileName):
 
     serverfile.save()
 
+def run_processing(serverfile:ServerDataFileName):
+    import scaffan
+    import scaffan.algorithm
+    import scaffan.image
+    coords = LobuleCoordinates.objects.filter(server_datafile=serverfile)
+
+    centers_mm = [[coord.x_mm, coord.y_mm] for coord in coords]
+
+    logger.debug(coords)
+    serverfile.outputdir = get_output_dir()
+    serverfile.process_started = True
+    serverfile.save()
+
+    cli_params = [
+        settings.CONDA_EXECUTABLE, "run", "-n", "scaffanweb", "python", "-m", "scaffan", "-lf",
+        str(Path(serverfile.outputdir) / 'scaffan.log'), "nogui",
+        "-i", str(serverfile.imagefile.path),
+        "-o", str(serverfile.outputdir),
+    ]
+    for coord in coords:
+        cli_params.append("--seeds_mm")
+        cli_params.append(str(coord.x_mm))
+        cli_params.append(str(coord.y_mm))
+
+    logger.debug(f"adding task to queue CLI params: {' '.join(cli_params)}")
+
+
+    logger.debug("Scaffan processing init")
+    mainapp = scaffan.algorithm.Scaffan()
+    mainapp.set_input_file(serverfile.imagefile.path)
+    mainapp.set_output_dir(serverfile.outputdir)
+    logger.debug("Scaffan processing run")
+    mainapp.run_lobuluses(seeds_mm=centers_mm)
