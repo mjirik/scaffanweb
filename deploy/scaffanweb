@@ -12,11 +12,11 @@ server {
     error_log /webapps/scaffanweb_django/logs/nginx-error.log;
 
     location /static/ {
-        alias   /webapps/scaffanweb_django/static/;
+        alias   /webapps/scaffanweb_django/scaffanweb/static/;
     }
 
     location /media/ {
-        alias   /webapps/scaffanweb_django/media/;
+        alias   /webapps/scaffanweb_django/scaffanweb/media/;
     }
 
     location / {
