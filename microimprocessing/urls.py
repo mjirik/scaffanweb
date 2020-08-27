@@ -11,6 +11,7 @@ urlpatterns = [
     # ex: /polls/5/
     path('<int:filename_id>/', views.detail, name='detail'),
     path('upload/', views.model_form_upload, name='model_form_upload'),
+    path('create_report/', views.create_report, name='create_report'),
     path('<int:pk>/run_processing/', views.run_processing, name='run_processing'),
     path('logout/', views.logout_view, name='logout_view'),
     path('add_example_data/', views.add_example_data, name='add_example_data'),

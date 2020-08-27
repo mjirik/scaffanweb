@@ -251,3 +251,12 @@ def logout_view(request):
     logout(request)
     # Redirect to a success page.
     return redirect('/')
+
+
+def create_report(request):
+    from django_q.tasks import async_task
+    async_task('tasks.create_html_report',
+            request.user,
+            # hook='tasks.email_report'
+               )
+    return redirect('/microimprocessing/')
