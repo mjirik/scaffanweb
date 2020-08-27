@@ -1,5 +1,49 @@
+from loguru import logger
+from pathlib import Path
+import numpy as np
+from .models import ServerDataFileName, LobuleCoordinates, ExampleData
+import os.path as op
+from scaffanweb import settings
 
 # report generator
 def create_html_report(user):
     html_report = 'We had a great quarter!'
+    logger.debug(html_report)
     return html_report
+
+
+def make_thumbnail(serverfile:ServerDataFileName):
+    import scaffan
+    import scaffan.algorithm
+    import scaffan.image
+    logger.debug(f"serverfile={serverfile}")
+
+    nm = str(Path(serverfile.imagefile.path).name)
+    anim = scaffan.image.AnnotatedImage(serverfile.imagefile.path)
+
+
+    full_view = anim.get_view(
+        location=[0, 0], level=0, size_on_level=anim.get_slide_size()[::-1]
+    )
+    # pxsz_mm = float(self.get_parameter("Processing;Preview Pixelsize")) * 1000
+    pxsz_mm = 0.02
+    view_corner = full_view.to_pixelsize(pixelsize_mm=[pxsz_mm, pxsz_mm])
+    img = view_corner.get_region_image(as_gray=False)
+    pth = str(Path(settings.MEDIA_ROOT) / (nm + ".preview.jpg"))
+    # pth = serverfile.outputdir + nm + ".preview.jpg"
+
+    # pth = serverfile.imagefile.path + ".thumbnail.jpg"
+    logger.debug("thumbnail path")
+    logger.debug(pth)
+    pth_rel = op.relpath(pth, settings.MEDIA_ROOT)
+    logger.debug(pth_rel)
+    serverfile.preview = pth_rel
+    serverfile.preview_pixelsize_mm = pxsz_mm
+    import skimage.io
+    logger.debug(f"img max: {np.max(img)}, img.dtype={img.dtype}")
+    if img.dtype != np.uint8:
+        img = (img*255).astype(np.uint8)
+    skimage.io.imsave(pth, img[:,:,:3])
+
+    serverfile.save()
+

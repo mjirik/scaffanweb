@@ -217,12 +217,27 @@ SOCIALACCOUNT_PROVIDERS = {
 # }
 
 
+# Q_CLUSTER = {
+#     'name': 'foo',
+#     'workers': 1,
+#     'cpu_affinity': 1,
+#     'sync': True,
+#     'timeout': 60,
+#     'catch_up': True,
+#     'recycle': 20,
+#     'compress': False,
+#     'save_limit': 250,
+#     'queue_limit': 500,
+#     'label': 'Django Q',
+#     'orm': 'default',
+# }
 Q_CLUSTER = {
     'name': 'foo',
     'workers': 1,
     'cpu_affinity': 1,
+    # 'sync': True,
     'sync': True,
-    'timeout': 60,
+    'timeout': 3600,
     'catch_up': True,
     'recycle': 20,
     'compress': False,
