@@ -27,7 +27,15 @@ Fill tables in admin
 
 [SocialApps Tutorial](https://medium.com/faun/how-to-set-up-conda-virtual-environments-with-apache-mod-wsgi-flask-c2043711223e)
 
-# Deploy with nginx
+# Deploy
+
+Prepare static files
+
+```bash
+python manage.py collectstatic
+```
+
+## Nginx, gunicorn and supervisor
 
 [Ngiinx, gunicorn, django tutorial](http://michal.karzynski.pl/blog/2013/06/09/django-nginx-gunicorn-virtualenv-supervisor/)
 
@@ -74,6 +82,12 @@ sudo service nginx restart
 We used apache before but now we moved our infrastructure to `nginx` and `gunicorn`.
 
 sudo apt-get install libapache2-mod-wsgi-py3
+
+
+# Final touch
+
+Sample data - uplad new data and in admin you can select which data would 
+be used as sample data.
 
 
 
