@@ -9,7 +9,8 @@ git clone
 Install requirements
  
 ```bash
-conda create -n scaffanweb -c conda-forge -c mjirik -c bioconda scaffan openslide-python django django-allauth google-auth pip redis-y
+sudo apt-get install redis
+conda create -n scaffanweb -c conda-forge -c mjirik -c bioconda scaffan openslide-python django django-allauth google-auth pip redis-py
 pip install django-q
 ```
  
