@@ -134,6 +134,8 @@ def run_processing(request, pk):
     # to capture the output we'll need a pipe
     # from subprocess import PIPE
     # tid = async_task("subprocess.run", cli_params, hook="microimprocessing.views.make_thumbnail")
+    serverfile.process_started = True
+    serverfile.save()
 
     tid = async_task('microimprocessing.tasks.run_processing', serverfile
                      # hook="microimprocessing.views.make_thumbnail"

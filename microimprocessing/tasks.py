@@ -58,7 +58,7 @@ def run_processing(serverfile:ServerDataFileName):
 
     logger.debug(coords)
     serverfile.outputdir = get_output_dir()
-    serverfile.process_started = True
+    # serverfile.process_started = True
     serverfile.save()
 
     cli_params = [
@@ -80,4 +80,11 @@ def run_processing(serverfile:ServerDataFileName):
     mainapp.set_input_file(serverfile.imagefile.path)
     mainapp.set_output_dir(serverfile.outputdir)
     logger.debug("Scaffan processing run")
+    if len(centers_mm) > 0:
+        mainapp.set_parameter("Input;Lobulus Selection Method", "Manual")
+    else:
+        mainapp.set_parameter("Input;Lobulus Selection Method", "Auto")
     mainapp.run_lobuluses(seeds_mm=centers_mm)
+
+    serverfile.process_started = False
+    serverfile.save()
