@@ -9,7 +9,7 @@
         </div>
         {% if latest_filenames %}
             <div class="container">
-                <div class="card-deck">
+                <div class="card-columns">
                 {% for server_filename, n_pts, output_exists in latest_filenames %}
                     {% if server_filename.imagefile %}
                         <div class="card" style="width:400px">
