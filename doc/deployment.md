@@ -83,10 +83,20 @@ sudo ln -s /etc/nginx/sites-available/scaffanweb /etc/nginx/sites-enabled/scaffa
 sudo service nginx restart
 ```
 
+## Q-cluster
+
+```bash
+python manage.py qcluster
+```
+To monitor Q-cluster and check all statistics 
+
+```bash
+python manage.py qmonitor
+python manage.py qinfo
+```
 
 
-
-# Final touch
+## Final touch
 
 Sample data - uplad new data and in admin you can select which data would 
 be used as sample data.

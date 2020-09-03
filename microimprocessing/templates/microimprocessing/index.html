@@ -7,59 +7,47 @@
             <a class="btn btn-secondary" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
             <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Refresh</a>
         </div>
-<!--        <ul>-->
-<!--            <li>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        <br>-->
         {% if latest_filenames %}
-        <div class="containger">
-        <table class="table table-hover">
-
+<!--            <div class="container">-->
+            <div class="card-deck">
             {% for server_filename, n_pts, output_exists in latest_filenames %}
-            <tr>
                 {% if server_filename.imagefile %}
-                    <td>
-<!--                        {{ server_filename.imagefile}}-->
-                        {{ server_filename}}
-                    </td>
-                    <td>
+                    <div class="card" style="width:400px">
                         {% if server_filename.preview %}
-                            <div class="container2">
-<!--                                <img id="multicellimg" class="multicella" src='{{server_filename.preview.url}}' width="50">-->
-                                <img id="multicellimg" class="rounded" src='{{server_filename.preview.url}}' width="100">
-                            </div>
+<!--                            <img id="multicellimg" class="rounded" src='{{server_filename.preview.url}}' width="100">-->
+                            <img id="multicellimg" class="card-img-top" src='{{server_filename.preview.url}}'>
                         {% endif %}
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" href="{% url 'microimprocessing:detail' server_filename.id %}"> Set lobules manually <br> ({{ n_pts }} points) </a>
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}">Run processing</a>
-                    </td>
-                    <td>
-                        {% if output_exists %}
-                            <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}">Download</a>
-                        {% else %}
-                            {% if server_filename.process_started%}
-                                running
-                            {% else %}
-                            {% endif %}
-                        {% endif %}
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                {{ server_filename }}
+                            </h4>
+                            <p class="card-text">
+                            </p>
+                                <a href="#" class="btn btn-primary">See <br> profile</a>
+                                <a class="btn btn-primary" href="{% url 'microimprocessing:detail' server_filename.id %}"> Set lobules manually <br> ({{ n_pts }} points) </a>
+                                <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}">Run <br>processing</a>
+                                {% if output_exists %}
+                                    <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}">Download</a>
+                                {% else %}
+                                    {% if server_filename.process_started %}
+                                        running
+                                    {% else %}
+                                    {% endif %}
+                                {% endif %}
 
-                    </td>
+                        </div>
+                    </div>
+
                 {% else %}
-                <td>No file</td>
+                    <div class="card" style="width:400px">
+                        No file
+                    </div>
                 {% endif %}
-                <td>
-                    <a class="btn btn-warning" href="{% url 'microimprocessing:delete_file' server_filename.id %}">Delete</a>
-                </td>
-            </tr>
+
             {% endfor %}
-        </table>
-        </div>
+            </div>
         {% else %}
-        <p>No data available.</p>
+            <p>No data available.</p>
         {% endif %}
     {% endif %}
 {% endblock %}
