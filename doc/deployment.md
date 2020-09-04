@@ -60,6 +60,7 @@ Prepare config files:
 
 cp deploy/gunicorn_start /webapps/scaffanweb_django/bin/
 cp deploy/scaffanweb.conf /etc/supervisor/conf.d/
+cp deploy/scaffanweb_qcluster.conf /etc/supervisor/conf.d/
 cp deploy/scaffanweb /etc/nginx/sites-enabled/scaffanweb
 ```
 
@@ -74,6 +75,7 @@ Try:
 
 ```bash
 sudo supervisorctl start scaffanweb
+sudo supervisorctl start scaffanweb_qcluster
 ```
 
 Create Nginx virtual servers:
@@ -83,7 +85,7 @@ sudo ln -s /etc/nginx/sites-available/scaffanweb /etc/nginx/sites-enabled/scaffa
 sudo service nginx restart
 ```
 
-## Q-cluster
+## Q-cluster management
 
 ```bash
 python manage.py qcluster
@@ -98,7 +100,7 @@ python manage.py qinfo
 
 ## Final touch
 
-Sample data - uplad new data and in admin you can select which data would 
+Sample data - upload new data and in admin you can select which data would 
 be used as sample data.
 
 
@@ -114,7 +116,14 @@ sudo apt-get install libapache2-mod-wsgi-py3
 
 # Troubleshooting
 
-# SocialApp matching query does not exist.
+## Restart everything
+
+```bash
+sudo supervisorctl restart all
+sudo service nginx restart
+```
+
+## SocialApp matching query does not exist.
 
 [set APP_ID=2](https://stackoverflow.com/questions/15409366/django-socialapp-matching-query-does-not-exist)
 
@@ -129,4 +138,5 @@ from django.contrib.sites.models import Site
 sorted([(site.id,site.name) for site in Site.objects.all()])
 
 ```
+
 
