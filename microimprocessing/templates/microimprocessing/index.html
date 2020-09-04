@@ -14,13 +14,17 @@
         {% if latest_filenames %}
             <div class="container">
                 <div class="card-columns">
-
-
                     <div class="card bg-light">
-<!--                        <img src="..." class="card-img-top" alt="...">-->
+                        <div class="card-body text-center">
+<!--                            <p>-->
+                                Moulisová V, Jiřík M, Schindler C, et al. <em>Novel morphological multi-scale evaluation system for quality assessment of decellularized liver scaffolds.</em> Journal of Tissue Engineering. January 2020.
+                                <a href="https://doi.org/10.1177/2041731420921121" class="stretched-link">doi:10.1177/2041731420921121</a>
+<!--                            </p>-->
+                        </div>
+                    </div>
+                    <div class="card bg-light">
                         <div class="card-body text-center">
                             <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
-<!--                            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>-->
                             <br>or<br>
                             <a class="btn btn-link" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
                         </div>
