@@ -85,7 +85,7 @@ class LobuleCoordinates(models.Model):
     #     """
     #     print("models get_absolute_url()")
     #     print(self.id)
-    #     return reverse('imviewer:image-detail', args=[str(self.id)])
+    #     return reverse('imviewer:image-set_lobules_seeds', args=[str(self.id)])
 
 
 class ExampleData(models.Model):

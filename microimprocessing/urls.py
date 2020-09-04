@@ -9,7 +9,7 @@ urlpatterns = [
     path('', views.index, name='index'),
 
     # ex: /polls/5/
-    path('<int:filename_id>/', views.detail, name='detail'),
+    path('<int:filename_id>/', views.set_lobules_seeds, name='set_lobules_seeds'),
     path('upload/', views.model_form_upload, name='model_form_upload'),
     path('create_report/', views.create_report, name='create_report'),
     path('<int:pk>/run_processing/', views.run_processing, name='run_processing'),

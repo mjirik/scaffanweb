@@ -63,7 +63,7 @@ def delete_file(request, filename_id):
     return redirect('/microimprocessing/')
 
 
-def detail(request, filename_id):
+def set_lobules_seeds(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     if not serverfile.preview:
         make_thumbnail(serverfile)
@@ -72,23 +72,24 @@ def detail(request, filename_id):
         print("post recived")
         print(request.POST)
         postDict = dict(request.POST)
-        xstrs = postDict["x"]
-        ystrs = postDict["y"]
-        xystrs = list(zip(xstrs, ystrs))
-        print(f"xstrs={xstrs}")
-        print(f"ystrs={ystrs}")
-        logger.debug(xystrs)
-        for xystr in xystrs:
-            logger.debug(f"Addeding new point" )
-            x_mm = float(xystr[0]) * serverfile.preview_pixelsize_mm
-            y_mm = float(xystr[1]) * serverfile.preview_pixelsize_mm
-            coords = LobuleCoordinates(x_mm=x_mm, y_mm=y_mm, server_datafile=serverfile)
-            coords.save()
-            logger.debug(f"Added new point={x_mm},{y_mm}")
-        # return render(request, 'microimprocessing/detail.html', {'serverfile': serverfile})
+        if "x" in postDict:
+            xstrs = postDict["x"]
+            ystrs = postDict["y"]
+            xystrs = list(zip(xstrs, ystrs))
+            logger.debug(f"xstrs={xstrs}")
+            logger.debug(f"ystrs={ystrs}")
+            logger.debug(f"xystrs={xystrs}")
+            for xystr in xystrs:
+                logger.debug(f"Addeding new point" )
+                x_mm = float(xystr[0]) * serverfile.preview_pixelsize_mm
+                y_mm = float(xystr[1]) * serverfile.preview_pixelsize_mm
+                coords = LobuleCoordinates(x_mm=x_mm, y_mm=y_mm, server_datafile=serverfile)
+                coords.save()
+                logger.debug(f"Added new point={x_mm},{y_mm}")
+        # return render(request, 'microimprocessing/set_lobules_seeds.html', {'serverfile': serverfile})
         return redirect('/microimprocessing/')
     else:
-        return render(request, 'microimprocessing/detail.html', {'serverfile': serverfile})
+        return render(request, 'microimprocessing/set_lobules_seeds.html', {'serverfile': serverfile})
     # return HttpResponse("You're looking at question %s." % question_id)
 
 
