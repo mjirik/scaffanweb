@@ -77,7 +77,12 @@ def detail(request, filename_id):
         df = dfall[keys]
         df_html = df.to_html(classes="table table-hover", border=0)
 
-    return render(request, 'microimprocessing/detail.html', {'serverfile': serverfile, 'df_html':df_html})
+        # import glob
+        # image_list = glob.glob(str(Path(serverfile.outputdir) / "lobulus_*.png"))
+        image_list=[]
+
+    return render(request, 'microimprocessing/detail.html',
+                  {'serverfile': serverfile, 'df_html':df_html, "image_list":image_list})
 
 
 def set_lobules_seeds(request, filename_id):

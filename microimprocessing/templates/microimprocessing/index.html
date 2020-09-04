@@ -5,7 +5,9 @@
 {% endblock %}
 {% block body %}
     {% if user.is_authenticated %}
-        <h2>Image List</h2>
+        <div class="container">
+            <h2>Image List</h2>
+        </div>
 <!--        <div class="container">-->
 <!--            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>-->
 <!--            <a class="btn btn-secondary" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>-->
@@ -58,6 +60,12 @@
                                     <i class="fas fa-play"></i>
                                 </a>
                                 {% if output_exists %}
+                                    <a class="btn btn-primary" href="{% url 'microimprocessing:detail' server_filename.id %}"
+                                       data-toggle="tooltip" data-placement="top"
+                                       title="View detail"
+                                    >
+                                        <i class="fas fa-table"></i>
+                                    </a>
                                     <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}"
                                        data-toggle="tooltip" data-placement="top"
                                        title="Download the results"
