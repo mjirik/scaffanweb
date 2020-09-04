@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block body %}
+{% if user.is_authenticated %}
+    <div class="container">
+        <h2>{{ serverfile }}</h2>
+    </div>
+    <div class="container">
+        <p>
+            {% autoescape off %}
+            {{ df_html }}
+            {% endautoescape %}
+        </p>
+        <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Back</a>
+    </div>
+{% endif %}
+{% endblock %}
+

@@ -62,6 +62,23 @@ def delete_file(request, filename_id):
     serverfile.delete()
     return redirect('/microimprocessing/')
 
+def detail(request, filename_id):
+    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+
+    filename = Path(serverfile.outputdir) / "data.xlsx"
+    if filename.exists():
+        import pandas as pd
+        dfall = pd.read_excel(str(filename), sheet_name="Sheet1", index_col=0)
+        key_candidate = ["SNI area prediction", "Skeleton length", "Branch number", "Dead ends number",
+                         "Area", "Area unit", "Lobulus Perimeter",
+                         "Annotation Center X [mm]", "Annotation Center Y [mm]",
+                         ]
+        keys = [key for key in key_candidate if key in dfall.keys()]
+        df = dfall[keys]
+        df_html = df.to_html(classes="table table-hover", border=0)
+
+    return render(request, 'microimprocessing/detail.html', {'serverfile': serverfile, 'df_html':df_html})
+
 
 def set_lobules_seeds(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
