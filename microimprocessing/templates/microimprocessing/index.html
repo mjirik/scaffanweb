@@ -1,19 +1,30 @@
 {% extends 'base.html' %}
 {% block head %}
-<!--refresh every 300 s-->
-<meta http-equiv="refresh" content="300">
+<!--refresh every 120 s-->
+<meta http-equiv="refresh" content="120">
 {% endblock %}
 {% block body %}
     {% if user.is_authenticated %}
         <h2>Image List</h2>
-        <div class="container">
-            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
-            <a class="btn btn-secondary" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
-            <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Refresh</a>
-        </div>
+<!--        <div class="container">-->
+<!--            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>-->
+<!--            <a class="btn btn-secondary" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>-->
+<!--            <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Refresh</a>-->
+<!--        </div>-->
         {% if latest_filenames %}
             <div class="container">
                 <div class="card-columns">
+
+
+                    <div class="card bg-light">
+<!--                        <img src="..." class="card-img-top" alt="...">-->
+                        <div class="card-body text-center">
+                            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
+<!--                            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>-->
+                            <br>or<br>
+                            <a class="btn btn-link" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
+                        </div>
+                    </div>
                 {% for server_filename, n_pts, output_exists in latest_filenames %}
                     {% if server_filename.imagefile %}
                         <div class="card">
@@ -28,45 +39,50 @@
                                 </h4>
                                 <p class="card-text">
                                 </p>
-                                    <a class="btn btn-primary"
-                                       href="{% url 'microimprocessing:detail' server_filename.id %}"
+                                <a class="btn btn-primary"
+                                   href="{% url 'microimprocessing:detail' server_filename.id %}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="Set lobules manually ({{ n_pts }} points)"
+                                >
+                                    <i class="fas fa-mouse-pointer"></i>
+                                </a>
+<!--                                <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}"-->
+                                <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="Run processing"
+                                >
+                                    <i class="fas fa-play"></i>
+                                </a>
+                                {% if output_exists %}
+                                    <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}"
                                        data-toggle="tooltip" data-placement="top"
-                                       title="Set lobules manually ({{ n_pts }} points)"
+                                       title="Download the results"
                                     >
-                                        <i class="fas fa-mouse-pointer"></i>
+                                        <i class="fas fa-download"></i>
                                     </a>
-                                    <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}"
-                                       data-toggle="tooltip" data-placement="top"
-                                       title="Run processing"
-                                    >
-                                        <i class="fas fa-play"></i>
-                                    </a>
-                                    {% if output_exists %}
-                                        <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}"
-                                           data-toggle="tooltip" data-placement="top"
-                                           title="Download the results"
-                                        >
-                                            <i class="fas fa-download"></i>
-                                        </a>
-                                    {% else %}
-                                    {% endif %}
-                                    <a class="btn btn-warning" href="{% url 'microimprocessing:delete_file' server_filename.id %}"
-                                       data-toggle="tooltip" data-placement="top"
-                                       title="Delete"
-                                    >
-                                        <i class="fas fa-spinner fa-trash"></i>
-                                    </a>
-                                    {% if server_filename.process_started %}
-                                        <i class="fas fa-spinner fa-pulse"></i>
-                                    {% else %}
-                                    {% endif %}
+                                {% else %}
+                                {% endif %}
+                                <a class="btn btn-secondary" href="{% url 'microimprocessing:delete_file' server_filename.id %}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="Delete"
+                                >
+                                    <i class="fas fa-spinner fa-trash"></i>
+                                </a>
+                                {% if server_filename.process_started %}
+                                    <i class="fas fa-spinner fa-pulse"></i>
+                                {% else %}
+                                {% endif %}
 
                             </div>
                         </div>
 
                     {% else %}
-                        <div class="card" style="width:400px">
-                            No file
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    No file
+                                </h4>
+                            </div>
                         </div>
                     {% endif %}
 
