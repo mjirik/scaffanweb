@@ -29,13 +29,13 @@
 
     {% block head %}
     {% endblock %}
+    <script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    </script>
 </head>
 
-<script>
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip();
-});
-</script>
 <body>
 <!-- A grey horizontal navbar that becomes vertical on small screens -->
 <!--    <div class="jumbotron p-1">-->
