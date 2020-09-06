@@ -165,6 +165,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, "static"),
 # )
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, 'upload')
 
 
 AUTHENTICATION_BACKENDS = (

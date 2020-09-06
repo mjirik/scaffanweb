@@ -4,6 +4,8 @@ from datetime import datetime
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from loguru import logger
+import os.path as op
 from . import scaffanweb_tools
 
 User = get_user_model()
@@ -15,17 +17,40 @@ pth = Path("~/data/medical/orig/Scaffan-analysis").expanduser()
 
 def get_output_dir():
     #
-    import datetime
-    import os.path as op
+    # import datetime
     OUTPUT_DIRECTORY_PATH = settings.MEDIA_ROOT
     # datetimestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f")
-    datetimestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    datetimestr = datetime.now().strftime("%Y%m%d-%H%M%S")
     filename = op.join(
         op.expanduser(OUTPUT_DIRECTORY_PATH),
-        "SA_" + datetimestr + "_" + scaffanweb_tools.randomString(8),
+        "SA_" + datetimestr + "_" + scaffanweb_tools.randomString(12),
         "SA_" + datetimestr
     )
     return filename
+
+def upload_to_unqiue_folder(instance, filename):
+    """
+    Uploads a file to an unique generated Path to keep the original filename
+    """
+    logger.debug("upload_to_unique_folder")
+    logger.debug(instance)
+    logger.debug(filename)
+    logger.debug(instance.uploaded_at)
+    hash = scaffanweb_tools.generate_sha1(instance.uploaded_at, "_")
+
+    instance_filename = Path(instance.imagefile.path).stem
+
+    datetimestr = datetime.now().strftime("%Y%m%d-%H%M%S")
+
+    return op.join(
+        settings.UPLOAD_PATH,
+        datetimestr + "_" + instance_filename + "_" + hash,
+        filename
+    )
+    # return 's%()%(path)s%(hash_path)s%(filename)s' % {'path': settings.UPLOAD_PATH,
+    #                                            'hash_path': scaffanweb_tools.randomString(12),
+    #                                            'filename': filename}
+
 
 class ServerDatasetPath(models.Model):
     comment = models.CharField(max_length=200)
@@ -47,13 +72,15 @@ class ServerDataFileName(models.Model):
     # users = models.ManyToManyField(Publication)
     processed_in_version = models.CharField(max_length=200)
     # imagefile_path = models.FilePathField("File Path",path=str(pth), allow_files=True, allow_folders=False, recursive=True, blank=True)
-    imagefile = models.FileField("Uploaded File", upload_to="documents/", blank=True, null=True)
-    annotationfile = models.FileField("Annotation File", upload_to="documents/", blank=True, null=True)
+    hash = scaffanweb_tools.randomString(12)
+    imagefile = models.FileField("Uploaded File", upload_to=upload_to_unqiue_folder, blank=True, null=True, max_length=500)
+    annotationfile = models.FileField("Annotation File", upload_to=upload_to_unqiue_folder, blank=True, null=True, max_length=500)
     # thumbnail = models.CharField("Thumbnail File", max_length=255, blank=True)
     preview = models.ImageField(upload_to="cellimage/", blank=True)
     zip_file = models.ImageField(upload_to="cellimage/", blank=True)
     preview_pixelsize_mm = models.FloatField("Preview Pixelsize [mm]", blank=True, null=True)
     description = models.CharField(max_length=255, blank=True)
+    # orig_filename = models.CharField(max_length=255, blank=True)
     # multicell_dapi = models.FileField(upload_to='documents/')
     # multicell_fitc = models.FileField(upload_to='documents/')
     # singlecell_dapi = models.FileField(upload_to='documents/')
