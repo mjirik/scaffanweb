@@ -72,6 +72,8 @@ def detail(request, filename_id):
         key_candidate = ["SNI area prediction", "Skeleton length", "Branch number", "Dead ends number",
                          "Area", "Area unit", "Lobulus Perimeter",
                          "Annotation Center X [mm]", "Annotation Center Y [mm]",
+                         "Scan Segmentation Empty Area [mm^2]", "Scan Segmentation Septum Area [mm^2]",
+                         "Scan Segmentation Sinusoidal Area [mm^2]",
                          ]
         keys = [key for key in key_candidate if key in dfall.keys()]
         df = dfall[keys]
