@@ -57,7 +57,7 @@ def run_processing(serverfile:ServerDataFileName):
     centers_mm = [[coord.x_mm, coord.y_mm] for coord in coords]
 
     logger.debug(coords)
-    serverfile.outputdir = get_output_dir()
+    # serverfile.outputdir = get_output_dir()
     # serverfile.process_started = True
     serverfile.save()
 

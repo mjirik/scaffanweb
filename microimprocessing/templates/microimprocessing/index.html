@@ -66,13 +66,14 @@
                                     >
                                         <i class="fas fa-table"></i>
                                     </a>
+                                {% endif %}
+                                {% if serverfilename.zip_file %}
                                     <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}"
                                        data-toggle="tooltip" data-placement="top"
                                        title="Download the results"
                                     >
                                         <i class="fas fa-download"></i>
                                     </a>
-                                {% else %}
                                 {% endif %}
                                 <a class="btn btn-secondary" href="{% url 'microimprocessing:delete_file' server_filename.id %}"
                                    data-toggle="tooltip" data-placement="top"

@@ -31,7 +31,7 @@ def index(request):
         for serverfile in latest_filenames
     ]
     output_exists = [
-        Path(serverfile.outputdir).exists()
+        Path(serverfile.outputdir / "data.xlsx").exists()
         for serverfile in latest_filenames
     ]
 
@@ -160,6 +160,7 @@ def run_processing(request, pk):
     # from subprocess import PIPE
     # tid = async_task("subprocess.run", cli_params, hook="microimprocessing.views.make_thumbnail")
     serverfile.process_started = True
+    serverfile.outputdir = get_output_dir()
     serverfile.save()
 
     tid = async_task('microimprocessing.tasks.run_processing', serverfile
