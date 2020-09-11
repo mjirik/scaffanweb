@@ -61,7 +61,8 @@ Prepare config files:
 cp deploy/gunicorn_start /webapps/scaffanweb_django/bin/
 cp deploy/scaffanweb.conf /etc/supervisor/conf.d/
 cp deploy/scaffanweb_qcluster.conf /etc/supervisor/conf.d/
-cp deploy/scaffanweb /etc/nginx/sites-enabled/scaffanweb
+cp deploy/scaffanweb /etc/nginx/sites-available/scaffanweb
+sudo ln -s /etc/nginx/sites-available/scaffanweb /etc/nginx/sites-enabled/scaffanweb
 ```
 
 Update `supervisor`:

@@ -281,6 +281,7 @@ if os.name == "nt":
     }
 else:
     Q_CLUSTER = {
+        'workers': 2,
         'redis': {
             'host': 'localhost',
             'port': 6379,
