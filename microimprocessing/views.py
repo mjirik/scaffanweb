@@ -42,13 +42,17 @@ def index(request):
                 make_zip(serverfile)
                 serverfile.process_started = False
                 serverfile.save()
+    zip_exists = [
+        Path(get_zip_fn(serverfile)).exists()
+        for serverfile in latest_filenames
+    ]
 
     # latest_filenames_short = [
     #     Path(fn.imagefile.path).name for fn in latest_filenames
     #     ]
     # template = loader.get_template('microimprocessing/index.html')
     context = {
-        'latest_filenames': zip(latest_filenames, number_of_points, output_exists),
+        'latest_filenames': zip(latest_filenames, number_of_points, output_exists, zip_exists),
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
@@ -196,8 +200,6 @@ def make_zip(serverfile:ServerDataFileName):
     serverfile.processed = True
     pth_rel = op.relpath(pth_zip, settings.MEDIA_ROOT)
     serverfile.zip_file = pth_rel
-
-
     serverfile.save()
 
 

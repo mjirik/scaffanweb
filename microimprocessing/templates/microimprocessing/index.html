@@ -31,7 +31,7 @@
                             <a class="btn btn-link" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
                         </div>
                     </div>
-                {% for server_filename, n_pts, output_exists in latest_filenames %}
+                {% for server_filename, n_pts, output_exists, zip_exists in latest_filenames %}
                     {% if server_filename.imagefile %}
                         <div class="card">
 <!--                            <div class="card" style="width:400px">-->
@@ -67,7 +67,7 @@
                                         <i class="fas fa-table"></i>
                                     </a>
                                 {% endif %}
-                                {% if serverfilename.zip_file %}
+                                {% if zip_exists %}
                                     <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}"
                                        data-toggle="tooltip" data-placement="top"
                                        title="Download the results"
