@@ -31,7 +31,7 @@ def index(request):
         for serverfile in latest_filenames
     ]
     output_exists = [
-        Path(serverfile.outputdir / "data.xlsx").exists()
+        (Path(serverfile.outputdir) / "data.xlsx").exists()
         for serverfile in latest_filenames
     ]
 
