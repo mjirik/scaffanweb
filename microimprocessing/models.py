@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from loguru import logger
 import os.path as op
 from . import scaffanweb_tools
+from django.contrib.auth.models import User
 
 User = get_user_model()
 # Create your models here.
@@ -27,6 +28,9 @@ def get_output_dir():
         "SA_" + datetimestr
     )
     return filename
+
+def get_default_user_hash():
+    return scaffanweb_tools.randomString(12)
 
 def upload_to_unqiue_folder(instance, filename):
     """
@@ -117,3 +121,21 @@ class LobuleCoordinates(models.Model):
 
 class ExampleData(models.Model):
     server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)
+
+class Tag(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True
+    )
+    name = models.CharField(max_length=50)
+    files = models.ManyToManyField(ServerDataFileName)
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # bio = models.TextField(max_length=500, blank=True)
+    # location = models.CharField(max_length=30, blank=True)
+    # birth_date = models.DateField(null=True, blank=True)
+    hash = models.CharField(max_length=50, default=get_default_user_hash)
+    automatic_import = models.BooleanField(default=False)
