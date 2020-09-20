@@ -44,13 +44,16 @@
 <nav class="navbar navbar-expand-sm bg-light">
 <!--        <div class="float-left">-->
 <!--    <a href="{% url 'microimprocessing:index' %}" >-->
-    <a href="{% url 'microimprocessing:index' %}" >
+    <a href="{% url 'login' %}" >
         <img id="scaffanlogo" class="m-0" src="{% static 'microimprocessing/scaffan_icon512.png' %}" alt="ScaffAn">
     </a>
     <ul class="navbar-nav ml-auto">
+
+        {% if user.is_authenticated %}
         <li class="nav-item">
             <a class="btn btn-secondary" href="{% url 'microimprocessing:logout_view' %}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i></a>
         </li>
+        {% endif %}
     </ul>
 <!--        </div>-->
 
