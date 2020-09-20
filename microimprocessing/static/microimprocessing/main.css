@@ -23,7 +23,7 @@ div.container-fluid {
 */
 
 #scaffanlogo {
-    width:128px;
+    width:100px;
 }
 
 #appbody {
@@ -32,19 +32,32 @@ div.container-fluid {
 #backgroundbody {
     z-index: 5;
 }
+div.container-xl {
+    max-width:1400px;
+}
+
+/* to make spaces in card-deck same as they are in card-columns */
+.card-deck .card {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.card-deck {
+    margin-right: -10px;
+    margin-left: -10px;
+}
 
 #backgroundbody::before {
     z-index: -1;
     background: url("/static/microimprocessing/logo_fav.png"), url("/static/microimprocessing/logo_lfp.png");
-    background-position: right bottom, left bottom;
+    background-position: right bottom, right bottom;
     background-repeat: no-repeat, no-repeat;
     opacity: 0.5;
 }
 
 
 #myDiv {
-
-  z-index: 5;
+    margin-top:30px;
+    z-index: 5;
   /*
   position: relative;
   height: 250px;
@@ -55,7 +68,7 @@ div.container-fluid {
   */
 }
 
-#myDiv::before {
+#myDiv::before{
     content: "";
     position: absolute;
     z-index: -1;
@@ -66,6 +79,7 @@ div.container-fluid {
     background: url("/static/microimprocessing/logo_fav.png"), url("/static/microimprocessing/logo_lfp.png");
     background-position: right bottom, left bottom;
     background-repeat: no-repeat, no-repeat;
+    background-size: 100px 100px, 100px 100px;
     opacity: .3;
 }
 

@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block head %}
 <!--refresh every 120 s-->
 <meta http-equiv="refresh" content="120">
 {% endblock %}
 {% block body %}
     {% if user.is_authenticated %}
-        <div class="container">
-            <h2>Image List</h2>
-        </div>
+<!--        <div class="container">-->
+<!--            <h2>Image List</h2>-->
+<!--        </div>-->
 <!--        <div class="container">-->
 <!--            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>-->
 <!--            <a class="btn btn-secondary" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>-->
@@ -15,92 +16,137 @@
 <!--        </div>-->
         {% if latest_filenames %}
             <div class="container">
-                <div class="card-columns">
-                    <div class="card bg-light">
-                        <div class="card-body text-center">
-<!--                            <p>-->
-                                Moulisová V, Jiřík M, Schindler C, et al. <em>Novel morphological multi-scale evaluation system for quality assessment of decellularized liver scaffolds.</em> Journal of Tissue Engineering. January 2020.
-                                <a href="https://doi.org/10.1177/2041731420921121" class="stretched-link">doi:10.1177/2041731420921121</a>
-<!--                            </p>-->
+<!--                <div class="row">-->
+<!--                    <div class="col-sm-3">-->
+
+    <!--                </div>-->
+    <!--                <div class="card-columns">-->
+                    <div class="card-deck">
+
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <div class="pt-4">
+
+    <!--                            <p>-->
+                                    Moulisová V, Jiřík M, Schindler C, et al. <em>Novel morphological multi-scale evaluation system for quality assessment of decellularized liver scaffolds.</em> Journal of Tissue Engineering. January 2020.
+                                    <a href="https://doi.org/10.1177/2041731420921121" class="stretched-link">doi:10.1177/2041731420921121</a>
+    <!--                            </p>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card bg-light">
+                            <img class="card-img-top" src="{% static 'microimprocessing/bc-wide.jpg' %}">
+                            <div class="card-body text-center">
+                                <h5>
+                                    Charles University
+                                </h5>
+                                Faculty of Medicine in Pilsen<br>
+                                Biomedical Center<br>
+                                <!--                            <p>-->
+                                <a href="https://www.liskalab.eu/" class="stretched-link">Liska Lab</a>
+                                <!--                            </p>-->
+                            </div>
+                        </div>
+                        <div class="card bg-light">
+                            <img class="card-img-top" src="{% static 'microimprocessing/ntis-wide.jpg' %}">
+                            <div class="card-body text-center">
+                                <h5>
+                                    University of West Bohemia
+                                </h5>
+                                Faculty of Applied Sciences<br>
+                                NTIS Research Centre<br>
+                                <!--                            <p>-->
+                                <a href="http://eyes.zcu.cz/" class="stretched-link">Pilsen Eyes Lab</a>
+                                <!--                            </p>-->
+                            </div>
                         </div>
                     </div>
-                    <div class="card bg-light">
-                        <div class="card-body text-center">
-                            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
-                            <br>or<br>
-                            <a class="btn btn-link" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
-                        </div>
-                    </div>
-                {% for server_filename, n_pts, output_exists, zip_exists in latest_filenames %}
-                    {% if server_filename.imagefile %}
-                        <div class="card">
-<!--                            <div class="card" style="width:400px">-->
-                            {% if server_filename.preview %}
-    <!--                            <img id="multicellimg" class="rounded" src='{{server_filename.preview.url}}' width="100">-->
-                                <img id="multicellimg" class="card-img-top" src='{{server_filename.preview.url}}'>
+                <h2 class="pt-3">
+                    Image List
+                </h2>
+<!--            </div>-->
+<!--            <div class="container">-->
+<!--                    <div class="col-sm-9">-->
+                        <div class="card-columns pt-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
+                                    <br>or<br>
+                                    <a class="btn btn-link" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
+                                </div>
+                            </div>
+                        {% for server_filename, n_pts, output_exists, zip_exists in latest_filenames %}
+                            {% if server_filename.imagefile %}
+                                <div class="card">
+        <!--                            <div class="card" style="width:400px">-->
+                                    {% if server_filename.preview %}
+            <!--                            <img id="multicellimg" class="rounded" src='{{server_filename.preview.url}}' width="100">-->
+                                        <img id="multicellimg" class="card-img-top" src='{{server_filename.preview.url}}'>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            {{ server_filename }}
+                                        </h5>
+                                        <p class="card-text">
+                                        </p>
+                                        <a class="btn btn-primary"
+                                           href="{% url 'microimprocessing:set_lobules_seeds' server_filename.id %}"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Set lobules manually ({{ n_pts }} points)"
+                                        >
+                                            <i class="fas fa-mouse-pointer"></i>
+                                        </a>
+        <!--                                <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}"-->
+                                        <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Run processing"
+                                        >
+                                            <i class="fas fa-play"></i>
+                                        </a>
+                                        {% if output_exists %}
+                                            <a class="btn btn-primary" href="{% url 'microimprocessing:detail' server_filename.id %}"
+                                               data-toggle="tooltip" data-placement="top"
+                                               title="View detail"
+                                            >
+                                                <i class="fas fa-table"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if zip_exists %}
+                                            <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}"
+                                               data-toggle="tooltip" data-placement="top"
+                                               title="Download the results"
+                                            >
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        {% endif %}
+                                        <a class="btn btn-secondary" href="{% url 'microimprocessing:delete_file' server_filename.id %}"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Delete"
+                                        >
+                                            <i class="fas fa-spinner fa-trash"></i>
+                                        </a>
+                                        {% if server_filename.process_started %}
+                                            <i class="fas fa-spinner fa-pulse"></i>
+                                        {% else %}
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+
+                            {% else %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            No file
+                                        </h4>
+                                    </div>
+                                </div>
                             {% endif %}
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    {{ server_filename }}
-                                </h4>
-                                <p class="card-text">
-                                </p>
-                                <a class="btn btn-primary"
-                                   href="{% url 'microimprocessing:set_lobules_seeds' server_filename.id %}"
-                                   data-toggle="tooltip" data-placement="top"
-                                   title="Set lobules manually ({{ n_pts }} points)"
-                                >
-                                    <i class="fas fa-mouse-pointer"></i>
-                                </a>
-<!--                                <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}"-->
-                                <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}"
-                                   data-toggle="tooltip" data-placement="top"
-                                   title="Run processing"
-                                >
-                                    <i class="fas fa-play"></i>
-                                </a>
-                                {% if output_exists %}
-                                    <a class="btn btn-primary" href="{% url 'microimprocessing:detail' server_filename.id %}"
-                                       data-toggle="tooltip" data-placement="top"
-                                       title="View detail"
-                                    >
-                                        <i class="fas fa-table"></i>
-                                    </a>
-                                {% endif %}
-                                {% if zip_exists %}
-                                    <a class="btn btn-primary" href="{{ server_filename.zip_file.url }}"
-                                       data-toggle="tooltip" data-placement="top"
-                                       title="Download the results"
-                                    >
-                                        <i class="fas fa-download"></i>
-                                    </a>
-                                {% endif %}
-                                <a class="btn btn-secondary" href="{% url 'microimprocessing:delete_file' server_filename.id %}"
-                                   data-toggle="tooltip" data-placement="top"
-                                   title="Delete"
-                                >
-                                    <i class="fas fa-spinner fa-trash"></i>
-                                </a>
-                                {% if server_filename.process_started %}
-                                    <i class="fas fa-spinner fa-pulse"></i>
-                                {% else %}
-                                {% endif %}
 
-                            </div>
+                        {% endfor %}
                         </div>
-
-                    {% else %}
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    No file
-                                </h4>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                {% endfor %}
-                </div>
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         {% else %}
             <p>No data available.</p>
