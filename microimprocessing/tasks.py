@@ -5,6 +5,7 @@ from .models import ServerDataFileName, LobuleCoordinates, ExampleData
 from .models import get_output_dir
 import os.path as op
 from scaffanweb import settings
+from microimprocessing import scaffanweb_tools, models
 
 # report generator
 def create_html_report(user):
@@ -61,24 +62,26 @@ def run_processing(serverfile:ServerDataFileName):
     # serverfile.process_started = True
     serverfile.save()
 
-    cli_params = [
-        settings.CONDA_EXECUTABLE, "run", "-n", "scaffanweb", "python", "-m", "scaffan", "-lf",
-        str(Path(serverfile.outputdir) / 'scaffan.log'), "nogui",
-        "-i", str(serverfile.imagefile.path),
-        "-o", str(serverfile.outputdir),
-    ]
-    for coord in coords:
-        cli_params.append("--seeds_mm")
-        cli_params.append(str(coord.x_mm))
-        cli_params.append(str(coord.y_mm))
-
-    logger.debug(f"adding task to queue CLI params: {' '.join(cli_params)}")
+    # cli_params = [
+    #     settings.CONDA_EXECUTABLE, "run", "-n", "scaffanweb", "python", "-m", "scaffan", "-lf",
+    #     str(Path(serverfile.outputdir) / 'scaffan.log'), "nogui",
+    #     "-i", str(serverfile.imagefile.path),
+    #     "-o", str(serverfile.outputdir),
+    # ]
+    # for coord in coords:
+    #     cli_params.append("--seeds_mm")
+    #     cli_params.append(str(coord.x_mm))
+    #     cli_params.append(str(coord.y_mm))
+    #
+    # logger.debug(f"adding task to queue CLI params: {' '.join(cli_params)}")
 
 
     logger.debug("Scaffan processing init")
     mainapp = scaffan.algorithm.Scaffan()
     mainapp.set_input_file(serverfile.imagefile.path)
     mainapp.set_output_dir(serverfile.outputdir)
+    mainapp.set_common_spreadsheet_file(models.get_comon_spreadsheet_file(serverfile.owner))
+    # settings.SECRET_KEY
     logger.debug("Scaffan processing run")
     if len(centers_mm) > 0:
         mainapp.set_parameter("Input;Lobulus Selection Method", "Manual")

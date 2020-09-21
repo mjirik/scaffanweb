@@ -66,10 +66,8 @@ def delete_file(request, filename_id):
     serverfile.delete()
     return redirect('/microimprocessing/')
 
-def detail(request, filename_id):
-    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+def _preapare_xlsx_for_rendering(filename:Path):
 
-    filename = Path(serverfile.outputdir) / "data.xlsx"
     if filename.exists():
         import pandas as pd
         dfall = pd.read_excel(str(filename), sheet_name="Sheet1", index_col=0)
@@ -83,10 +81,18 @@ def detail(request, filename_id):
         df = dfall[keys]
         df_html = df.to_html(classes="table table-hover", border=0)
 
+    return df_html
+
+def detail(request, filename_id):
+    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+
+    filename = Path(serverfile.outputdir) / "data.xlsx"
+
         # import glob
         # image_list = glob.glob(str(Path(serverfile.outputdir) / "lobulus_*.png"))
-        image_list=[]
 
+    df_html = _preapare_xlsx_for_rendering(filename)
+    image_list = []
     return render(request, 'microimprocessing/detail.html',
                   {'serverfile': serverfile, 'df_html':df_html, "image_list":image_list})
 
