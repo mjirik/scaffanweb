@@ -8,6 +8,7 @@
 <!--    <title>Google Registration</title>-->
 <!--  </head>-->
 <!--  <body>-->
+<div class="container">
     {% if user.is_authenticated %}
     <h1>ScaffAn</h1>
     <p>Welcome, {{ user.username }} !</p>
@@ -29,6 +30,7 @@
             </p>
         </div>
     </div>
+</div>
 <!--    <h2>Team</h2>-->
 
 {% endblock %}

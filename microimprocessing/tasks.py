@@ -80,7 +80,8 @@ def run_processing(serverfile:ServerDataFileName):
     mainapp = scaffan.algorithm.Scaffan()
     mainapp.set_input_file(serverfile.imagefile.path)
     mainapp.set_output_dir(serverfile.outputdir)
-    mainapp.set_common_spreadsheet_file(models.get_comon_spreadsheet_file(serverfile.owner))
+    fn,_,_ = models.get_common_spreadsheet_file(serverfile.owner)
+    mainapp.set_common_spreadsheet_file(str(fn).replace("\\", "/"))
     # settings.SECRET_KEY
     logger.debug("Scaffan processing run")
     if len(centers_mm) > 0:

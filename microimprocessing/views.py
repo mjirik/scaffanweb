@@ -9,6 +9,7 @@ from .forms import ImageQuatroForm
 from .tasks import make_thumbnail
 from pathlib import Path
 from django.conf import settings
+from microimprocessing import models
 import sys
 # pth = str(Path(__file__).parent.parent.parent / "scaffan")
 # print(f"local scaffan path={pth}")
@@ -18,9 +19,11 @@ import os.path as op
 from loguru import logger
 import numpy as np
 
-from .models import ServerDataFileName, LobuleCoordinates, ExampleData
+from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User
 
 # Create your views here.
+
+
 
 def index(request):
     # latest_question_list = ServerDataFileName.objects.order_by('-pub_date')[:5]
@@ -47,12 +50,17 @@ def index(request):
         for serverfile in latest_filenames
     ]
 
+    fn, spreadsheet_url, name = models.get_common_spreadsheet_file(request.user)
+    spreadsheet_exists = fn.exists()
+
     # latest_filenames_short = [
     #     Path(fn.imagefile.path).name for fn in latest_filenames
     #     ]
     # template = loader.get_template('microimprocessing/index.html')
     context = {
         'latest_filenames': zip(latest_filenames, number_of_points, output_exists, zip_exists),
+        "spreadsheet_exists": spreadsheet_exists,
+        "spreadsheet_url": spreadsheet_url,
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
@@ -67,7 +75,8 @@ def delete_file(request, filename_id):
     return redirect('/microimprocessing/')
 
 def _preapare_xlsx_for_rendering(filename:Path):
-
+    logger.debug(filename)
+    df_html = None
     if filename.exists():
         import pandas as pd
         dfall = pd.read_excel(str(filename), sheet_name="Sheet1", index_col=0)
@@ -95,6 +104,25 @@ def detail(request, filename_id):
     image_list = []
     return render(request, 'microimprocessing/detail.html',
                   {'serverfile': serverfile, 'df_html':df_html, "image_list":image_list})
+
+def common_spreadsheet(request):
+
+    filename,url,_ = models.get_common_spreadsheet_file(request.user)
+    # serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+    # filename = Path(serverfile.outputdir) / "data.xlsx"
+
+    # import glob
+    # image_list = glob.glob(str(Path(serverfile.outputdir) / "lobulus_*.png"))
+
+    df_html = _preapare_xlsx_for_rendering(filename)
+    image_list = []
+    return render(request, 'microimprocessing/detail.html',
+                  {
+                      'serverfile': "Common Spreadsheet",
+                      'df_html':df_html,
+                      "image_list":image_list,
+                      "spreadsheet_url":url}
+                  )
 
 
 def set_lobules_seeds(request, filename_id):

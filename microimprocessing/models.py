@@ -29,12 +29,15 @@ def get_output_dir():
     )
     return filename
 
-def get_comon_spreadsheet_file(user:User):
-    filename = op.join(
+
+def get_common_spreadsheet_file(user:User) -> [Path, str, str]:
+    name = f"data_{user.username}_{scaffanweb_tools.generate_sha1(user.username, settings.SECRET_KEY)}.xlsx"
+    filename = Path(
         op.expanduser(settings.MEDIA_ROOT),
-        f"data_{user.username}_{scaffanweb_tools.generate_sha1(user.username, settings.SECRET_KEY)}.xlsx"
+        name
     )
-    return filename
+    url = settings.MEDIA_URL + name
+    return filename, url, name
 
 def get_default_user_hash():
     return scaffanweb_tools.randomString(12)

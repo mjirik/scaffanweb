@@ -118,6 +118,7 @@
 </script>
 {% endblock %}
 {% block body%}
+<div class="container">
     {% if user.is_authenticated %}
     {% if serverfile %}
     <h1>{{ serverfile}}</h1>
@@ -149,4 +150,5 @@
     <p>No polls are available.</p>
     {% endif %}
     {% endif %}
+</div>
 {% endblock %}

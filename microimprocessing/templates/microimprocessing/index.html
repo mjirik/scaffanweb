@@ -61,9 +61,29 @@
                             </div>
                         </div>
                     </div>
-                <h2 class="pt-3">
-                    Image List
-                </h2>
+                <div class="pt-3">
+                    <nav class="navbar navbar-expand-sm bg-light pt-3">
+                        <h2>
+                            Image List
+                        </h2>
+                        <ul class="navbar-nav ml-auto">
+                            {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                {% if spreadsheet_exists %}
+                                <a class="btn btn-primary" href="{% url 'microimprocessing:common_spreadsheet' %}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="View Common Spreadsheet"
+                                >
+                                    <i class="fas fa-table"></i>
+                                </a>
+                                {% endif %}
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% if spreadsheet_exists %}
+                {% endif %}
 <!--            </div>-->
 <!--            <div class="container">-->
 <!--                    <div class="col-sm-9">-->
