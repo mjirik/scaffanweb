@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body%}
+<div class="container">
     {% if user.is_authenticated %}
     <div class="containder">
         <h1>Upload</h1>
@@ -18,5 +19,5 @@
         </form>
     </div>
     {% endif %}
-
+</div>
 {% endblock %}
