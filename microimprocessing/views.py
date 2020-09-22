@@ -41,12 +41,14 @@ def index(request):
     for serverfile in latest_filenames:
         if (Path(serverfile.outputdir) / "data.xlsx").exists():
             logger.debug(f"output exists: {serverfile.outputdir}")
-            if not Path(get_zip_fn(serverfile)).exists():
-                make_zip(serverfile)
-                serverfile.process_started = False
-                serverfile.save()
+            zip_fn = get_zip_fn(serverfile)
+            if zip_fn:
+                if not Path(zip_fn).exists():
+                    make_zip(serverfile)
+                    serverfile.process_started = False
+                    serverfile.save()
     zip_exists = [
-        Path(get_zip_fn(serverfile)).exists()
+        Path(get_zip_fn(serverfile)).exists() if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
 
@@ -220,6 +222,12 @@ def run_processing(request, pk):
     return redirect('/microimprocessing/')
 
 def get_zip_fn(serverfile:ServerDataFileName):
+    logger.debug(f"serverfile.imagefile={serverfile.imagefile.name}")
+    if not serverfile.imagefile.name:
+        logger.debug(f"No file uploaded for {serverfile.imagefile}")
+        return None
+        # file is not uploaded
+
     nm = str(Path(serverfile.imagefile.path).name)
     # prepare output zip file path
     pth_zip = serverfile.outputdir + nm + ".zip"
@@ -227,14 +235,15 @@ def get_zip_fn(serverfile:ServerDataFileName):
 
 def make_zip(serverfile:ServerDataFileName):
     pth_zip = get_zip_fn(serverfile)
-    import shutil
-    # remove last letters.because of .zip is added by make_archive
-    shutil.make_archive(pth_zip[:-4], "zip", serverfile.outputdir)
+    if pth_zip:
+        import shutil
+        # remove last letters.because of .zip is added by make_archive
+        shutil.make_archive(pth_zip[:-4], "zip", serverfile.outputdir)
 
-    serverfile.processed = True
-    pth_rel = op.relpath(pth_zip, settings.MEDIA_ROOT)
-    serverfile.zip_file = pth_rel
-    serverfile.save()
+        serverfile.processed = True
+        pth_rel = op.relpath(pth_zip, settings.MEDIA_ROOT)
+        serverfile.zip_file = pth_rel
+        serverfile.save()
 
 
 def add_example_data(request):

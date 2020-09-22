@@ -159,6 +159,12 @@
                                         <h4 class="card-title">
                                             No file
                                         </h4>
+                                        <a class="btn btn-secondary" href="{% url 'microimprocessing:delete_file' server_filename.id %}"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Delete"
+                                        >
+                                            <i class="fas fa-spinner fa-trash"></i>
+                                        </a>
                                     </div>
                                 </div>
                             {% endif %}
