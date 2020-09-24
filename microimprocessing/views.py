@@ -191,6 +191,8 @@ def create_tag(request):
                 tag = form.save()
             else:
                 tag = objs[0]
+
+            tag.users.add(request.user)
             return redirect('/microimprocessing/')
     else:
         form = TagForm
