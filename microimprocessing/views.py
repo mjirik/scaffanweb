@@ -51,6 +51,9 @@ def index(request):
         Path(get_zip_fn(serverfile)).exists() if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
+    files_tags = [serverfile.tag_set.all()
+        for serverfile in latest_filenames
+    ]
 
     fn, spreadsheet_url, name = models.get_common_spreadsheet_file(request.user)
     spreadsheet_exists = fn.exists()
@@ -60,9 +63,16 @@ def index(request):
     #     ]
     # template = loader.get_template('microimprocessing/index.html')
     context = {
-        'latest_filenames': zip(latest_filenames, number_of_points, output_exists, zip_exists),
+        'latest_filenames': zip(
+            latest_filenames,
+            number_of_points,
+            output_exists,
+            zip_exists,
+            files_tags
+        ),
         "spreadsheet_exists": spreadsheet_exists,
         "spreadsheet_url": spreadsheet_url,
+        "user_tags": request.user.tag_set.all()
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
@@ -200,6 +210,13 @@ def create_tag(request):
     return render(request, 'microimprocessing/model_form_upload.html', {
         'form': form
     })
+
+def add_tag(request, tag_id, filename_id):
+    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+    tag = get_object_or_404(Tag, pk=tag_id)
+    tag.users.add(request.user)
+    tag.files.add(serverfile)
+    return redirect('/microimprocessing/')
 
 
 def run_processing(request, pk):

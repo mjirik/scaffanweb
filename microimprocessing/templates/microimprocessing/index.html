@@ -68,6 +68,12 @@
                         </h2>
                         <ul class="navbar-nav ml-auto">
                             {% if user.is_authenticated %}
+                            {% for user_tag in user_tags %}
+                                ula
+                                <li class="nav-item">
+                                    <div class="btn">{{ user_tag }}</div>
+                                </li>
+                            {% endfor %}
                             <li class="nav-item">
                                 {% if spreadsheet_exists %}
                                 <a class="btn btn-primary" href="{% url 'microimprocessing:common_spreadsheet' %}"
@@ -95,7 +101,7 @@
                                     <a class="btn btn-link" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
                                 </div>
                             </div>
-                        {% for server_filename, n_pts, output_exists, zip_exists in latest_filenames %}
+                        {% for server_filename, n_pts, output_exists, zip_exists, file_tags in latest_filenames %}
                             {% if server_filename.imagefile %}
                                 <div class="card">
         <!--                            <div class="card" style="width:400px">-->
@@ -108,6 +114,19 @@
                                             {{ server_filename }}
                                         </h5>
                                         <p class="card-text">
+                                            {% for file_tag in file_tags %}
+                                            <span class="badge badge-secondary">{{ file_tag }}</span>
+                                            {% endfor %}
+                                            <div class="dropdown">
+                                                <a type="button" class="badge badge-secondary dropdown-toggle" data-toggle="dropdown">
+                                                    +
+                                                </a>
+                                                {% for user_tag in user_tags %}
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">{{ user_tag }}</a>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
                                         </p>
                                         <a class="btn btn-primary"
                                            href="{% url 'microimprocessing:set_lobules_seeds' server_filename.id %}"
