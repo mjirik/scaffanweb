@@ -13,6 +13,7 @@ urlpatterns = [
     path('<int:filename_id>/detail', views.detail, name='detail'),
     path('common_spreadsheet', views.common_spreadsheet, name='common_spreadsheet'),
     path('upload/', views.model_form_upload, name='model_form_upload'),
+    path('create_tag/', views.create_tag, name='create_tag'),
     path('create_report/', views.create_report, name='create_report'),
     path('<int:pk>/run_processing/', views.run_processing, name='run_processing'),
     path('logout/', views.logout_view, name='logout_view'),

@@ -133,13 +133,34 @@ class ExampleData(models.Model):
     server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)
 
 class Tag(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True
-    )
+    users = models.ManyToManyField(User)
+    # user = models.ForeignKey(
+    #     User,
+    #     on_delete=models.CASCADE,
+    #     null=True
+    # )
     name = models.CharField(max_length=50)
     files = models.ManyToManyField(ServerDataFileName)
+    def __str__(self):
+        return str(self.name)
+
+def get_tag_by_str(
+        name:str,
+            # server_datafile:ServerDataFileName
+            ):
+    """
+    Find tag or create new one by string.
+    :param user:
+    :param name:
+    :return:
+    """
+    objs = Tag.objects.filter(name=name)
+    if len(objs) == 0:
+        tag=Tag()
+        tag.name=name
+    else:
+        tag = objs[0]
+    return tag
 
 
 class Profile(models.Model):

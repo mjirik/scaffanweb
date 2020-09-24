@@ -4,8 +4,8 @@ from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth import logout
 from django.core.files.base import ContentFile
-from .models import get_output_dir
-from .forms import ImageQuatroForm
+from .models import get_output_dir, Tag
+from .forms import ImageQuatroForm, TagForm
 from .tasks import make_thumbnail
 from pathlib import Path
 from django.conf import settings
@@ -81,7 +81,10 @@ def _preapare_xlsx_for_rendering(filename:Path):
     df_html = None
     if filename.exists():
         import pandas as pd
-        dfall = pd.read_excel(str(filename), sheet_name="Sheet1", index_col=0)
+        dfall = pd.read_excel(str(filename), sheet_name="Sheet1",
+                              index=False,
+                              # index_col=0
+                              )
         key_candidate = ["SNI area prediction", "Skeleton length", "Branch number", "Dead ends number",
                          "Area", "Area unit", "Lobulus Perimeter",
                          "Annotation Center X [mm]", "Annotation Center Y [mm]",
@@ -165,24 +168,37 @@ def model_form_upload(request):
         if form.is_valid():
             from django_q.tasks import async_task
             serverfile = form.save()
-            # form.save()
             print(f"user id={request.user.id}")
             serverfile.owner = request.user
             serverfile.save()
-            # make_thumbnail(serverfile)
             async_task('microimprocessing.tasks.make_thumbnail', serverfile,
                        # hook='tasks.email_report'
                        )
-            # mainapp = scaffan.algorithm.Scaffan()
-            # mainapp.set_input_file(serverfile.imagefile.path)
-            # from . import imageprocessing
-            # imageprocessing.quatrofile_processing()
             return redirect('/microimprocessing/')
     else:
         form = ImageQuatroForm()
     return render(request, 'microimprocessing/model_form_upload.html', {
         'form': form
     })
+
+def create_tag(request):
+    if request.method == 'POST':
+        form = TagForm(request.POST, request.FILES)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            objs = Tag.objects.filter(name=name)
+            if len(objs) == 0:
+                tag = form.save()
+            else:
+                tag = objs[0]
+            return redirect('/microimprocessing/')
+    else:
+        form = TagForm
+
+    return render(request, 'microimprocessing/model_form_upload.html', {
+        'form': form
+    })
+
 
 def run_processing(request, pk):
     from django_q.tasks import async_task, result

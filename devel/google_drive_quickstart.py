@@ -10,7 +10,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/drive.readonly']
 
 def main():
     """Shows basic usage of the Drive v3 API.
@@ -36,9 +36,16 @@ def main():
             pickle.dump(creds, token)
 
     service = build('drive', 'v3', credentials=creds)
-
+    driveId = "0AHtTDixl96VzUk9PVA" # my Zeiss Scann ID
     # Call the Drive v3 API
     results = service.files().list(
+        driveId=driveId,
+        # q="name = '11_2019_11_13__-7.czi'",
+        # q="mimeType = 'application/vnd.google-apps.folder'", # list all directories
+        q="'1pStkl9_vEQJHTAc0OIbP4X39GmcBhVBJ' in parents", # all files in Moulisova-Jena
+        includeItemsFromAllDrives=True,
+        supportsAllDrives=True,
+        corpora="drive",
         pageSize=10, fields="nextPageToken, files(id, name)").execute()
     items = results.get('files', [])
 
