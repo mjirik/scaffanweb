@@ -191,7 +191,7 @@ def model_form_upload(request):
         'form': form
     })
 
-def create_tag(request):
+def create_tag(request, filename_id=None):
     if request.method == 'POST':
         form = TagForm(request.POST, request.FILES)
         if form.is_valid():
@@ -203,6 +203,9 @@ def create_tag(request):
                 tag = objs[0]
 
             tag.users.add(request.user)
+            tag.save()
+            if filename_id:
+                _add_tag(request, filename_id, tag.id)
             return redirect('/microimprocessing/')
     else:
         form = TagForm
@@ -211,11 +214,15 @@ def create_tag(request):
         'form': form
     })
 
-def add_tag(request, tag_id, filename_id):
+def _add_tag(request, filename_id, tag_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     tag = get_object_or_404(Tag, pk=tag_id)
     tag.users.add(request.user)
     tag.files.add(serverfile)
+    tag.save()
+
+def add_tag(request, filename_id, tag_id):
+    _add_tag(request, filename_id, tag_id)
     return redirect('/microimprocessing/')
 
 
