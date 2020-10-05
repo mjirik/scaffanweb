@@ -67,10 +67,13 @@
                             Image List
                         </h2>
                         <ul class="navbar-nav ml-auto">
-                            {% if user.is_authenticated %}
-                            {% for user_tag in user_tags %}
+                            {% for user_tag, user_tag_status in user_tags %}
                                 <li class="nav-item">
-                                    <span class="badge badge-pill badge-info">{{ user_tag }}</span>
+                                    <div class="badge badge-pill badge-info" data-toggle="dropdown">{{ user_tag }} {{ user_tag_status }} </div>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'microimprocessing:show_tag' user_tag.id %}">show</a>
+                                        <a class="dropdown-item" href="{% url 'microimprocessing:hide_tag' user_tag.id %}">hide</a>
+                                    </div>
                                 </li>
                             {% endfor %}
                             <li class="nav-item">
@@ -83,7 +86,6 @@
                                 </a>
                                 {% endif %}
                             </li>
-                            {% endif %}
                         </ul>
                     </nav>
                 </div>
@@ -115,7 +117,7 @@
                                             {% endfor %}
                                                 <div type="button" class="badge  badge-pill badge-info" data-toggle="dropdown">+</div>
                                                 <div class="dropdown-menu">
-                                                    {% for user_tag in user_tags %}
+                                                    {% for user_tag, user_tag_status in user_tags %}
                                                         <a class="dropdown-item" href="{% url 'microimprocessing:add_tag' server_filename.id user_tag.id %}">{{ user_tag }}</a>
                                                     {% endfor %}
                                                     <div class="dropdown-divider"></div>

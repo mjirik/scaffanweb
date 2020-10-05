@@ -17,3 +17,6 @@ class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = ('name', )
+
+class QueryForm(forms.Form):
+    your_name = forms.CharField(label='Your name', max_length=100)

@@ -29,6 +29,12 @@ def index(request):
     # latest_question_list = ServerDataFileName.objects.order_by('-pub_date')[:5]
     # latest_filenames = ServerDataFileName.objects.all()
     latest_filenames = ServerDataFileName.objects.filter(owner=request.user).order_by("-uploaded_at")
+    # if request.method == "POST":
+    #
+    #     # latest_filenames = [fn for fn in latest_filenames if ]
+    #     pass
+    # else:
+    #     latest_filenames = ServerDataFileName.objects.filter(owner=request.user).order_by("-uploaded_at")
     number_of_points = [
         len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
         for serverfile in latest_filenames
@@ -62,6 +68,14 @@ def index(request):
     #     Path(fn.imagefile.path).name for fn in latest_filenames
     #     ]
     # template = loader.get_template('microimprocessing/index.html')
+
+    user_tags = [
+        (
+            tag,
+            "show" if tag.id in request.session.get("show_tags", []) else
+            "hide" if tag.id in request.session.get("hide_tags", []) else
+            "ignore"
+        ) for tag in  request.user.tag_set.all()]
     context = {
         'latest_filenames': zip(
             latest_filenames,
@@ -72,7 +86,7 @@ def index(request):
         ),
         "spreadsheet_exists": spreadsheet_exists,
         "spreadsheet_url": spreadsheet_url,
-        "user_tags": request.user.tag_set.all()
+        "user_tags": user_tags
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
@@ -190,6 +204,24 @@ def model_form_upload(request):
     return render(request, 'microimprocessing/model_form_upload.html', {
         'form': form
     })
+
+def _show_hide_tag(request, tag_id):
+    tag = get_object_or_404(Tag, pk=tag_id)
+    hide = request.session.get("hide_tags", [])
+    show = request.session.get("show_tags", [])
+    return show, hide, tag
+
+def show_tag(request, tag_id):
+    show, hide, tag = _show_hide_tag(request, tag_id)
+
+    request.session.modified = True
+    return redirect('/microimprocessing/')
+
+def hide_tag(request, tag_id):
+    show, hide, tag = _show_hide_tag(request, tag_id)
+
+    request.session.modified = True
+    return redirect('/microimprocessing/')
 
 def create_tag(request, filename_id=None):
     if request.method == 'POST':
