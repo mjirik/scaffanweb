@@ -69,10 +69,12 @@
                         <ul class="navbar-nav ml-auto">
                             {% for user_tag, user_tag_status in user_tags %}
                                 <li class="nav-item">
-                                    <div class="badge badge-pill badge-info" data-toggle="dropdown">{{ user_tag }} {{ user_tag_status }} </div>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{% url 'microimprocessing:show_tag' user_tag.id %}">show</a>
-                                        <a class="dropdown-item" href="{% url 'microimprocessing:hide_tag' user_tag.id %}">hide</a>
+                                    <div class="dropdown">
+                                        <div class="badge badge-pill badge-info" data-toggle="dropdown">{{ user_tag }} {{ user_tag_status }} </div>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="{% url 'microimprocessing:show_tag' user_tag.id %}">show</a>
+                                            <a class="dropdown-item" href="{% url 'microimprocessing:hide_tag' user_tag.id %}">hide</a>
+                                        </div>
                                     </div>
                                 </li>
                             {% endfor %}
