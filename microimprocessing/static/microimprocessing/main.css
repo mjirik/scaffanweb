@@ -83,3 +83,8 @@ div.container-xl {
     opacity: .3;
 }
 
+
+.badge-pill.badge-light {
+    border: 1px solid #999;
+    border-color: @grayDark;
+}

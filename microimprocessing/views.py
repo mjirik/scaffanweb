@@ -28,7 +28,13 @@ from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User
 def index(request):
     # latest_question_list = ServerDataFileName.objects.order_by('-pub_date')[:5]
     # latest_filenames = ServerDataFileName.objects.all()
-    latest_filenames = ServerDataFileName.objects.filter(owner=request.user).order_by("-uploaded_at")
+    latest_filenames = ServerDataFileName.objects.filter(
+        owner=request.user,
+        ).exclude(
+        tag__in=request.session.get("hide_tags", [])
+    ).order_by("-uploaded_at")
+    if len(request.session.get("show_tags", [])) > 0:
+        latest_filenames = latest_filenames.filter(tag__in=request.session.get("show_tags", []))
     # if request.method == "POST":
     #
     #     # latest_filenames = [fn for fn in latest_filenames if ]
@@ -207,18 +213,46 @@ def model_form_upload(request):
 
 def _show_hide_tag(request, tag_id):
     tag = get_object_or_404(Tag, pk=tag_id)
-    hide = request.session.get("hide_tags", [])
-    show = request.session.get("show_tags", [])
+    if "hide_tags" in request.session:
+        hide = request.session["hide_tags"]
+    else:
+        hide = []
+        request.session["hide_tags"] = hide
+    if "show_tags" in request.session:
+        show = request.session["show_tags"]
+    else:
+        show = []
+        request.session["show_tags"] = hide
+    # hide = request.session.get("hide_tags", [])
+    # show = request.session.get("show_tags", [])
+    logger.debug(f"show={show}")
+    logger.debug(f"hide={hide}")
     return show, hide, tag
 
 def show_tag(request, tag_id):
     show, hide, tag = _show_hide_tag(request, tag_id)
+    if tag_id in hide:
+        hide.remove(tag_id)
+    show.append(tag_id)
 
     request.session.modified = True
     return redirect('/microimprocessing/')
 
 def hide_tag(request, tag_id):
     show, hide, tag = _show_hide_tag(request, tag_id)
+    if tag_id in show:
+        show.remove(tag_id)
+    hide.append(tag_id)
+
+    request.session.modified = True
+    return redirect('/microimprocessing/')
+
+def ignore_tag(request, tag_id):
+    show, hide, tag = _show_hide_tag(request, tag_id)
+    if tag_id in show:
+        show.remove(tag_id)
+    if tag_id in hide:
+        hide.remove(tag_id)
 
     request.session.modified = True
     return redirect('/microimprocessing/')
