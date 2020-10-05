@@ -71,7 +71,7 @@
                                 <li class="nav-item">
                                     <div class="dropdown px-1">
 <!--                                        <div class="badge badge-pill {% if user_tag_status == 'show' %} badge-success {% elif user_tag_status == 'hide' %} badge-danger{% else %} badge-secondary{% endif %}" data-toggle="dropdown">{{ user_tag }} {{ user_tag_status }} </div>-->
-                                        <div class="badge badge-pill {% if user_tag_status == 'show' %} badge-dark {% elif user_tag_status == 'hide' %} badge-light {% else %} badge-secondary{% endif %}" data-toggle="dropdown">{{ user_tag }} {{ user_tag_status }} </div>
+                                        <div class="badge badge-pill {% if user_tag_status == 'show' %} badge-dark {% elif user_tag_status == 'hide' %} badge-light {% else %} badge-secondary{% endif %}" data-toggle="dropdown">{{ user_tag }}</div>
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item" href="{% url 'microimprocessing:show_tag' user_tag.id %}">Show</a>
                                             <a class="dropdown-item" href="{% url 'microimprocessing:ignore_tag' user_tag.id %}">Ignore</a>
@@ -117,7 +117,7 @@
                                     <div class="card-body">
                                         <div class="card-text">
                                             {% for file_tag in file_tags %}
-                                            <span class="badge badge-pill badge-secondary">{{ file_tag }}</span>
+                                            <a class="badge badge-pill badge-secondary" href="{% url 'microimprocessing:remove_tag' server_filename.id file_tag.id %}">{{ file_tag }} ×</a>
                                             {% endfor %}
                                                 <div type="button" class="badge  badge-pill badge-secondary" data-toggle="dropdown">+</div>
                                                 <div class="dropdown-menu">

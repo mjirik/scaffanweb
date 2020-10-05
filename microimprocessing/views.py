@@ -208,7 +208,9 @@ def model_form_upload(request):
     else:
         form = ImageQuatroForm()
     return render(request, 'microimprocessing/model_form_upload.html', {
-        'form': form
+        'form': form,
+        "headline": "Upload",
+        "button": "Upload"
     })
 
 def _show_hide_tag(request, tag_id):
@@ -277,7 +279,9 @@ def create_tag(request, filename_id=None):
         form = TagForm
 
     return render(request, 'microimprocessing/model_form_upload.html', {
-        'form': form
+        'form': form,
+        "headline": 'Create Tag',
+        "button": "Create",
     })
 
 def _add_tag(request, filename_id, tag_id):
@@ -289,6 +293,13 @@ def _add_tag(request, filename_id, tag_id):
 
 def add_tag(request, filename_id, tag_id):
     _add_tag(request, filename_id, tag_id)
+    return redirect('/microimprocessing/')
+
+def remove_tag(request, filename_id, tag_id):
+    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+    tag = get_object_or_404(Tag, pk=tag_id)
+    tag.files.remove(serverfile)
+    tag.save()
     return redirect('/microimprocessing/')
 
 
