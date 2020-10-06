@@ -106,14 +106,16 @@ def delete_file(request, filename_id):
     serverfile.delete()
     return redirect('/microimprocessing/')
 
+
 def _preapare_xlsx_for_rendering(filename:Path):
     logger.debug(filename)
     df_html = None
     if filename.exists():
         import pandas as pd
         dfall = pd.read_excel(str(filename), sheet_name="Sheet1",
-                              index=False,
+                              # index=False,
                               # index_col=0
+                              #index_col=None
                               )
         key_candidate = ["SNI area prediction", "Skeleton length", "Branch number", "Dead ends number",
                          "Area", "Area unit", "Lobulus Perimeter",
