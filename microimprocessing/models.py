@@ -87,7 +87,7 @@ class ServerDataFileName(models.Model):
     processed_in_version = models.CharField(max_length=200)
     # imagefile_path = models.FilePathField("File Path",path=str(pth), allow_files=True, allow_folders=False, recursive=True, blank=True)
     hash = scaffanweb_tools.randomString(12)
-    imagefile = models.FileField("Uploaded File", upload_to=upload_to_unqiue_folder, blank=True, null=True, max_length=500)
+    imagefile = models.FileField("Image File", upload_to=upload_to_unqiue_folder, blank=True, null=True, max_length=500)
     annotationfile = models.FileField("Annotation File", upload_to=upload_to_unqiue_folder, blank=True, null=True, max_length=500)
     # thumbnail = models.CharField("Thumbnail File", max_length=255, blank=True)
     preview = models.ImageField(upload_to="cellimage/", blank=True)

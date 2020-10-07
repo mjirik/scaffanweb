@@ -199,6 +199,16 @@ def model_form_upload(request):
                                )
         if form.is_valid():
             from django_q.tasks import async_task
+            logger.debug(f"imagefile.name={dir(form)}")
+            name = form.cleaned_data['imagefile']
+            if name is None or name == '':
+                return render(request, 'microimprocessing/model_form_upload.html', {
+                    'form': form,
+                    "headline": "Upload",
+                    "button": "Upload",
+                    "error_text": "Image File is mandatory"
+                })
+
             serverfile = form.save()
             print(f"user id={request.user.id}")
             serverfile.owner = request.user
