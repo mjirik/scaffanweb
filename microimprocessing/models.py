@@ -170,3 +170,11 @@ class Profile(models.Model):
     # birth_date = models.DateField(null=True, blank=True)
     hash = models.CharField(max_length=50, default=get_default_user_hash)
     automatic_import = models.BooleanField(default=False)
+
+
+class GDriveImport(models.Model):
+    user = models.ManyToManyField(User, on_delete=models.CASCADE)
+    gdrive_id = models.CharField(max_length=35)
+    gdir_id = models.CharField(max_length=35, min_length=30)
+    token = models.FilePathField()
+    credentials = models.FilePathField()
