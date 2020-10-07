@@ -383,21 +383,24 @@ def add_example_data(request):
     for sample_image in all:
         logger.debug("add data")
         sdf = sample_image.server_datafile
-        # sample_image.image
-        logger.debug(f"add data as a copy of {sdf}")
-        new_sdf = ServerDataFileName(
-            owner=request.user,
-            # imagefile=sdf.,
-            preview=sdf.preview,
-            description="Sample data",
-            # preview=ContentFile(sdf.preview.read()),
-        )
-        # logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
-        # new_sdf.owner=request.user
-        new_sdf.imagefile.save(Path(sdf.imagefile.name).name, ContentFile(sdf.imagefile.read()))
-        make_thumbnail(new_sdf)
-        # new_sdf.save()
-        logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
+        if Path(sdf.imagefile.path).exists():
+            # sample_image.image
+            logger.debug(f"add data as a copy of {sdf}")
+            new_sdf = ServerDataFileName(
+                owner=request.user,
+                # imagefile=sdf.,
+                preview=sdf.preview,
+                description="Sample data",
+                # preview=ContentFile(sdf.preview.read()),
+            )
+            # logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
+            # new_sdf.owner=request.user
+            new_sdf.imagefile.save(Path(sdf.imagefile.name).name, ContentFile(sdf.imagefile.read()))
+            make_thumbnail(new_sdf)
+            # new_sdf.save()
+            logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
+        else:
+            logger.warning(f"Example file '{sdf.imagefile.name}' not found. Skipping.")
 
     return redirect('/microimprocessing/')
 
