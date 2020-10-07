@@ -173,8 +173,8 @@ class Profile(models.Model):
 
 
 class GDriveImport(models.Model):
-    user = models.ManyToManyField(User, on_delete=models.CASCADE)
+    user = models.ManyToManyField(User)
     gdrive_id = models.CharField(max_length=35)
-    gdir_id = models.CharField(max_length=35, min_length=30)
+    gdir_id = models.CharField(max_length=35)
     token = models.FilePathField()
     credentials = models.FilePathField()
