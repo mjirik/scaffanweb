@@ -13,6 +13,7 @@ from .models import (
     Profile,
     GDriveImport
 )
+import django_q.models as qmodels
 
 admin.site.register(ServerDataFileName)
 admin.site.register(ServerDatasetPath)
@@ -21,3 +22,5 @@ admin.site.register(ExampleData)
 admin.site.register(Tag)
 admin.site.register(Profile)
 admin.site.register(GDriveImport)
+
+# admin.site.register(qmodels.Schedule)

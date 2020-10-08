@@ -98,6 +98,12 @@ python manage.py qmonitor
 python manage.py qinfo
 ```
 
+# Google drive import
+
+* Create `credentials.json` by enabling google API
+* Copy `credentials.json` and `token.pickle` into project root dir (`token.pickle` can be created automatically)
+* Add new record to `GDriveImport` in Admin
+* Add new record to Django-Q Scheduled Tasks in Admin. (func: tasks.run_gdrive_import)
 
 ## Final touch
 

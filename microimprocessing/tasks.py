@@ -220,3 +220,13 @@ def run_gdrive_import():
         for user in gdriveimport.user.all():
             _run_gdrive_import_for_user(gdriveimport, user)
 
+
+# Use the schedule wrapper
+from django_q.tasks import schedule
+
+schedule(
+    'tasks.run_gdrive_import',
+         # hook='hooks.print_result',
+         schedule_type='H',
+        name="Google Drive Import"
+)

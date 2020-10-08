@@ -412,8 +412,10 @@ def add_example_data(request):
 
 
 def gdrive_import(request):
+    from django_q.tasks import async_task
     logger.debug("gdrive import")
-    tasks.run_gdrive_import()
+    async_task('tasks.run_gdrive_import')
+    # tasks.run_gdrive_import()
     return redirect('/microimprocessing/')
 
 
