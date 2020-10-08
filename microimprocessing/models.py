@@ -54,7 +54,8 @@ def upload_to_unqiue_folder(instance, filename):
     logger.debug(instance.uploaded_at)
     hash = scaffanweb_tools.generate_sha1(instance.uploaded_at, "_")
 
-    instance_filename = Path(instance.imagefile.path).stem
+    # instance_filename = Path(instance.imagefile.path).stem # sometimes the instance.imagefile does not exist
+    instance_filename = Path(filename).stem
 
     datetimestr = datetime.now().strftime("%Y%m%d-%H%M%S")
 

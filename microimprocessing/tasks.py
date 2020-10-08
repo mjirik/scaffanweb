@@ -208,9 +208,9 @@ def _run_gdrive_import_for_user(gdriveimport:models.GDriveImport, user:models.Us
                 # preview=ContentFile(sdf.preview.read()),
             )
             logger.debug(f"new_sdf name={name}, new_sdf.imagefile={new_sdf.imagefile}")
-            new_sdf.imagefile.save(name, ContentFile(fh.read()))
+            new_sdf.imagefile.save(name, ContentFile(fh.read()), save=True)
             new_sdf.save()
-            tag = get_tag_by_name("Auto Import")
+            tag = get_tag_by_name("Imported")
             views._add_tag(user=user, filename_id=new_sdf.id, tag_id=tag.id)
             make_thumbnail(new_sdf)
 
@@ -220,15 +220,3 @@ def run_gdrive_import():
         for user in gdriveimport.user.all():
             _run_gdrive_import_for_user(gdriveimport, user)
 
-def main():
-    dfilespath = "download2"
-    for fh, name in _iterate_gdrive_import_files():
-        dfpath = Path(dfilespath)
-        dfpath.mkdir(parents=True, exist_ok=True)
-        opath = dfpath / name
-        if opath.exists():
-            logger.debug(f"File '{opath}' exists. Skipping download.")
-        else:
-            with io.open(opath, 'wb') as f:
-                fh.seek(0)
-                f.write(fh.read())
