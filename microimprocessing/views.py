@@ -9,7 +9,7 @@ from .forms import ImageQuatroForm, TagForm
 from .tasks import make_thumbnail
 from pathlib import Path
 from django.conf import settings
-from microimprocessing import models
+from microimprocessing import models, tasks
 import sys
 # pth = str(Path(__file__).parent.parent.parent / "scaffan")
 # print(f"local scaffan path={pth}")
@@ -19,7 +19,7 @@ import os.path as op
 from loguru import logger
 import numpy as np
 
-from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User
+from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User, GDriveImport
 
 # Create your views here.
 
@@ -271,6 +271,7 @@ def ignore_tag(request, tag_id):
     request.session.modified = True
     return redirect('/microimprocessing/')
 
+
 def create_tag(request, filename_id=None):
     if request.method == 'POST':
         form = TagForm(request.POST, request.FILES)
@@ -285,7 +286,7 @@ def create_tag(request, filename_id=None):
             tag.users.add(request.user)
             tag.save()
             if filename_id:
-                _add_tag(request, filename_id, tag.id)
+                _add_tag(request.user, filename_id, tag.id)
             return redirect('/microimprocessing/')
     else:
         form = TagForm
@@ -296,16 +297,19 @@ def create_tag(request, filename_id=None):
         "button": "Create",
     })
 
-def _add_tag(request, filename_id, tag_id):
+
+def _add_tag(user, filename_id, tag_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     tag = get_object_or_404(Tag, pk=tag_id)
-    tag.users.add(request.user)
+    tag.users.add(user)
     tag.files.add(serverfile)
     tag.save()
 
+
 def add_tag(request, filename_id, tag_id):
-    _add_tag(request, filename_id, tag_id)
+    models._add_tag(request.user, filename_id, tag_id)
     return redirect('/microimprocessing/')
+
 
 def remove_tag(request, filename_id, tag_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
@@ -352,6 +356,7 @@ def run_processing(request, pk):
         # mainapp.run_lobuluses(seeds_mm=centers_mm)
     return redirect('/microimprocessing/')
 
+
 def get_zip_fn(serverfile:ServerDataFileName):
     logger.debug(f"serverfile.imagefile={serverfile.imagefile.name}")
     if not serverfile.imagefile.name:
@@ -363,6 +368,7 @@ def get_zip_fn(serverfile:ServerDataFileName):
     # prepare output zip file path
     pth_zip = serverfile.outputdir + nm + ".zip"
     return pth_zip
+
 
 def make_zip(serverfile:ServerDataFileName):
     pth_zip = get_zip_fn(serverfile)
@@ -402,6 +408,12 @@ def add_example_data(request):
         else:
             logger.warning(f"Example file '{sdf.imagefile.name}' not found. Skipping.")
 
+    return redirect('/microimprocessing/')
+
+
+def gdrive_import(request):
+    logger.debug("gdrive import")
+    tasks.run_gdrive_import()
     return redirect('/microimprocessing/')
 
 

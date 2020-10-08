@@ -17,12 +17,19 @@ from loguru import logger
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/drive.file']
 
 def iterate_files(
+        credentials_json='credentials_mjirik_gapps.json',
         token_pickle='token.pickle',
         drive_id="0AHtTDixl96VzUk9PVA",  # my Zeiss Scann ID
         dir_id='1OsKfZlp_s6RPHXXei8LsZunTNjPsBwMb',
+        file_extension=None
         ):
-    """Shows basic usage of the Drive v3 API.
-    Prints the names and ids of the first 10 files the user has access to.
+    """
+
+    :param credentials_json: path to credentials in json format. It can be obtained by activating Google API
+    :param token_pickle: path to token in pickle. It can be created automatically interactively by first run.
+    :param drive_id: Google Drive ID
+    :param dir_id: Google Directory ID
+    :return:
     """
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -37,13 +44,16 @@ def iterate_files(
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials_mjirik_gapps.json', SCOPES)
+                credentials_json, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('drive', 'v3', credentials=creds)
+    q = f"'{dir_id}' in parents"
+    if file_extension:
+        q += f" and fileExtension = '{file_extension}'"
     # Call the Drive v3 API
     results = service.files().list(
         driveId=drive_id,
@@ -51,7 +61,7 @@ def iterate_files(
         # q="mimeType = 'application/vnd.google-apps.folder'", # list all directories
         # q="'1pStkl9_vEQJHTAc0OIbP4X39GmcBhVBJ' in parents", # all files in Moulisova-Jena
         # q="'1OsKfZlp_s6RPHXXei8LsZunTNjPsBwMb' in parents", # all files in scaffan_import
-        q=f"'{dir_id}' in parents", # all files in scaffan_import
+        q=q, # all files in scaffan_import
 
         includeItemsFromAllDrives=True,
         supportsAllDrives=True,

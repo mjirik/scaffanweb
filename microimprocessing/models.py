@@ -39,8 +39,10 @@ def get_common_spreadsheet_file(user:User) -> [Path, str, str]:
     url = settings.MEDIA_URL + name
     return filename, url, name
 
+
 def get_default_user_hash():
     return scaffanweb_tools.randomString(12)
+
 
 def upload_to_unqiue_folder(instance, filename):
     """
@@ -144,20 +146,19 @@ class Tag(models.Model):
     def __str__(self):
         return str(self.name)
 
-def get_tag_by_str(
+
+def get_tag_by_name(
         name:str,
             # server_datafile:ServerDataFileName
             ):
     """
     Find tag or create new one by string.
-    :param user:
-    :param name:
-    :return:
     """
     objs = Tag.objects.filter(name=name)
     if len(objs) == 0:
-        tag=Tag()
-        tag.name=name
+        tag=Tag(name=name)
+        # tag.name=name
+        tag.save()
     else:
         tag = objs[0]
     return tag
@@ -176,5 +177,6 @@ class GDriveImport(models.Model):
     user = models.ManyToManyField(User)
     gdrive_id = models.CharField(max_length=35)
     gdir_id = models.CharField(max_length=35)
-    token = models.FilePathField()
-    credentials = models.FilePathField()
+    extension = models.CharField(max_length=10)
+    token = models.FilePathField(path=settings.BASE_DIR)
+    credentials = models.FilePathField(path=settings.BASE_DIR)

@@ -21,6 +21,7 @@ urlpatterns = [
     path('<int:filename_id>/add_tag/<int:tag_id>', views.add_tag, name='add_tag'),
     path('<int:filename_id>/remove_tag/<int:tag_id>', views.remove_tag, name='remove_tag'),
     path('create_report/', views.create_report, name='create_report'),
+    path('gdrive_import/', views.gdrive_import, name='gdrive_import'),
     path('<int:pk>/run_processing/', views.run_processing, name='run_processing'),
     path('logout/', views.logout_view, name='logout_view'),
     path('add_example_data/', views.add_example_data, name='add_example_data'),
