@@ -28,19 +28,18 @@ from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User, GD
 def index(request):
     # latest_question_list = ServerDataFileName.objects.order_by('-pub_date')[:5]
     # latest_filenames = ServerDataFileName.objects.all()
+    hide_tags = request.session.get("hide_tags", [])
+    show_tags = request.session.get("show_tags", [])
+    logger.debug(f"hide_tags={hide_tags}")
+    logger.debug(f"show_tags={show_tags}")
     latest_filenames = ServerDataFileName.objects.filter(
         owner=request.user,
         ).exclude(
-        tag__in=request.session.get("hide_tags", [])
+        tag__in=hide_tags
     ).order_by("-uploaded_at")
-    if len(request.session.get("show_tags", [])) > 0:
+    if len(show_tags) > 0:
         latest_filenames = latest_filenames.filter(tag__in=request.session.get("show_tags", []))
-    # if request.method == "POST":
-    #
-    #     # latest_filenames = [fn for fn in latest_filenames if ]
-    #     pass
-    # else:
-    #     latest_filenames = ServerDataFileName.objects.filter(owner=request.user).order_by("-uploaded_at")
+
     number_of_points = [
         len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
         for serverfile in latest_filenames
@@ -261,7 +260,8 @@ def hide_tag(request, tag_id):
     request.session.modified = True
     return redirect('/microimprocessing/')
 
-def ignore_tag(request, tag_id):
+
+def ignore_tag(request, tag_id, redirect=True):
     show, hide, tag = _show_hide_tag(request, tag_id)
     if tag_id in show:
         show.remove(tag_id)
@@ -269,7 +269,8 @@ def ignore_tag(request, tag_id):
         hide.remove(tag_id)
 
     request.session.modified = True
-    return redirect('/microimprocessing/')
+    if redirect:
+        return redirect('/microimprocessing/')
 
 
 def create_tag(request, filename_id=None):
@@ -307,7 +308,7 @@ def _add_tag(user, filename_id, tag_id):
 
 
 def add_tag(request, filename_id, tag_id):
-    models._add_tag(request.user, filename_id, tag_id)
+    _add_tag(request.user, filename_id, tag_id)
     return redirect('/microimprocessing/')
 
 
@@ -315,6 +316,17 @@ def remove_tag(request, filename_id, tag_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     tag = get_object_or_404(Tag, pk=tag_id)
     tag.files.remove(serverfile)
+    tag.save()
+    return redirect('/microimprocessing/')
+
+
+def remove_tag_from_user(request, tag_id):
+    tag = get_object_or_404(Tag, pk=tag_id)
+    logger.debug(f"delete tag {tag}")
+    ignore_tag(request,tag_id=tag_id, redirect=False)
+    for file in tag.files.filter(owner=request.user):
+        tag.files.remove(file)
+    tag.users.remove(request.user)
     tag.save()
     return redirect('/microimprocessing/')
 

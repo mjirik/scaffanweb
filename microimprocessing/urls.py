@@ -16,6 +16,7 @@ urlpatterns = [
     path('show_tag/<int:tag_id>', views.show_tag, name='show_tag'),
     path('hide_tag/<int:tag_id>', views.hide_tag, name='hide_tag'),
     path('ignore_tag/<int:tag_id>', views.ignore_tag, name='ignore_tag'),
+    path('remove_tag_from_user/<int:tag_id>', views.remove_tag_from_user, name='remove_tag_from_user'),
     path('create_tag/', views.create_tag, name='create_tag'),
     path('create_tag/<int:filename_id>', views.create_tag, name='create_and_add_tag'),
     path('<int:filename_id>/add_tag/<int:tag_id>', views.add_tag, name='add_tag'),
