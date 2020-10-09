@@ -222,11 +222,11 @@ def run_gdrive_import():
 
 
 # Use the schedule wrapper
-from django_q.tasks import schedule
-
-schedule(
-    'tasks.run_gdrive_import',
-         # hook='hooks.print_result',
-         schedule_type='H',
-        name="Google Drive Import"
-)
+# from django_q.tasks import schedule
+#
+# schedule(
+#     'tasks.run_gdrive_import',
+#          # hook='hooks.print_result',
+#          schedule_type='H',
+#         name="Google Drive Import"
+# )
