@@ -98,7 +98,7 @@ python manage.py qmonitor
 python manage.py qinfo
 ```
 
-# Google drive import
+## Google drive import
 
 * Create `credentials.json` by downloading from [Google API Console](https://console.developers.google.com/)
 * Copy `credentials.json` and `token.pickle` into project root dir (`token.pickle` can be created automatically)
