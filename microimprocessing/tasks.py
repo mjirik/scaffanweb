@@ -98,6 +98,7 @@ def run_processing(serverfile:ServerDataFileName):
         mainapp.set_parameter("Input;Lobulus Selection Method", "Auto")
     mainapp.run_lobuluses(seeds_mm=centers_mm)
 
+    serverfile.processed_in_version = scaffan.__version__
     serverfile.process_started = False
     serverfile.save()
 
