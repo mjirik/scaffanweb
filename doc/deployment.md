@@ -103,6 +103,11 @@ python manage.py qinfo
 
 * Create `credentials.json` by downloading from [Google API Console](https://console.developers.google.com/)
 * Copy `credentials.json` and `token.pickle` into project root dir (`token.pickle` can be created automatically)
+* Change owner and permissions
+  ```bash
+  sudo chown scaffanweb /webapps/scaffanweb_django/scaffanweb/credentials_mjirik_gapps.json
+  sudo chown scaffanweb /webapps/scaffanweb_django/scaffanweb/token.pickle
+  ```
 * Add records to `GDriveImport` and `Tasks` using fixture json (or manually)
   ```bash
   python manage.py loaddata gdrive_import
