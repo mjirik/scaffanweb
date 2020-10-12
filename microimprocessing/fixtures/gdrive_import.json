@@ -15,10 +15,10 @@
   },
   {
     "model": "django_q.schedule",
-    "pk": 2,
+    "pk": 1,
     "fields": {
       "name": "Google Drive Import",
-      "func": "tasks.run_gdrive_import",
+      "func": "microimprocessing.tasks.run_gdrive_import",
       "hook": null,
       "args": "()",
       "kwargs": "{}",
