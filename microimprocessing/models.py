@@ -108,6 +108,7 @@ class ServerDataFileName(models.Model):
         default=datetime.now
     )
     outputdir = models.CharField(max_length=255, blank=True, default=get_output_dir)
+    last_error_message = models.CharField(max_length=10000, blank=True, null=True)
     # image_preview = models.ImageField(upload_to="image_preview/", blank=True)
     # votes = models.IntegerField(default=0)
 

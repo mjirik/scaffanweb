@@ -111,7 +111,7 @@ def delete_file(request, filename_id):
     return redirect('/microimprocessing/')
 
 
-def _preapare_xlsx_for_rendering(filename:Path):
+def _preapare_xlsx_for_rendering(filename:Path, additional_keys=None):
     logger.debug(filename)
     df_html = None
     if filename.exists():
@@ -127,6 +127,8 @@ def _preapare_xlsx_for_rendering(filename:Path):
                          "Scan Segmentation Empty Area [mm^2]", "Scan Segmentation Septum Area [mm^2]",
                          "Scan Segmentation Sinusoidal Area [mm^2]",
                          ]
+        if additional_keys:
+            key_candidate += additional_keys
         keys = [key for key in key_candidate if key in dfall.keys()]
         df = dfall[keys]
         df_html = df.to_html(classes="table table-hover", border=0)
@@ -155,7 +157,7 @@ def common_spreadsheet(request):
     # import glob
     # image_list = glob.glob(str(Path(serverfile.outputdir) / "lobulus_*.png"))
 
-    df_html = _preapare_xlsx_for_rendering(filename)
+    df_html = _preapare_xlsx_for_rendering(filename, additional_keys=["File Name"])
     image_list = []
     return render(request, 'microimprocessing/detail.html',
                   {
