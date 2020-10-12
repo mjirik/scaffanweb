@@ -133,6 +133,7 @@
                                         <h5 class="card-title">
                                             {{ server_filename }}
                                         </h5>
+                                        <p>{{ server_filename.description }}</p>
                                         <a class="btn btn-primary"
                                            href="{% url 'microimprocessing:set_lobules_seeds' server_filename.id %}"
                                            data-toggle="tooltip" data-placement="top"
