@@ -62,6 +62,10 @@ def index(request):
         Path(get_zip_fn(serverfile)).exists() if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
+    file_error = [
+        None if Path(serverfile.imagefile.path).exists() else "File not found on the server" if get_zip_fn(serverfile) else False
+        for serverfile in latest_filenames
+    ]
     files_tags = [serverfile.tag_set.all()
         for serverfile in latest_filenames
     ]
@@ -87,7 +91,8 @@ def index(request):
             number_of_points,
             output_exists,
             zip_exists,
-            files_tags
+            files_tags,
+            file_error
         ),
         "spreadsheet_exists": spreadsheet_exists,
         "spreadsheet_url": spreadsheet_url,

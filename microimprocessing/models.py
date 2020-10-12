@@ -113,7 +113,10 @@ class ServerDataFileName(models.Model):
 
     def __str__(self):
         if self.imagefile:
-            return f"{Path(self.imagefile.path).name}"
+            s = f"{Path(self.imagefile.path).name}"
+            if not Path(self.imagefile.path).exists():
+                s += " [file not found]"
+            return s
             # return f"{Path(self.imagefile.path).name} {self.description}"
         else:
             return self.description
