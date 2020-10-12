@@ -442,7 +442,9 @@ def gdrive_import(request):
     return redirect('/microimprocessing/')
 
 
-    # latest_filenames = ServerDataFileName.objects.filter(owner=request.user)
+# TODO add scaffan parameter edit
+# def default_scaffan_params(request):
+#     mainapp.parameters_to_dict()
 
 def logout_view(request):
     logout(request)
