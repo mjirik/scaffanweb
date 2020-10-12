@@ -39,8 +39,10 @@ def get_common_spreadsheet_file(user:User) -> [Path, str, str]:
     url = settings.MEDIA_URL + name
     return filename, url, name
 
+
 def get_default_user_hash():
     return scaffanweb_tools.randomString(12)
+
 
 def upload_to_unqiue_folder(instance, filename):
     """
@@ -52,7 +54,8 @@ def upload_to_unqiue_folder(instance, filename):
     logger.debug(instance.uploaded_at)
     hash = scaffanweb_tools.generate_sha1(instance.uploaded_at, "_")
 
-    instance_filename = Path(instance.imagefile.path).stem
+    # instance_filename = Path(instance.imagefile.path).stem # sometimes the instance.imagefile does not exist
+    instance_filename = Path(filename).stem
 
     datetimestr = datetime.now().strftime("%Y%m%d-%H%M%S")
 
@@ -87,7 +90,7 @@ class ServerDataFileName(models.Model):
     processed_in_version = models.CharField(max_length=200)
     # imagefile_path = models.FilePathField("File Path",path=str(pth), allow_files=True, allow_folders=False, recursive=True, blank=True)
     hash = scaffanweb_tools.randomString(12)
-    imagefile = models.FileField("Uploaded File", upload_to=upload_to_unqiue_folder, blank=True, null=True, max_length=500)
+    imagefile = models.FileField("Image File", upload_to=upload_to_unqiue_folder, blank=True, null=True, max_length=500)
     annotationfile = models.FileField("Annotation File", upload_to=upload_to_unqiue_folder, blank=True, null=True, max_length=500)
     # thumbnail = models.CharField("Thumbnail File", max_length=255, blank=True)
     preview = models.ImageField(upload_to="cellimage/", blank=True)
@@ -105,12 +108,17 @@ class ServerDataFileName(models.Model):
         default=datetime.now
     )
     outputdir = models.CharField(max_length=255, blank=True, default=get_output_dir)
+    last_error_message = models.CharField(max_length=10000, blank=True, null=True)
     # image_preview = models.ImageField(upload_to="image_preview/", blank=True)
     # votes = models.IntegerField(default=0)
 
     def __str__(self):
         if self.imagefile:
-            return f"{Path(self.imagefile.path).name} {self.description}"
+            s = f"{Path(self.imagefile.path).name}"
+            if not Path(self.imagefile.path).exists():
+                s += " [file not found]"
+            return s
+            # return f"{Path(self.imagefile.path).name} {self.description}"
         else:
             return self.description
 
@@ -144,20 +152,19 @@ class Tag(models.Model):
     def __str__(self):
         return str(self.name)
 
-def get_tag_by_str(
+
+def get_tag_by_name(
         name:str,
             # server_datafile:ServerDataFileName
             ):
     """
     Find tag or create new one by string.
-    :param user:
-    :param name:
-    :return:
     """
     objs = Tag.objects.filter(name=name)
     if len(objs) == 0:
-        tag=Tag()
-        tag.name=name
+        tag=Tag(name=name)
+        # tag.name=name
+        tag.save()
     else:
         tag = objs[0]
     return tag
@@ -170,3 +177,12 @@ class Profile(models.Model):
     # birth_date = models.DateField(null=True, blank=True)
     hash = models.CharField(max_length=50, default=get_default_user_hash)
     automatic_import = models.BooleanField(default=False)
+
+
+class GDriveImport(models.Model):
+    user = models.ManyToManyField(User)
+    gdrive_id = models.CharField(max_length=35)
+    gdir_id = models.CharField(max_length=35)
+    extension = models.CharField(max_length=10)
+    token = models.FilePathField(path=settings.BASE_DIR)
+    credentials = models.FilePathField(path=settings.BASE_DIR)

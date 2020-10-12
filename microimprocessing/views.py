@@ -9,7 +9,7 @@ from .forms import ImageQuatroForm, TagForm
 from .tasks import make_thumbnail
 from pathlib import Path
 from django.conf import settings
-from microimprocessing import models
+from microimprocessing import models, tasks
 import sys
 # pth = str(Path(__file__).parent.parent.parent / "scaffan")
 # print(f"local scaffan path={pth}")
@@ -19,7 +19,7 @@ import os.path as op
 from loguru import logger
 import numpy as np
 
-from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User
+from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User, GDriveImport
 
 # Create your views here.
 
@@ -28,19 +28,18 @@ from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User
 def index(request):
     # latest_question_list = ServerDataFileName.objects.order_by('-pub_date')[:5]
     # latest_filenames = ServerDataFileName.objects.all()
+    hide_tags = request.session.get("hide_tags", [])
+    show_tags = request.session.get("show_tags", [])
+    logger.debug(f"hide_tags={hide_tags}")
+    logger.debug(f"show_tags={show_tags}")
     latest_filenames = ServerDataFileName.objects.filter(
         owner=request.user,
         ).exclude(
-        tag__in=request.session.get("hide_tags", [])
+        tag__in=hide_tags
     ).order_by("-uploaded_at")
-    if len(request.session.get("show_tags", [])) > 0:
+    if len(show_tags) > 0:
         latest_filenames = latest_filenames.filter(tag__in=request.session.get("show_tags", []))
-    # if request.method == "POST":
-    #
-    #     # latest_filenames = [fn for fn in latest_filenames if ]
-    #     pass
-    # else:
-    #     latest_filenames = ServerDataFileName.objects.filter(owner=request.user).order_by("-uploaded_at")
+
     number_of_points = [
         len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
         for serverfile in latest_filenames
@@ -61,6 +60,10 @@ def index(request):
                     serverfile.save()
     zip_exists = [
         Path(get_zip_fn(serverfile)).exists() if get_zip_fn(serverfile) else False
+        for serverfile in latest_filenames
+    ]
+    file_error = [
+        None if Path(serverfile.imagefile.path).exists() else "File not found on the server" if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
     files_tags = [serverfile.tag_set.all()
@@ -88,7 +91,8 @@ def index(request):
             number_of_points,
             output_exists,
             zip_exists,
-            files_tags
+            files_tags,
+            file_error
         ),
         "spreadsheet_exists": spreadsheet_exists,
         "spreadsheet_url": spreadsheet_url,
@@ -106,14 +110,16 @@ def delete_file(request, filename_id):
     serverfile.delete()
     return redirect('/microimprocessing/')
 
-def _preapare_xlsx_for_rendering(filename:Path):
+
+def _preapare_xlsx_for_rendering(filename:Path, additional_keys=None):
     logger.debug(filename)
     df_html = None
     if filename.exists():
         import pandas as pd
         dfall = pd.read_excel(str(filename), sheet_name="Sheet1",
-                              index=False,
+                              # index=False,
                               # index_col=0
+                              #index_col=None
                               )
         key_candidate = ["SNI area prediction", "Skeleton length", "Branch number", "Dead ends number",
                          "Area", "Area unit", "Lobulus Perimeter",
@@ -121,6 +127,8 @@ def _preapare_xlsx_for_rendering(filename:Path):
                          "Scan Segmentation Empty Area [mm^2]", "Scan Segmentation Septum Area [mm^2]",
                          "Scan Segmentation Sinusoidal Area [mm^2]",
                          ]
+        if additional_keys:
+            key_candidate += additional_keys
         keys = [key for key in key_candidate if key in dfall.keys()]
         df = dfall[keys]
         df_html = df.to_html(classes="table table-hover", border=0)
@@ -149,7 +157,7 @@ def common_spreadsheet(request):
     # import glob
     # image_list = glob.glob(str(Path(serverfile.outputdir) / "lobulus_*.png"))
 
-    df_html = _preapare_xlsx_for_rendering(filename)
+    df_html = _preapare_xlsx_for_rendering(filename, additional_keys=["File Name"])
     image_list = []
     return render(request, 'microimprocessing/detail.html',
                   {
@@ -197,6 +205,16 @@ def model_form_upload(request):
                                )
         if form.is_valid():
             from django_q.tasks import async_task
+            logger.debug(f"imagefile.name={dir(form)}")
+            name = form.cleaned_data['imagefile']
+            if name is None or name == '':
+                return render(request, 'microimprocessing/model_form_upload.html', {
+                    'form': form,
+                    "headline": "Upload",
+                    "button": "Upload",
+                    "error_text": "Image File is mandatory"
+                })
+
             serverfile = form.save()
             print(f"user id={request.user.id}")
             serverfile.owner = request.user
@@ -224,7 +242,7 @@ def _show_hide_tag(request, tag_id):
         show = request.session["show_tags"]
     else:
         show = []
-        request.session["show_tags"] = hide
+        request.session["show_tags"] = show
     # hide = request.session.get("hide_tags", [])
     # show = request.session.get("show_tags", [])
     logger.debug(f"show={show}")
@@ -235,21 +253,26 @@ def show_tag(request, tag_id):
     show, hide, tag = _show_hide_tag(request, tag_id)
     if tag_id in hide:
         hide.remove(tag_id)
-    show.append(tag_id)
+        request.session.modified = True
+    if tag_id not in show:
+        show.append(tag_id)
+        request.session.modified = True
 
-    request.session.modified = True
     return redirect('/microimprocessing/')
 
 def hide_tag(request, tag_id):
     show, hide, tag = _show_hide_tag(request, tag_id)
     if tag_id in show:
         show.remove(tag_id)
-    hide.append(tag_id)
+        request.session.modified = True
+    if tag_id not in hide:
+        hide.append(tag_id)
+        request.session.modified = True
 
-    request.session.modified = True
     return redirect('/microimprocessing/')
 
-def ignore_tag(request, tag_id):
+
+def ignore_tag(request, tag_id, do_redirect=True):
     show, hide, tag = _show_hide_tag(request, tag_id)
     if tag_id in show:
         show.remove(tag_id)
@@ -257,7 +280,9 @@ def ignore_tag(request, tag_id):
         hide.remove(tag_id)
 
     request.session.modified = True
-    return redirect('/microimprocessing/')
+    if do_redirect:
+        return redirect('/microimprocessing/')
+
 
 def create_tag(request, filename_id=None):
     if request.method == 'POST':
@@ -273,7 +298,7 @@ def create_tag(request, filename_id=None):
             tag.users.add(request.user)
             tag.save()
             if filename_id:
-                _add_tag(request, filename_id, tag.id)
+                _add_tag(request.user, filename_id, tag.id)
             return redirect('/microimprocessing/')
     else:
         form = TagForm
@@ -284,21 +309,35 @@ def create_tag(request, filename_id=None):
         "button": "Create",
     })
 
-def _add_tag(request, filename_id, tag_id):
+
+def _add_tag(user, filename_id, tag_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     tag = get_object_or_404(Tag, pk=tag_id)
-    tag.users.add(request.user)
+    tag.users.add(user)
     tag.files.add(serverfile)
     tag.save()
 
+
 def add_tag(request, filename_id, tag_id):
-    _add_tag(request, filename_id, tag_id)
+    _add_tag(request.user, filename_id, tag_id)
     return redirect('/microimprocessing/')
+
 
 def remove_tag(request, filename_id, tag_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     tag = get_object_or_404(Tag, pk=tag_id)
     tag.files.remove(serverfile)
+    tag.save()
+    return redirect('/microimprocessing/')
+
+
+def remove_tag_from_user(request, tag_id):
+    tag = get_object_or_404(Tag, pk=tag_id)
+    logger.debug(f"delete tag {tag}")
+    ignore_tag(request,tag_id=tag_id, do_redirect=False)
+    for file in tag.files.filter(owner=request.user):
+        tag.files.remove(file)
+    tag.users.remove(request.user)
     tag.save()
     return redirect('/microimprocessing/')
 
@@ -340,6 +379,7 @@ def run_processing(request, pk):
         # mainapp.run_lobuluses(seeds_mm=centers_mm)
     return redirect('/microimprocessing/')
 
+
 def get_zip_fn(serverfile:ServerDataFileName):
     logger.debug(f"serverfile.imagefile={serverfile.imagefile.name}")
     if not serverfile.imagefile.name:
@@ -351,6 +391,7 @@ def get_zip_fn(serverfile:ServerDataFileName):
     # prepare output zip file path
     pth_zip = serverfile.outputdir + nm + ".zip"
     return pth_zip
+
 
 def make_zip(serverfile:ServerDataFileName):
     pth_zip = get_zip_fn(serverfile)
@@ -371,26 +412,39 @@ def add_example_data(request):
     for sample_image in all:
         logger.debug("add data")
         sdf = sample_image.server_datafile
-        # sample_image.image
-        logger.debug(f"add data as a copy of {sdf}")
-        new_sdf = ServerDataFileName(
-            owner=request.user,
-            # imagefile=sdf.,
-            preview=sdf.preview,
-            description="Sample data",
-            # preview=ContentFile(sdf.preview.read()),
-        )
-        # logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
-        # new_sdf.owner=request.user
-        new_sdf.imagefile.save(Path(sdf.imagefile.name).name, ContentFile(sdf.imagefile.read()))
-        make_thumbnail(new_sdf)
-        # new_sdf.save()
-        logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
+        if Path(sdf.imagefile.path).exists():
+            # sample_image.image
+            logger.debug(f"add data as a copy of {sdf}")
+            new_sdf = ServerDataFileName(
+                owner=request.user,
+                # imagefile=sdf.,
+                preview=sdf.preview,
+                description="Sample data",
+                # preview=ContentFile(sdf.preview.read()),
+            )
+            # logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
+            # new_sdf.owner=request.user
+            new_sdf.imagefile.save(Path(sdf.imagefile.name).name, ContentFile(sdf.imagefile.read()))
+            make_thumbnail(new_sdf)
+            # new_sdf.save()
+            logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
+        else:
+            logger.warning(f"Example file '{sdf.imagefile.name}' not found. Skipping.")
 
     return redirect('/microimprocessing/')
 
 
-    # latest_filenames = ServerDataFileName.objects.filter(owner=request.user)
+def gdrive_import(request):
+    from django_q.tasks import async_task
+    logger.debug("gdrive import")
+    async_task('tasks.run_gdrive_import')
+    # tasks.run_gdrive_import()
+    return redirect('/microimprocessing/')
+
+
+# TODO add scaffan parameter edit
+# def default_scaffan_params(request):
+#     mainapp.parameters_to_dict()
 
 def logout_view(request):
     logout(request)

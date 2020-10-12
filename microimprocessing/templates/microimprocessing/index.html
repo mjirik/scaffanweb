@@ -73,9 +73,11 @@
 <!--                                        <div class="badge badge-pill {% if user_tag_status == 'show' %} badge-success {% elif user_tag_status == 'hide' %} badge-danger{% else %} badge-secondary{% endif %}" data-toggle="dropdown">{{ user_tag }} {{ user_tag_status }} </div>-->
                                         <div class="badge badge-pill {% if user_tag_status == 'show' %} badge-dark {% elif user_tag_status == 'hide' %} badge-light {% else %} badge-secondary{% endif %}" data-toggle="dropdown">{{ user_tag }}</div>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="{% url 'microimprocessing:show_tag' user_tag.id %}">Show</a>
-                                            <a class="dropdown-item" href="{% url 'microimprocessing:ignore_tag' user_tag.id %}">Ignore</a>
-                                            <a class="dropdown-item" href="{% url 'microimprocessing:hide_tag' user_tag.id %}">Hide</a>
+                                            <a class="dropdown-item" href="{% url 'microimprocessing:show_tag' user_tag.id %}" data-toggle="tooltip" title="Show data with this tag. Hide other data.">Show</a>
+                                            <a class="dropdown-item" href="{% url 'microimprocessing:ignore_tag' user_tag.id %}" data-toggle="tooltip" title="Remove from filters">Ignore</a>
+                                            <a class="dropdown-item" href="{% url 'microimprocessing:hide_tag' user_tag.id %}" data-toggle="tooltip" title="Hide data with this tag.">Hide</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{% url 'microimprocessing:remove_tag_from_user' user_tag.id %}" onclick="return confirm('Delete tag {{ user_tag }}?')" data-toggle="tooltip" title="Delete the tag and remove it from all data.">Delete</a>
                                         </div>
                                     </div>
                                 </li>
@@ -106,7 +108,7 @@
                                     <a class="btn btn-link" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
                                 </div>
                             </div>
-                        {% for server_filename, n_pts, output_exists, zip_exists, file_tags in latest_filenames %}
+                        {% for server_filename, n_pts, output_exists, zip_exists, file_tags, file_error in latest_filenames %}
                             {% if server_filename.imagefile %}
                                 <div class="card">
         <!--                            <div class="card" style="width:400px">-->
@@ -127,10 +129,14 @@
                                                     <div class="dropdown-divider"></div>
                                                     <a class="dropdown-item" href="{% url 'microimprocessing:create_and_add_tag' server_filename.id %}">+</a>
                                                 </div >
+                                            {% if file_error %}
+                                            <i class="fas fa-exclamation-triangle text-warning" data-toggle="tooltip" title="{{ file_error }}"></i>
+                                            {% endif %}
                                         </div>
                                         <h5 class="card-title">
                                             {{ server_filename }}
                                         </h5>
+                                        <p>{{ server_filename.description }}</p>
                                         <a class="btn btn-primary"
                                            href="{% url 'microimprocessing:set_lobules_seeds' server_filename.id %}"
                                            data-toggle="tooltip" data-placement="top"

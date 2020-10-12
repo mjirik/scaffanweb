@@ -2,3 +2,4 @@ django
 django-allauth
 redis
 openslide
+pandas>=1.1
