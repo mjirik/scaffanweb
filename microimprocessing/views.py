@@ -235,7 +235,7 @@ def _show_hide_tag(request, tag_id):
         show = request.session["show_tags"]
     else:
         show = []
-        request.session["show_tags"] = hide
+        request.session["show_tags"] = show
     # hide = request.session.get("hide_tags", [])
     # show = request.session.get("show_tags", [])
     logger.debug(f"show={show}")
@@ -246,22 +246,26 @@ def show_tag(request, tag_id):
     show, hide, tag = _show_hide_tag(request, tag_id)
     if tag_id in hide:
         hide.remove(tag_id)
-    show.append(tag_id)
+        request.session.modified = True
+    if tag_id not in show:
+        show.append(tag_id)
+        request.session.modified = True
 
-    request.session.modified = True
     return redirect('/microimprocessing/')
 
 def hide_tag(request, tag_id):
     show, hide, tag = _show_hide_tag(request, tag_id)
     if tag_id in show:
         show.remove(tag_id)
-    hide.append(tag_id)
+        request.session.modified = True
+    if tag_id not in hide:
+        hide.append(tag_id)
+        request.session.modified = True
 
-    request.session.modified = True
     return redirect('/microimprocessing/')
 
 
-def ignore_tag(request, tag_id, redirect=True):
+def ignore_tag(request, tag_id, do_redirect=True):
     show, hide, tag = _show_hide_tag(request, tag_id)
     if tag_id in show:
         show.remove(tag_id)
@@ -269,7 +273,7 @@ def ignore_tag(request, tag_id, redirect=True):
         hide.remove(tag_id)
 
     request.session.modified = True
-    if redirect:
+    if do_redirect:
         return redirect('/microimprocessing/')
 
 
@@ -323,7 +327,7 @@ def remove_tag(request, filename_id, tag_id):
 def remove_tag_from_user(request, tag_id):
     tag = get_object_or_404(Tag, pk=tag_id)
     logger.debug(f"delete tag {tag}")
-    ignore_tag(request,tag_id=tag_id, redirect=False)
+    ignore_tag(request,tag_id=tag_id, do_redirect=False)
     for file in tag.files.filter(owner=request.user):
         tag.files.remove(file)
     tag.users.remove(request.user)
