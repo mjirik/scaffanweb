@@ -9,7 +9,35 @@
       "token": "C:\\Users\\Jirik\\projects\\scaffanweb\\token.pickle",
       "credentials": "C:\\Users\\Jirik\\projects\\scaffanweb\\credentials_mjirik_gapps.json",
       "user": [
-        2
+        1
+      ]
+    }
+  },
+  {
+    "model": "microimprocessing.gdriveimport",
+    "pk": 2,
+    "fields": {
+      "gdrive_id": "0AHtTDixl96VzUk9PVA",
+      "gdir_id": "1OsKfZlp_s6RPHXXei8LsZunTNjPsBwMb",
+      "extension": "ndpi",
+      "token": "C:\\Users\\Jirik\\projects\\scaffanweb\\token.pickle",
+      "credentials": "C:\\Users\\Jirik\\projects\\scaffanweb\\credentials_mjirik_gapps.json",
+      "user": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "microimprocessing.gdriveimport",
+    "pk": 3,
+    "fields": {
+      "gdrive_id": "0AHtTDixl96VzUk9PVA",
+      "gdir_id": "1OsKfZlp_s6RPHXXei8LsZunTNjPsBwMb",
+      "extension": "tif",
+      "token": "C:\\Users\\Jirik\\projects\\scaffanweb\\token.pickle",
+      "credentials": "C:\\Users\\Jirik\\projects\\scaffanweb\\credentials_mjirik_gapps.json",
+      "user": [
+        1
       ]
     }
   },
