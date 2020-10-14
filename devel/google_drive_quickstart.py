@@ -47,11 +47,11 @@ def iterate_files(
                 credentials_json, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
+        with open(token_pickle, 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('drive', 'v3', credentials=creds)
-    q = f"'{dir_id}' in parents"
+    q = f"'{dir_id}' in parents and trashed = false"
     if file_extension:
         q += f" and fileExtension = '{file_extension}'"
     # Call the Drive v3 API
@@ -62,7 +62,6 @@ def iterate_files(
         # q="'1pStkl9_vEQJHTAc0OIbP4X39GmcBhVBJ' in parents", # all files in Moulisova-Jena
         # q="'1OsKfZlp_s6RPHXXei8LsZunTNjPsBwMb' in parents", # all files in scaffan_import
         q=q, # all files in scaffan_import
-
         includeItemsFromAllDrives=True,
         supportsAllDrives=True,
         corpora="drive",
@@ -77,17 +76,17 @@ def iterate_files(
         for item in items:
             print(u'{0} ({1})'.format(item['name'], item['id']))
 
-        file_id = item["id"]
-        name = item['name']
-        drive_service = service
-        request = drive_service.files().get_media(fileId=file_id)
-        fh = io.BytesIO()
-        downloader = MediaIoBaseDownload(fh, request)
-        done = False
-        while done is False:
-            status, done = downloader.next_chunk()
-            logger.debug("Download %d%%." % int(status.progress() * 100))
-        yield fh, name
+            file_id = item["id"]
+            name = item['name']
+            drive_service = service
+            request = drive_service.files().get_media(fileId=file_id)
+            fh = io.BytesIO()
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+                logger.debug("Download %d%%." % int(status.progress() * 100))
+            yield fh, name
 
 
 def main():
