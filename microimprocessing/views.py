@@ -425,6 +425,8 @@ def add_example_data(request):
             # logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
             # new_sdf.owner=request.user
             new_sdf.imagefile.save(Path(sdf.imagefile.name).name, ContentFile(sdf.imagefile.read()))
+            tag = models.get_tag_by_name("Sample")
+            _add_tag(user=request.user, filename_id=new_sdf.id, tag_id=tag.id)
             make_thumbnail(new_sdf)
             # new_sdf.save()
             logger.debug(f"newsdf.owner{new_sdf.owner}, new_sdf.imagefile={new_sdf.imagefile}")
