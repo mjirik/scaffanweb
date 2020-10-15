@@ -77,6 +77,8 @@ def index(request):
     #     Path(fn.imagefile.path).name for fn in latest_filenames
     #     ]
     # template = loader.get_template('microimprocessing/index.html')
+    # if request.user in gdriveimport.user.all():
+    user_has_gdrive_import = (len(models.GDriveImport.objects.filter(user=request.user)) > 0)
 
     user_tags = [
         (
@@ -96,7 +98,8 @@ def index(request):
         ),
         "spreadsheet_exists": spreadsheet_exists,
         "spreadsheet_url": spreadsheet_url,
-        "user_tags": user_tags
+        "user_tags": user_tags,
+        "user_has_gdrive_import": user_has_gdrive_import
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))

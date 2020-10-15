@@ -82,13 +82,23 @@
                                     </div>
                                 </li>
                             {% endfor %}
-                            <li class="nav-item">
+                            <li class="nav-item px-1">
                                 {% if spreadsheet_exists %}
                                 <a class="btn btn-primary" href="{% url 'microimprocessing:common_spreadsheet' %}"
                                    data-toggle="tooltip" data-placement="top"
                                    title="View Common Spreadsheet"
                                 >
                                     <i class="fas fa-table"></i>
+                                </a>
+                                {% endif %}
+                            </li>
+                            <li class="nav-item px-1">
+                                {% if user_has_gdrive_import %}
+                                <a class="btn btn-secondary" href="{% url 'microimprocessing:gdrive_import' %}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="Run the import now. Regular imports are done every hour."
+                                >
+                                    <i class="fas fa-sync-alt"></i>
                                 </a>
                                 {% endif %}
                             </li>
@@ -169,6 +179,7 @@
                                         {% endif %}
                                         <a class="btn btn-secondary" href="{% url 'microimprocessing:delete_file' server_filename.id %}"
                                            data-toggle="tooltip" data-placement="top"
+                                           onclick="return confirm('Delete file {{ server_filename }}?')"
                                            title="Delete"
                                         >
                                             <i class="fas fa-spinner fa-trash"></i>
