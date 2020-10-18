@@ -21,9 +21,11 @@ div.container-fluid {
   background-color: yellow;
 }
 */
-
+.table td {
+    text-align: right
+}
 #scaffanlogo {
-    width:100px;
+    width:50px;
 }
 
 #appbody {

@@ -40,13 +40,19 @@
 <body>
 <!-- A grey horizontal navbar that becomes vertical on small screens -->
 <!--    <div class="jumbotron p-1">-->
-<!--<nav class="navbar navbar-expand-sm bg-light">-->
 <nav class="navbar navbar-expand-sm bg-light">
+<!--<nav class="navbar navbar-default ">-->
+<!--    <div class="container-fluid">-->
+
 <!--        <div class="float-left">-->
 <!--    <a href="{% url 'microimprocessing:index' %}" >-->
-    <a href="{% url 'login' %}" >
-        <img id="scaffanlogo" class="m-0" src="{% static 'microimprocessing/scaffan_icon512.png' %}" alt="ScaffAn">
-    </a>
+<!--        <div class="navbar-header">-->
+
+            <a class="navbar-brand" href="{% url 'login' %}" >
+                <img id="scaffanlogo" class="m-0" src="{% static 'microimprocessing/scaffan_icon512.png' %}" alt="ScaffAn">
+            </a>
+<!--        </div>-->
+<!--    <ul class="nav navbar-nav">-->
     <ul class="navbar-nav ml-auto">
 
         {% if user.is_authenticated %}
@@ -56,11 +62,13 @@
             </div>
         </li>
         <li class="nav-item">
-            <a class="btn btn-secondary" href="{% url 'microimprocessing:logout_view' %}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i></a>
+            <a class="btn btn-light" href="{% url 'microimprocessing:logout_view' %}">Logout
+<!--                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>-->
+            </a>
         </li>
         {% endif %}
     </ul>
-<!--        </div>-->
+<!--    </div>-->
 
 </nav>
 <!--    </div>-->
