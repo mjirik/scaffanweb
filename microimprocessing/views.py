@@ -21,9 +21,6 @@ import numpy as np
 
 from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User, GDriveImport
 
-# Create your views here.
-
-
 
 def index(request):
     # latest_question_list = ServerDataFileName.objects.order_by('-pub_date')[:5]

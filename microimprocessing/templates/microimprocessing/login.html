@@ -9,15 +9,20 @@
 <!--  </head>-->
 <!--  <body>-->
 <div class="container">
-    {% if user.is_authenticated %}
     <h1>ScaffAn</h1>
-    <p>Welcome, {{ user.username }} !</p>
-    <a class="btn btn-primary" href="{% url 'microimprocessing:index' %}">Go to your images</a>
+    Application for liver scaffold analysis
+    <ol>
+        <li>Upload H&E Stained Image</li>
+        <li>Run the analysis</li>
+        <li>Get the score</li>
+    </ol>
+    {% if user.is_authenticated %}
+<!--    <p>Welcome, {{ user.username }} !</p>-->
+    <a class="btn btn-primary" href="{% url 'microimprocessing:index' %}">Go to the application</a>
 
 
     {% else %}
-    <h1>ScaffAn</h1>
-    <a class="btn btn-primary" href="{% provider_login_url 'google' %}">Login with Google</a>
+    <a class="btn btn-primary" href="{% provider_login_url 'google' %}?next={% url 'microimprocessing:index' %}">Login with Google</a>
     {% endif %}
 
     <h2 class="pt-5">High-quality liver tissue scaffold for tissue engineering</h2>
