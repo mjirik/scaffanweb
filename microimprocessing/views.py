@@ -133,7 +133,7 @@ def _preapare_xlsx_for_rendering(filename:Path, additional_keys=None):
                               # index_col=0
                               #index_col=None
                               )
-        key_candidate = ["SNI area prediction", "Skeleton length", "Branch number", "Dead ends number",
+        key_candidate = ["SNI area prediction", "SNI Prediction CNN", "Skeleton length", "Branch number", "Dead ends number",
                          "Area", "Area unit", "Lobulus Perimeter",
                          "Annotation Center X [mm]", "Annotation Center Y [mm]",
                          "Scan Segmentation Empty Area [mm^2]", "Scan Segmentation Septum Area [mm^2]",
