@@ -102,6 +102,14 @@ def run_processing(serverfile:ServerDataFileName):
     serverfile.process_started = False
     serverfile.save()
 
+def finish_processing(task):
+    if task.success:
+        pass
+    else:
+        serverfile = task.args[0]
+        serverfile.process_started = False
+        serverfile.save()
+
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/drive.file']
 

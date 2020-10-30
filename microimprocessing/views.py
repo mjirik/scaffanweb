@@ -60,7 +60,8 @@ def index(request):
         for serverfile in latest_filenames
     ]
     file_error = [
-        None if Path(serverfile.imagefile.path).exists() else "File not found on the server" if get_zip_fn(serverfile) else False
+        _find_error(serverfile)
+        # None if Path(serverfile.imagefile.path).exists() else "File not found on the server" if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
     files_tags = [serverfile.tag_set.all()
@@ -104,6 +105,17 @@ def index(request):
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")
 
+def _find_error(serverfile:ServerDataFileName):
+
+    if (not Path(serverfile.imagefile.path).exists()) and get_zip_fn( serverfile):
+        return "File not found on the server"
+    else:
+        import django_q.models as qmodels
+        query = qmodels.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(serverfile,))
+        if len(query) > 0:
+            if not query.latest("started").success:
+                return str(query.latest("started").result)
+        # qmodels.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(sn,)).latest("started")
 
 def delete_file(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
@@ -361,9 +373,10 @@ def run_processing(request, pk):
     serverfile.outputdir = get_output_dir()
     serverfile.save()
 
-    tid = async_task('microimprocessing.tasks.run_processing', serverfile
+    tid = async_task(
+        'microimprocessing.tasks.run_processing', serverfile,
                      # hook="microimprocessing.views.make_thumbnail"
-               # hook='tasks.email_report'
+               hook='tasks.finish_processing'
                )
 
     # logger.debug("before results")
