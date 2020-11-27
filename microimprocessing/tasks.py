@@ -166,7 +166,7 @@ def _iterate_gdrive_import_files(
         includeItemsFromAllDrives=True,
         supportsAllDrives=True,
         corpora="drive",
-        # pageSize=10,
+        pageSize=1000,
         fields="nextPageToken, files(id, name)").execute()
     items = results.get('files', [])
 
