@@ -102,7 +102,7 @@ def run_processing(serverfile:ServerDataFileName):
     serverfile.processed_in_version = scaffan.__version__
     serverfile.process_started = False
     serverfile.last_error_message = ''
-    if serverfile.zip_file and Path(serverfile.zip_file).exists():
+    if serverfile.zip_file and Path(serverfile.zip_file.path).exists():
         serverfile.zip_file.delete()
     serverfile.save()
 
