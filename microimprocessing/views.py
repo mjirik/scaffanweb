@@ -440,8 +440,8 @@ def run_processing(request, pk):
     tid = async_task(
         'microimprocessing.tasks.run_processing', serverfile,
                      # hook="microimprocessing.views.make_thumbnail"
-               hook='tasks.finish_processing'
-               )
+        hook='microimprocessing.tasks.finish_processing',
+    )
 
     # logger.debug("before results")
     # res = result(tid, 500)

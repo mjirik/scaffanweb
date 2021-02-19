@@ -97,10 +97,13 @@ def run_processing(serverfile:ServerDataFileName):
     else:
         mainapp.set_parameter("Input;Lobulus Selection Method", "Auto")
     mainapp.run_lobuluses(seeds_mm=centers_mm)
+    serverfile.score = mainapp.report.df["SNI area prediction"].mean()
 
     serverfile.processed_in_version = scaffan.__version__
     serverfile.process_started = False
     serverfile.last_error_message = ''
+    if serverfile.zip_file and Path(serverfile.zip_file).exists():
+        serverfile.zip_file.delete()
     serverfile.save()
 
 

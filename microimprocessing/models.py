@@ -107,6 +107,7 @@ class ServerDataFileName(models.Model):
         # blank=True) #,
         default=datetime.now
     )
+    score = models.FloatField(blank=True, null=True)
     outputdir = models.CharField(max_length=255, blank=True, default=get_output_dir)
     last_error_message = models.CharField(max_length=10000, blank=True, null=True)
     # last_task_uuid = models.CharField(max_length=255, blank=True, null=True)

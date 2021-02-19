@@ -124,7 +124,20 @@
         <!--                            <div class="card" style="width:400px">-->
                                     {% if server_filename.preview %}
             <!--                            <img id="multicellimg" class="rounded" src='{{server_filename.preview.url}}' width="100">-->
+                                    <div>
                                         <img id="multicellimg" class="card-img-top" src='{{server_filename.preview.url}}'>
+                                        <div class="card-img-top-overlay">
+                                            {% if output_exists %}
+                                                {% if server_filename.score %}
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                    <b>
+                                                        {{ server_filename.score }}
+                                                    </b>
+
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                     {% endif %}
                                     <div class="card-body">
                                         <div class="card-text">
