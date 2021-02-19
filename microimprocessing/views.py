@@ -19,6 +19,8 @@ import os.path as op
 from loguru import logger
 import numpy as np
 import django_q
+import glob
+import os.path
 
 from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User, GDriveImport
 
@@ -61,7 +63,7 @@ def index(request):
         for serverfile in latest_filenames
     ]
     file_error = [
-        _find_error(serverfile)
+        _find_error(serverfile)[0]
         # None if Path(serverfile.imagefile.path).exists() else "File not found on the server" if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
@@ -106,6 +108,17 @@ def index(request):
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")
 
+def create_and_download_zip(request, filename_id):
+    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+    zip_fn = get_zip_fn(serverfile)
+    if zip_fn:
+        if not Path(zip_fn).exists():
+            make_zip(serverfile)
+            serverfile.process_started = False
+            serverfile.save()
+    return redirect(serverfile.zip_file.url)
+
+
 def _find_error(serverfile:ServerDataFileName):
 
     msg = ''
@@ -115,25 +128,61 @@ def _find_error(serverfile:ServerDataFileName):
     tasks_of_file = [tsk for tsk in django_q.models.Task.objects.all().order_by('-started') if
                          ((len(tsk.args) > 0) and (tsk.args[0] == serverfile))]
 
+    last_task = None
     if len(tasks_of_file) > 0:
         last_task = tasks_of_file[0]
         if last_task.success:
             pass
         else:
-            msg += f"Failure. Func: {last_task.func}, Args: {last_task.args}, Result: {last_task.result}"
+            msg += f"Failed task. Func: {last_task.func}, Short result: {last_task.short_result}"
             # import django_q.models as qmodels
             # query = models.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(serverfile,))
             # if len(query) > 0:
             #     if not query.latest("started").success:
             #         return str(query.latest("started").result)
             # qmodels.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(sn,)).latest("started")
-    return msg
+    return msg, last_task
+
 
 def delete_file(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     serverfile.delete()
     return redirect('/microimprocessing/')
 
+
+def file_log(request, filename_id):
+    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+    msg, task = _find_error(serverfile)
+    key_value = {}
+    if task and not task.success:
+        key_value = {
+            'Id': task.id,
+            'Name': task.name,
+            'Func': task.func,
+            'Args': task.args,
+            'Kwargs': task.kwargs,
+            'Result': task.result.replace('\n', '<br>'),
+            'Group': task.group,
+            'Started': task.started,
+            'Stopped': task.stopped,
+            "Success": task.success,
+        }
+    if (len(msg) > 0) and ((task is None) or task.success):
+        key_value = {"Error": msg}
+
+    opath = Path(serverfile.outputdir)
+    # outputdir_url = opath.exists()
+    if opath.exists():
+        key_value.update({
+            "Files": "<br>".join(map(os.path.basename, glob.glob(str(opath / "*.*"))))
+        })
+
+    # if filename.exists():
+
+    return render(request, 'microimprocessing/file_log.html',
+                  {'serverfile': serverfile, 'df_html':None, "image_list":None, 'key_value': key_value,
+                   'download_button': opath.exists()
+                   })
 
 def _preapare_xlsx_for_rendering(filename:Path, additional_keys=None):
     logger.debug(filename)
@@ -172,6 +221,7 @@ def detail(request, filename_id):
     return render(request, 'microimprocessing/detail.html',
                   {'serverfile': serverfile, 'df_html':df_html, "image_list":image_list})
 
+
 def common_spreadsheet(request):
 
     filename,url,_ = models.get_common_spreadsheet_file(request.user)
@@ -186,9 +236,11 @@ def common_spreadsheet(request):
     return render(request, 'microimprocessing/detail.html',
                   {
                       'serverfile': "Common Spreadsheet",
-                      'df_html':df_html,
-                      "image_list":image_list,
-                      "spreadsheet_url":url}
+                      'df_html': df_html,
+                      "image_list": image_list,
+                      "spreadsheet_url": url,
+                      "spreadsheet_url_tooltip": "Download the table"
+                  }
                   )
 
 

@@ -2,13 +2,12 @@
 {% block body %}
 {% if user.is_authenticated %}
 <!--    <div class="container-fluid">-->
-    <div class="navbar navbar-expand-sm">
-        <h2>{{ serverfile }}</h2>
-        {% if spreadsheet_url %}
+    <div class="navbar">
+        {% if download_button %}
         <div class="navbar-nav ml-auto">
-            <a class="btn btn-primary" href="{{ spreadsheet_url }}"
+            <a class="btn btn-primary" href="{% url 'microimprocessing:create_and_download_zip' serverfile.id %}"
                data-toggle="tooltip" data-placement="top"
-               title="{{ spreadsheet_url_tooltip }}"
+               title="Download zip of the output directory"
             >
                 <i class="fas fa-download"></i>
             </a>
@@ -16,7 +15,8 @@
         {% endif %}
     </div>
 
-    <div class="container-fluid">
+    <div class="container">
+        <h2>{{ serverfile }}</h2>
         {% if df_html %}
         <p>
             {% autoescape off %}

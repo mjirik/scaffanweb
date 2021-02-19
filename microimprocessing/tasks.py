@@ -103,7 +103,9 @@ def run_processing(serverfile:ServerDataFileName):
     serverfile.last_error_message = ''
     serverfile.save()
 
+
 def finish_processing(task):
+    # this does not work
     if task.success:
         pass
     else:
@@ -111,8 +113,10 @@ def finish_processing(task):
         serverfile.process_started = False
         serverfile.save()
 
+
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/drive.file']
+
 
 def _iterate_gdrive_import_files(
         credentials_json='credentials_mjirik_gapps.json',

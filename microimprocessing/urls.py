@@ -11,6 +11,8 @@ urlpatterns = [
     # ex: /polls/5/
     path('<int:filename_id>/', views.set_lobules_seeds, name='set_lobules_seeds'),
     path('<int:filename_id>/detail', views.detail, name='detail'),
+    path('<int:filename_id>/file_log', views.file_log, name='file_log'),
+    path('<int:filename_id>/create_and_download_zip', views.create_and_download_zip, name='create_and_download_zip'),
     path('common_spreadsheet', views.common_spreadsheet, name='common_spreadsheet'),
     path('upload/', views.model_form_upload, name='model_form_upload'),
     path('show_tag/<int:tag_id>', views.show_tag, name='show_tag'),
