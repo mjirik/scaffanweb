@@ -128,12 +128,11 @@
 <!--                                    <div class="card-image">-->
                                         <img id="multicellimg" class="card-img-top" src='{{server_filename.preview.url}}'>
                                         <div  style="position: absolute; top: 0; left: 0; right: 0; padding:1.25rem;">
-                                            ula
                                             {% if output_exists %}
                                                 {% if server_filename.score %}
                                                     <i class="fas fa-star-half-alt"></i>
                                                     <b>
-                                                        {{ server_filename.score }}
+                                                        {{ server_filename.score |floatformat:3 }}
                                                     </b>
 
                                                 {% endif %}
