@@ -100,6 +100,7 @@ def run_processing(serverfile:ServerDataFileName):
 
     serverfile.processed_in_version = scaffan.__version__
     serverfile.process_started = False
+    serverfile.last_error_message = ''
     serverfile.save()
 
 def finish_processing(task):

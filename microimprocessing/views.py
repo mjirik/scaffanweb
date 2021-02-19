@@ -18,6 +18,7 @@ import sys
 import os.path as op
 from loguru import logger
 import numpy as np
+import django_q
 
 from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User, GDriveImport
 
@@ -107,15 +108,26 @@ def index(request):
 
 def _find_error(serverfile:ServerDataFileName):
 
+    msg = ''
     if (not Path(serverfile.imagefile.path).exists()) and get_zip_fn( serverfile):
-        return "File not found on the server"
-    else:
-        import django_q.models as qmodels
-        query = qmodels.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(serverfile,))
-        if len(query) > 0:
-            if not query.latest("started").success:
-                return str(query.latest("started").result)
-        # qmodels.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(sn,)).latest("started")
+        msg += "File not found on the server<br>"
+        # is_failed = [fn in first_arg_of_failed_tasks for fn in latest_filenames]
+    tasks_of_file = [tsk for tsk in django_q.models.Task.objects.all().order_by('-started') if
+                         ((len(tsk.args) > 0) and (tsk.args[0] == serverfile))]
+
+    if len(tasks_of_file) > 0:
+        last_task = tasks_of_file[0]
+        if last_task.success:
+            pass
+        else:
+            msg += f"Result: {last_task.result},<br>Func: {last_task.func}, <br> Args: {last_task.args}"
+            # import django_q.models as qmodels
+            # query = models.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(serverfile,))
+            # if len(query) > 0:
+            #     if not query.latest("started").success:
+            #         return str(query.latest("started").result)
+            # qmodels.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(sn,)).latest("started")
+    return msg
 
 def delete_file(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
