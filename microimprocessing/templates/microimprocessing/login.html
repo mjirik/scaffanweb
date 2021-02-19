@@ -11,11 +11,47 @@
 <div class="container">
     <h1>ScaffAn</h1>
     Application for liver scaffold analysis
-    <ol>
-        <li>Upload H&E Stained Image</li>
-        <li>Run the analysis</li>
-        <li>Get the score</li>
-    </ol>
+
+    <h2> How it works</h2>
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row justify-content-md-center align-items-center">
+                <div class="col">
+                    <p class="text-center">
+                        <i class="fas fa-upload fa-6x"></i>
+                        <br>
+                        <br>
+                        Upload H&E Stained Image
+
+                    </p>
+                </div>
+                <div class="col">
+                    <p class="text-center">
+                        <i class="fas fa-long-arrow-alt-right fa-4x"></i>
+                    </p>
+                </div>
+                <div class="col">
+                    <i class="fas fa-chart-line fa-6x"></i>
+                    <br>
+                    <br>
+                    Run the analysis
+                </div>
+                <div class="col">
+                    <p class="text-center">
+                        <i class="fas fa-long-arrow-alt-right fa-4x"></i>
+                    </p>
+                </div>
+                <div class="col">
+                    <p class="text-center">
+                        <i class="fas fa-star-half-alt fa-6x"></i>
+                        <br>
+                        <br>
+                        Get the score
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
     {% if user.is_authenticated %}
 <!--    <p>Welcome, {{ user.username }} !</p>-->
     <a class="btn btn-primary" href="{% url 'microimprocessing:index' %}">Go to the application</a>
