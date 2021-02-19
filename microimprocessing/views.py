@@ -110,7 +110,7 @@ def _find_error(serverfile:ServerDataFileName):
 
     msg = ''
     if (not Path(serverfile.imagefile.path).exists()) and get_zip_fn( serverfile):
-        msg += "File not found on the server<br>"
+        msg += "File not found on the server. "
         # is_failed = [fn in first_arg_of_failed_tasks for fn in latest_filenames]
     tasks_of_file = [tsk for tsk in django_q.models.Task.objects.all().order_by('-started') if
                          ((len(tsk.args) > 0) and (tsk.args[0] == serverfile))]
@@ -120,7 +120,7 @@ def _find_error(serverfile:ServerDataFileName):
         if last_task.success:
             pass
         else:
-            msg += f"Result: {last_task.result},<br>Func: {last_task.func}, <br> Args: {last_task.args}"
+            msg += f"Failure. Func: {last_task.func}, Args: {last_task.args}, Result: {last_task.result}"
             # import django_q.models as qmodels
             # query = models.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(serverfile,))
             # if len(query) > 0:
