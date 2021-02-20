@@ -112,10 +112,9 @@ def create_and_download_zip(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     zip_fn = get_zip_fn(serverfile)
     if zip_fn:
-        if not Path(zip_fn).exists():
-            make_zip(serverfile)
-            serverfile.process_started = False
-            serverfile.save()
+        make_zip(serverfile)
+        serverfile.process_started = False
+        serverfile.save()
     return redirect(serverfile.zip_file.url)
 
 
