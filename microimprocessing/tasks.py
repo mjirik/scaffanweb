@@ -1,4 +1,5 @@
 from loguru import logger
+import loguru
 from pathlib import Path
 import numpy as np
 from .models import ServerDataFileName, LobuleCoordinates, ExampleData
@@ -61,6 +62,13 @@ def run_processing(serverfile:ServerDataFileName):
     import scaffan
     import scaffan.algorithm
     import scaffan.image
+    log_format = loguru._defaults.LOGURU_FORMAT
+    logger_id = logger.add(
+        str(Path(serverfile.outputdir) / "log.txt"),
+        format=log_format,
+        level='DEBUG',
+        rotation="1 week"
+    )
     coords = LobuleCoordinates.objects.filter(server_datafile=serverfile)
 
     centers_mm = [[coord.x_mm, coord.y_mm] for coord in coords]
@@ -105,6 +113,7 @@ def run_processing(serverfile:ServerDataFileName):
     if serverfile.zip_file and Path(serverfile.zip_file.path).exists():
         serverfile.zip_file.delete()
     serverfile.save()
+    logger.remove(logger_id)
 
 
 def finish_processing(task):
