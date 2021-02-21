@@ -29,4 +29,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout_view'),
     path('add_example_data/', views.add_example_data, name='add_example_data'),
     path('<int:filename_id>/delete_file/', views.delete_file, name='delete_file'),
+    path('force_update/', views.force_update, name='force_update'),
 ]

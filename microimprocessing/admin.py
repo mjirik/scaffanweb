@@ -11,7 +11,8 @@ from .models import (
     ExampleData,
     Tag,
     Profile,
-    GDriveImport
+    GDriveImport,
+    BitmapImage
 )
 import django_q.models as qmodels
 
@@ -22,5 +23,6 @@ admin.site.register(ExampleData)
 admin.site.register(Tag)
 admin.site.register(Profile)
 admin.site.register(GDriveImport)
+admin.site.register(BitmapImage)
 
 # admin.site.register(qmodels.Schedule)

@@ -149,6 +149,21 @@ def delete_file(request, filename_id):
     return redirect('/microimprocessing/')
 
 
+def force_update(request):
+    """
+    Used to generate few things automatically. Usually used for debug.
+    :param request:
+    :return:
+    """
+    logger.debug("Force update")
+    latest_filenames = ServerDataFileName.objects.all()
+    for serverfile in latest_filenames:
+        logger.debug(serverfile)
+        tasks.delete_generated_images(serverfile)
+        tasks.add_generated_images(serverfile)
+
+    return redirect('/microimprocessing/')
+
 def file_log(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     msg, task = _find_error(serverfile)
@@ -217,7 +232,8 @@ def detail(request, filename_id):
         # image_list = glob.glob(str(Path(serverfile.outputdir) / "lobulus_*.png"))
 
     df_html = _preapare_xlsx_for_rendering(filename)
-    image_list = []
+    image_list = serverfile.bitmapimage_set.all()
+
     return render(request, 'microimprocessing/detail.html',
                   {'serverfile': serverfile, 'df_html':df_html, "image_list":image_list})
 

@@ -15,6 +15,7 @@ import pickle
 from django.core.files.base import ContentFile
 from scaffanweb import settings
 from microimprocessing import scaffanweb_tools, models, views
+import glob
 
 # report generator
 def create_html_report(user):
@@ -69,6 +70,7 @@ def run_processing(serverfile:ServerDataFileName):
         level='DEBUG',
         rotation="1 week"
     )
+    delete_generated_images(serverfile) # remove images from database and the output directory
     coords = LobuleCoordinates.objects.filter(server_datafile=serverfile)
 
     centers_mm = [[coord.x_mm, coord.y_mm] for coord in coords]
@@ -107,6 +109,8 @@ def run_processing(serverfile:ServerDataFileName):
     mainapp.run_lobuluses(seeds_mm=centers_mm)
     serverfile.score = mainapp.report.df["SNI area prediction"].mean()
 
+    add_generated_images(serverfile) # add generated images to database
+
     serverfile.processed_in_version = scaffan.__version__
     serverfile.process_started = False
     serverfile.last_error_message = ''
@@ -124,6 +128,26 @@ def finish_processing(task):
         serverfile = task.args[0]
         serverfile.process_started = False
         serverfile.save()
+
+
+def add_generated_images(serverfile:ServerDataFileName):
+    # serverfile.bitmap_image_set.all().delete()
+    od = Path(serverfile.outputdir)
+    logger.debug(od)
+    lst = glob.glob(str(od / "slice_raster.png"))
+    lst.extend(glob.glob(str(od / "slice_label.png")))
+    lst.extend(glob.glob(str(od / "sinusoidal_tissue_local_centers.png")))
+    lst.extend(glob.glob(str(od / "lobulus_[0-9]*.png")))
+    logger.debug(lst)
+
+    for fn in lst:
+        pth_rel = op.relpath(fn, settings.MEDIA_ROOT)
+        bi = models.BitmapImage(server_datafile=serverfile, bitmap_image=pth_rel)
+        bi.save()
+
+
+def delete_generated_images(serverfile:ServerDataFileName):
+    serverfile.bitmapimage_set.all().delete()
 
 
 # If modifying these scopes, delete the file token.pickle.

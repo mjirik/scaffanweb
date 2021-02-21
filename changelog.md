@@ -1,6 +1,7 @@
 # Changelog
 
 
+* [Added] Preview images in detail view
 * [Added] Score in cards
 * [Added] Download not completed data dir
 * [Added] Error log information

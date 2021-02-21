@@ -125,6 +125,15 @@ class ServerDataFileName(models.Model):
             return self.description
 
 
+class BitmapImage(models.Model):
+    server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)
+    bitmap_image = models.ImageField()
+
+    @property
+    def filename(self):
+        return op.basename(self.bitmap_image.name)
+
+
 class LobuleCoordinates(models.Model):
     server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)
     x_mm = models.FloatField("X [mm]")
