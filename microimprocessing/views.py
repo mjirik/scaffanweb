@@ -9,6 +9,9 @@ from .forms import ImageQuatroForm, TagForm
 from .tasks import make_thumbnail
 from pathlib import Path
 from django.conf import settings
+from django.views.generic import ListView
+from django.http import HttpResponse
+from datetime import datetime
 from microimprocessing import models, tasks
 import sys
 # pth = str(Path(__file__).parent.parent.parent / "scaffan")
@@ -32,11 +35,44 @@ def index(request):
     show_tags = request.session.get("show_tags", [])
     logger.debug(f"hide_tags={hide_tags}")
     logger.debug(f"show_tags={show_tags}")
-    latest_filenames = ServerDataFileName.objects.filter(
+    order_by = request.session.get("order_by", '-uploaded_at')
+    order_by_items_input = [
+        "uploaded_at",
+        "started_at",
+        "filename"
+    ]
+
+    order_by_items = []
+    for field in order_by_items_input:
+        if field == 'filename':
+            title = "Filename"
+        else:
+            title = models.ServerDataFileName._meta.get_field(field).verbose_name.title()
+        order_by_items.append([
+            field,
+            "▲ " + title,
+            # "&#9650; " + title,
+            field == order_by
+        ])
+        order_by_items.append([
+            "-" + field,
+            "▼ " + title,
+            # "&#9660; " + title,
+            ("-" + field) == order_by
+        ])
+
+    logger.warning(order_by_items)
+    qs_latest_filenames = ServerDataFileName.objects.filter(
         owner=request.user,
         ).exclude(
         tag__in=hide_tags
-    ).order_by("-uploaded_at")
+    )
+    if order_by == "filename":
+        latest_filenames = sorted(qs_latest_filenames, key=lambda i: i.filename, reverse=False)
+    elif order_by  == "-filename":
+        latest_filenames = sorted(qs_latest_filenames, key=lambda i: i.filename, reverse=True)
+    else:
+        latest_filenames = qs_latest_filenames.order_by(order_by)
     if len(show_tags) > 0:
         latest_filenames = latest_filenames.filter(tag__in=request.session.get("show_tags", []))
 
@@ -100,7 +136,9 @@ def index(request):
         "spreadsheet_exists": spreadsheet_exists,
         "spreadsheet_url": spreadsheet_url,
         "user_tags": user_tags,
-        "user_has_gdrive_import": user_has_gdrive_import
+        "user_has_gdrive_import": user_has_gdrive_import,
+        "order_by": order_by,
+        "order_by_items": order_by_items,
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
@@ -149,6 +187,18 @@ def delete_file(request, filename_id):
     return redirect('/microimprocessing/')
 
 
+# class GenericFileListView(ListView):
+#     # not used
+#     model = ServerDataFileName
+#
+#     def head(self, *args, **kwargs):
+#         last_book = self.get_queryset().latest('upladed_at')
+#         response = HttpResponse()
+#         # RFC 1123 date format
+#         response['Last-Modified'] = last_book.publication_date.strftime('%a, %d %b %Y %H:%M:%S GMT')
+#         return response
+#
+
 def force_update(request):
     """
     Used to generate few things automatically. Usually used for debug.
@@ -163,6 +213,7 @@ def force_update(request):
         tasks.add_generated_images(serverfile)
 
     return redirect('/microimprocessing/')
+
 
 def file_log(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
@@ -415,6 +466,11 @@ def add_tag(request, filename_id, tag_id):
     return redirect('/microimprocessing/')
 
 
+def set_order_by(request, order_by):
+    request.session["order_by"] = order_by
+    request.session.modified = True
+    return redirect('/microimprocessing/')
+
 def remove_tag(request, filename_id, tag_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     tag = get_object_or_404(Tag, pk=tag_id)
@@ -451,6 +507,7 @@ def run_processing(request, pk):
     # tid = async_task("subprocess.run", cli_params, hook="microimprocessing.views.make_thumbnail")
     serverfile.process_started = True
     serverfile.outputdir = get_output_dir()
+    serverfile.started = datetime.now
     serverfile.save()
 
     tid = async_task(

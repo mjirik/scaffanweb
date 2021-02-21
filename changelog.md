@@ -1,6 +1,7 @@
 # Changelog
 
 
+* [Added] Order by filename, upload at and started at
 * [Added] Preview images in detail view
 * [Added] Score in cards
 * [Added] Download not completed data dir

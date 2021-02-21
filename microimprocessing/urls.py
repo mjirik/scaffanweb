@@ -30,4 +30,6 @@ urlpatterns = [
     path('add_example_data/', views.add_example_data, name='add_example_data'),
     path('<int:filename_id>/delete_file/', views.delete_file, name='delete_file'),
     path('force_update/', views.force_update, name='force_update'),
+    # path('generic_files/', views.GenericFileListView.as_view()),
+    path('set_order_by/<str:order_by>', views.set_order_by, name='set_order_by'),
 ]

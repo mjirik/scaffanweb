@@ -68,6 +68,11 @@ def upload_to_unqiue_folder(instance, filename):
     #                                            'hash_path': scaffanweb_tools.randomString(12),
     #                                            'filename': filename}
 
+def _prepare_filename():
+    # instance_filename = Path(instance.filename).name
+
+    # return instance_filename
+    return ""
 
 class ServerDatasetPath(models.Model):
     comment = models.CharField(max_length=200)
@@ -103,9 +108,15 @@ class ServerDataFileName(models.Model):
     # singlecell_dapi = models.FileField(upload_to='documents/')
     # singlecell_fitc = models.FileField(upload_to='documents/')
     uploaded_at = models.DateTimeField(
+        "Uploaded at",
         # auto_now_add=True,
         # blank=True) #,
         default=datetime.now
+    )
+    started_at = models.DateTimeField(
+        "Started at",
+        # auto_now_add=True,
+        blank=True, null=True
     )
     score = models.FloatField(blank=True, null=True)
     outputdir = models.CharField(max_length=255, blank=True, default=get_output_dir)
@@ -113,6 +124,11 @@ class ServerDataFileName(models.Model):
     # last_task_uuid = models.CharField(max_length=255, blank=True, null=True)
     # image_preview = models.ImageField(upload_to="image_preview/", blank=True)
     # votes = models.IntegerField(default=0)
+    # filename = models.CharField(max_length=500, default=_prepare_filename)
+    @property
+
+    def filename(self):
+        return f"{Path(self.imagefile.path).name}"
 
     def __str__(self):
         if self.imagefile:
