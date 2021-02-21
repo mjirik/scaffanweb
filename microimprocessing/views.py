@@ -146,6 +146,7 @@ def index(request):
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")
 
+
 def create_and_download_zip(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     zip_fn = get_zip_fn(serverfile)
@@ -507,7 +508,7 @@ def run_processing(request, pk):
     # tid = async_task("subprocess.run", cli_params, hook="microimprocessing.views.make_thumbnail")
     serverfile.process_started = True
     serverfile.outputdir = get_output_dir()
-    serverfile.started = datetime.now
+    serverfile.started_at = datetime.now()
     serverfile.save()
 
     tid = async_task(
