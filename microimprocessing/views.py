@@ -67,14 +67,15 @@ def index(request):
         ).exclude(
         tag__in=hide_tags
     )
+    if len(show_tags) > 0:
+        qs_latest_filenames = qs_latest_filenames.filter(tag__in=request.session.get("show_tags", []))
+
     if order_by == "filename":
         latest_filenames = sorted(qs_latest_filenames, key=lambda i: i.filename, reverse=False)
     elif order_by  == "-filename":
         latest_filenames = sorted(qs_latest_filenames, key=lambda i: i.filename, reverse=True)
     else:
         latest_filenames = qs_latest_filenames.order_by(order_by)
-    if len(show_tags) > 0:
-        latest_filenames = latest_filenames.filter(tag__in=request.session.get("show_tags", []))
 
     number_of_points = [
         len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
