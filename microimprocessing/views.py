@@ -256,6 +256,14 @@ def file_log(request, filename_id):
             "Files": "<br>".join(map(os.path.basename, glob.glob(str(opath / "*.*"))))
         })
 
+        logpath = opath / "log.txt"
+        if logpath.exists():
+            with open(logpath) as f:
+                lines = f.readlines()
+            key_value.update({
+                "Log": '<p class="text-monospace">' + "<br>".join(lines) + '</p>'
+            })
+
     # if filename.exists():
 
     return render(request, 'microimprocessing/file_log.html',
