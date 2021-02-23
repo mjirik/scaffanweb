@@ -116,18 +116,23 @@ def run_processing(serverfile:ServerDataFileName):
     serverfile.last_error_message = ''
     if serverfile.zip_file and Path(serverfile.zip_file.path).exists():
         serverfile.zip_file.delete()
+
+    views.make_zip(serverfile)
     serverfile.save()
     logger.remove(logger_id)
 
 
 def finish_processing(task):
     # this does not work
-    if task.success:
-        pass
-    else:
+    if task.args and len(task.args) > 0:
         serverfile = task.args[0]
         serverfile.process_started = False
         serverfile.save()
+
+    if task.success:
+        pass
+    else:
+        pass
 
 
 def add_generated_images(serverfile:ServerDataFileName):

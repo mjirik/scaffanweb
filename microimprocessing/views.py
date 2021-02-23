@@ -86,15 +86,15 @@ def index(request):
         for serverfile in latest_filenames
     ]
 
-    for serverfile in latest_filenames:
-        if (Path(serverfile.outputdir) / "data.xlsx").exists():
-            logger.debug(f"output exists: {serverfile.outputdir}")
-            zip_fn = get_zip_fn(serverfile)
-            if zip_fn:
-                if not Path(zip_fn).exists():
-                    make_zip(serverfile)
-                    serverfile.process_started = False
-                    serverfile.save()
+    # for serverfile in latest_filenames:
+    #     if (Path(serverfile.outputdir) / "data.xlsx").exists():
+    #         logger.debug(f"output exists: {serverfile.outputdir}")
+    #         zip_fn = get_zip_fn(serverfile)
+    #         if zip_fn:
+    #             if not Path(zip_fn).exists():
+    #                 make_zip(serverfile)
+    #                 serverfile.process_started = False
+    #                 serverfile.save()
     zip_exists = [
         Path(get_zip_fn(serverfile)).exists() if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
@@ -208,12 +208,23 @@ def force_update(request):
     :return:
     """
     logger.debug("Force update")
+    # prepare images
     latest_filenames = ServerDataFileName.objects.all()
     for serverfile in latest_filenames:
         logger.debug(serverfile)
         tasks.delete_generated_images(serverfile)
         tasks.add_generated_images(serverfile)
 
+    # finish run by creating zip file if xlsx file exists
+    for serverfile in latest_filenames:
+        if (Path(serverfile.outputdir) / "data.xlsx").exists():
+            logger.debug(f"output exists: {serverfile.outputdir}")
+            zip_fn = get_zip_fn(serverfile)
+            if zip_fn:
+                if not Path(zip_fn).exists():
+                    make_zip(serverfile)
+                    serverfile.process_started = False
+                    serverfile.save()
     return redirect('/microimprocessing/')
 
 
