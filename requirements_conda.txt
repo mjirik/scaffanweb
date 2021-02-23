@@ -3,3 +3,5 @@ django-allauth
 redis
 openslide
 pandas>=1.1
+google-auth 
+google-auth-oauthlib
