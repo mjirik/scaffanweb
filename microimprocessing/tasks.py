@@ -68,7 +68,9 @@ def run_processing(serverfile:ServerDataFileName):
         str(Path(serverfile.outputdir) / "log.txt"),
         format=log_format,
         level='DEBUG',
-        rotation="1 week"
+        rotation="1 week",
+        backtrace=True,
+        diagnose=True
     )
     delete_generated_images(serverfile) # remove images from database and the output directory
     coords = LobuleCoordinates.objects.filter(server_datafile=serverfile)
