@@ -107,7 +107,11 @@ def run_processing(serverfile:ServerDataFileName):
     else:
         mainapp.set_parameter("Input;Lobulus Selection Method", "Auto")
     mainapp.run_lobuluses(seeds_mm=centers_mm)
-    serverfile.score = mainapp.report.df["SNI area prediction"].mean()
+    serverfile.score = _clamp(mainapp.report.df["SNI area prediction"].mean() * 0.5, 0., 1.)
+    serverfile.score_skeleton_length = mainapp.report.df["Skeleton length"].mean()
+    serverfile.score_branch_number = mainapp.report.df["Branch number"].mean()
+    serverfile.score_dead_ends_number = mainapp.report.df["Dead ends number"].mean()
+    serverfile.score_area = mainapp.report.df["Area"].mean()
 
     add_generated_images(serverfile) # add generated images to database
 
@@ -293,7 +297,8 @@ def run_gdrive_import():
             logger.debug(f"gimport for user={user}")
             _run_gdrive_import_for_user(gdriveimport, user)
 
-
+def _clamp(n, minn, maxn):
+    return max(min(maxn, n), minn)
 # Use the schedule wrapper
 # from django_q.tasks import schedule
 #

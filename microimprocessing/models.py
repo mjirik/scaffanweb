@@ -119,6 +119,10 @@ class ServerDataFileName(models.Model):
         blank=True, null=True
     )
     score = models.FloatField(blank=True, null=True)
+    score_skeleton_length = models.FloatField(blank=True, null=True)
+    score_branch_number = models.FloatField(blank=True, null=True)
+    score_dead_ends_number = models.FloatField(blank=True, null=True)
+    score_area = models.FloatField(blank=True, null=True)
     outputdir = models.CharField(max_length=255, blank=True, default=get_output_dir)
     last_error_message = models.CharField(max_length=10000, blank=True, null=True)
     # last_task_uuid = models.CharField(max_length=255, blank=True, null=True)
@@ -140,6 +144,8 @@ class ServerDataFileName(models.Model):
         else:
             return self.description
 
+class OverallMetric(models.Model):
+    pass
 
 class BitmapImage(models.Model):
     server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)

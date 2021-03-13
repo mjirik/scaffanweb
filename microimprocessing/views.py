@@ -552,7 +552,7 @@ def run_processing(request, pk):
 
 
 def get_zip_fn(serverfile:ServerDataFileName):
-    logger.debug(f"serverfile.imagefile={serverfile.imagefile.name}")
+    logger.trace(f"serverfile.imagefile={serverfile.imagefile.name}")
     if not serverfile.imagefile.name:
         logger.debug(f"No file uploaded for {serverfile.imagefile}")
         return None
