@@ -144,9 +144,6 @@ class ServerDataFileName(models.Model):
         else:
             return self.description
 
-class OverallMetric(models.Model):
-    pass
-
 class BitmapImage(models.Model):
     server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)
     bitmap_image = models.ImageField()
