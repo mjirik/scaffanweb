@@ -281,11 +281,11 @@ def _preapare_xlsx_for_rendering(filename:Path, additional_keys=None):
                               # index_col=0
                               #index_col=None
                               )
-        key_candidate = ["SNI area prediction", "SNI prediction CNN", "Skeleton length", "Branch number", "Dead ends number",
-                         "Area", "Area unit", "Lobulus Perimeter",
+        key_candidate = ["Skeleton length", "Branch number", "Dead ends number",
+                         "Area", "Area unit", "Lobulus Perimeter", # "Lobulus Equivalent Surface",
                          "Annotation Center X [mm]", "Annotation Center Y [mm]",
                          "Scan Segmentation Empty Area [mm^2]", "Scan Segmentation Septum Area [mm^2]",
-                         "Scan Segmentation Sinusoidal Area [mm^2]",
+                         "Scan Segmentation Sinusoidal Area [mm^2]","SNI area prediction", "SNI prediction CNN"
                          ]
         if additional_keys:
             key_candidate += additional_keys
