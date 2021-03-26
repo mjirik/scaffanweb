@@ -291,5 +291,7 @@ else:
             'charset': 'utf-8',
             'errors': 'strict',
             'unix_socket_path': None
-        }
+        },
+        'timeout': 3600,
+        'retry': 4000
     }
