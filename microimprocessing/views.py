@@ -61,7 +61,7 @@ def index(request):
             ("-" + field) == order_by
         ])
 
-    logger.warning(order_by_items)
+    # logger.warning(order_by_items)
     qs_latest_filenames = ServerDataFileName.objects.filter(
         owner=request.user,
         ).exclude(
