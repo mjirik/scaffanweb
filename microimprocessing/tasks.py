@@ -16,6 +16,13 @@ from django.core.files.base import ContentFile
 from scaffanweb import settings
 from microimprocessing import scaffanweb_tools, models, views
 import glob
+import sys
+
+pth_to_scaffan = Path(__file__).parent.parent.parent / "scaffan"
+logger.debug(pth_to_scaffan)
+logger.debug(pth_to_scaffan.exists())
+if pth_to_scaffan.exists():
+    sys.path.insert(0, str(pth_to_scaffan))
 
 # report generator
 def create_html_report(user):
