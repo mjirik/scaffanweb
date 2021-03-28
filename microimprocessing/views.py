@@ -33,8 +33,8 @@ def index(request):
     # latest_filenames = ServerDataFileName.objects.all()
     hide_tags = request.session.get("hide_tags", [])
     show_tags = request.session.get("show_tags", [])
-    logger.debug(f"hide_tags={hide_tags}")
-    logger.debug(f"show_tags={show_tags}")
+    logger.trace(f"hide_tags={hide_tags}")
+    logger.trace(f"show_tags={show_tags}")
     order_by = request.session.get("order_by", '-uploaded_at')
     order_by_items_input = [
         "uploaded_at",
@@ -280,6 +280,8 @@ def _preapare_xlsx_for_rendering(filename:Path, additional_keys=None):
                               # index=False,
                               # index_col=0
                               #index_col=None
+                              engine='openpyxl'
+
                               )
         key_candidate = ["Skeleton length", "Branch number", "Dead ends number",
                          "Area", "Area unit", "Lobulus Perimeter", # "Lobulus Equivalent Surface",

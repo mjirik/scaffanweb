@@ -5,7 +5,8 @@ WORKDIR /webapps
 #VOLUME .. /
 SHELL ["/bin/bash", "--login", "-c"]
 RUN apt-get update --yes
-RUN apt-get install --yes gpg vim redis
+# PyQt5 => ffmpeg libsm6 libxext6
+RUN apt-get install --yes gpg vim redis ffmpeg libsm6 libxext6
 # Install our public GPG key to trusted store
 RUN curl https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc | gpg --dearmor > conda.gpg
 RUN install -o root -g root -m 644 conda.gpg /usr/share/keyrings/conda-archive-keyring.gpg
