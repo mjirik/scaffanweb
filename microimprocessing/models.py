@@ -60,7 +60,7 @@ def upload_to_unqiue_folder(instance, filename):
     datetimestr = datetime.now().strftime("%Y%m%d-%H%M%S")
 
     return op.join(
-        settings.UPLOAD_PATH,
+        settings.UPLOAD_RELATIVE_PATH,
         datetimestr + "_" + instance_filename + "_" + hash,
         filename
     )
