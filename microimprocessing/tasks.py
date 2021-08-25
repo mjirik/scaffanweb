@@ -153,8 +153,9 @@ def add_generated_images(serverfile:ServerDataFileName):
     od = Path(serverfile.outputdir)
     logger.debug(od)
     lst = glob.glob(str(od / "slice_raster.png"))
-    lst.extend(glob.glob(str(od / "slice_label.png")))
-    lst.extend(glob.glob(str(od / "sinusoidal_tissue_local_centers.png")))
+    # lst.extend(glob.glob(str(od / "slice_label.png")))
+    lst.extend(glob.glob(str(od / "preview_with_annotations.png")))
+    # lst.extend(glob.glob(str(od / "sinusoidal_tissue_local_centers.png")))
     lst.extend(glob.glob(str(od / "lobulus_[0-9]*.png")))
     logger.debug(lst)
 
