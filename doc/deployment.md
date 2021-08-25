@@ -34,7 +34,7 @@ Fill tables in admin
 
 
 
-# Deploy
+# Server preparation
 
 Prepare static files
 
