@@ -1,6 +1,6 @@
 # Changelog
 
-
+* [Added] Preview popup image
 * [Added] Docker support
 * [Added] Order by filename, upload at and started at
 * [Added] Preview images in detail view
