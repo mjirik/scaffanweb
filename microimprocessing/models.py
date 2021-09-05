@@ -84,6 +84,7 @@ class ServerDatasetPath(models.Model):
 class ScaffanParameterSetup(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text_parameters = models.TextField(max_length=4000, default="{}")
+    name = models.CharField(max_length=200, default="My Setting 1")
 
 
 class ServerDataFileName(models.Model):
