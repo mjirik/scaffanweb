@@ -208,6 +208,15 @@ class Profile(models.Model):
     hash = models.CharField(max_length=50, default=get_default_user_hash)
     automatic_import = models.BooleanField(default=False)
 
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
 
 class GDriveImport(models.Model):
     user = models.ManyToManyField(User)
