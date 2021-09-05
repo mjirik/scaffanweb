@@ -8,6 +8,8 @@ from loguru import logger
 import os.path as op
 from . import scaffanweb_tools
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 User = get_user_model()
 # Create your models here.
@@ -79,6 +81,11 @@ class ServerDatasetPath(models.Model):
     server_dataset_path = models.FilePathField("Path to dataset on server", path=str(pth), allow_files=False, allow_folders=True)
 
 
+class ScaffanParameterSetup(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text_parameters = models.TextField(max_length=4000, default="{}")
+
+
 class ServerDataFileName(models.Model):
 
     # server_dataset_path= models.ForeignKey(ServerDatasetPath, on_delete=models.CASCADE)
@@ -125,6 +132,7 @@ class ServerDataFileName(models.Model):
     score_area = models.FloatField(blank=True, null=True)
     outputdir = models.CharField(max_length=255, blank=True, default=get_output_dir)
     last_error_message = models.CharField(max_length=10000, blank=True, null=True)
+    scaffan_parameter_setup = models.ForeignKey(ScaffanParameterSetup, on_delete=models.CASCADE, blank=True, null=True)
     # last_task_uuid = models.CharField(max_length=255, blank=True, null=True)
     # image_preview = models.ImageField(upload_to="image_preview/", blank=True)
     # votes = models.IntegerField(default=0)
@@ -207,6 +215,8 @@ class Profile(models.Model):
     # birth_date = models.DateField(null=True, blank=True)
     hash = models.CharField(max_length=50, default=get_default_user_hash)
     automatic_import = models.BooleanField(default=False)
+    last_used_version = models.CharField(max_length=20, default="0.0.0")
+    text_parameters = models.TextField(max_length=4000, default="{}")
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -225,3 +235,5 @@ class GDriveImport(models.Model):
     extension = models.CharField(max_length=10)
     token = models.FilePathField(path=settings.BASE_DIR)
     credentials = models.FilePathField(path=settings.BASE_DIR)
+
+
