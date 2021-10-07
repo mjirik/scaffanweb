@@ -138,8 +138,8 @@ class ServerDataFileName(models.Model):
     # image_preview = models.ImageField(upload_to="image_preview/", blank=True)
     # votes = models.IntegerField(default=0)
     # filename = models.CharField(max_length=500, default=_prepare_filename)
-    @property
 
+    @property
     def filename(self):
         return f"{Path(self.imagefile.path).name}"
 
