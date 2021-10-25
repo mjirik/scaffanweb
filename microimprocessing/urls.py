@@ -32,4 +32,5 @@ urlpatterns = [
     path('force_update/', views.force_update, name='force_update'),
     # path('generic_files/', views.GenericFileListView.as_view()),
     path('set_order_by/<str:order_by>', views.set_order_by, name='set_order_by'),
+    path('book/<int:pk>/renew/', views.renew_book_librarian, name='renew-book-librarian'),
 ]

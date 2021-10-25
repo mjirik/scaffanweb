@@ -1,3 +1,5 @@
+import pdb
+
 from django.db import models
 # import io3d
 from datetime import datetime
@@ -219,14 +221,25 @@ class Profile(models.Model):
     last_used_version = models.CharField(max_length=20, default="0.0.0")
     text_parameters = models.TextField(max_length=4000, default="{}")
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        logger.debug(sender)
+        logger.debug(instance)
+        logger.debug(kwargs)
+        # pdb.set_trace()
+        from django.core.exceptions import ObjectDoesNotExist
+        try:
+            instance.profile
+        except ObjectDoesNotExist:
+            profile, created = Profile.objects.get_or_create(user=instance)
+            instance.profile = profile
+        # UserProfile.objects.get_or_create(user=request.user)
+        instance.profile.save()
 
 
 class GDriveImport(models.Model):

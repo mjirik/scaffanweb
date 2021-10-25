@@ -5,7 +5,7 @@ from django.template import loader
 from django.contrib.auth import logout
 from django.core.files.base import ContentFile
 from .models import get_output_dir, Tag
-from .forms import ImageQuatroForm, TagForm
+from .forms import ImageQuatroForm, TagForm, RenewBookForm
 from .tasks import make_thumbnail
 from pathlib import Path
 from django.conf import settings
@@ -634,3 +634,43 @@ def create_report(request):
             # hook='tasks.email_report'
                )
     return redirect('/microimprocessing/')
+
+
+
+def pre_run(request, filename_id):
+    # return redirect('/microimprocessing/')
+    serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+    # book_instance = get_object_or_404(BookInstance, pk=pk)
+
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        # RenewBookForm(request.)
+
+        form = RenewBookForm(request.POST)
+
+        # # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            # book_instance.due_back = form.cleaned_data['renewal_date']
+            # book_instance.save()
+        #
+        #     # redirect to a new URL:
+        #     return HttpResponseRedirect(reverse('all-borrowed') )
+
+            logger.debug("Redy to run")
+            return redirect('/microimprocessing/')
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        # proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        # form = RenewBookForm(initial={'renewal_date': proposed_renewal_date})
+        form = RenewBookForm()
+
+    context = {
+        'form': form,
+        # 'book_instance': book_instance,
+    }
+
+    return render(request, 'catalog/book_renew_librarian.html', context)
