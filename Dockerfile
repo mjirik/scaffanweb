@@ -36,5 +36,10 @@ RUN conda list
 RUN /opt/conda/condabin/conda init bash
 RUN conda run -n scaffanweb --no-capture-output pip install -r requirements_pip.txt
 
+CMD cd /webapps/scaffanweb_django/scaffanweb && \
+    service redis-server start && \
+#    /webapps/piglegsurgery/docker/bin/qcluster_start  & && \
+#    /webapps/piglegsurgery/docker/bin/gunicorn_start & && \
+    tail -f /dev/null
 # CMD ["cd", "/webapps/scaffanweb_django"]
 # ENTRYPOINT ["python", "manage.py", 'runserver']
