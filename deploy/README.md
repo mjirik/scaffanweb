@@ -4,5 +4,5 @@
 Generate ssl key:
 ```bash
 sudo mkdir /etc/nginx/certificate/
-openssl req -new -sha256 -nodes -newkey rsa:4096 -keyout scaffan.kky.zcu.cz.key -out scaffan.kky.zcu.cz.csr
+openssl req -new -x509 -sha256 -newkey rsa:2048 -nodes -keyout scaffan.kky.zcu.cz.key.pem -out scaffan.kky.zcu.cz.cert.pem
 ```
