@@ -1,0 +1,27 @@
+server {
+    listen   80;
+    server_name scaffan.kky.zcu.cz;
+
+    client_max_body_size 4G;
+
+    access_log /webapps/scaffanweb_django/logs/nginx-access.log;
+    error_log /webapps/scaffanweb_django/logs/nginx-error.log;
+
+    location /static/ {
+        alias   /webapps/scaffanweb_django/scaffanweb/static/;
+    }
+
+    location /media/ {
+        alias   /webapps/scaffanweb_django/scaffanweb/media/;
+    }
+
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        if (!-f $request_filename) {
+            proxy_pass http://scaffanweb_app_server;
+            break;
+        }
+    }
+}
