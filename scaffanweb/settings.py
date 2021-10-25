@@ -168,6 +168,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # UPLOAD_PATH = os.path.join(MEDIA_ROOT, 'upload')
 UPLOAD_RELATIVE_PATH = 'upload'
 
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 AUTHENTICATION_BACKENDS = (
  'django.contrib.auth.backends.ModelBackend',
