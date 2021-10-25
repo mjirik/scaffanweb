@@ -174,6 +174,9 @@ AUTHENTICATION_BACKENDS = (
  'allauth.account.auth_backends.AuthenticationBackend',
  )
 
+
+# if os.name == "nt":
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -186,6 +189,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+# Try to solve the google oauth ssl problem
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # Q_CLUSTER = {
