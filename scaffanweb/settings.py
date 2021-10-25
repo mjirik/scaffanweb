@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,6 +32,17 @@ else:
         SECRET_KEY = f.write(
             get_random_secret_key()
         )
+settings_local_json = Path(__file__).parent / "settings_local.json"
+if settings_local_json.exists():
+    with open(settings_local_json, "r") as f:
+        settings_local = json.load(f)
+else:
+    with open(settings_local_json, "w") as f:
+        settings_local = {
+            "ACCOUNT_DEFAULT_HTTP_PROTOCOL": "http",
+            # "ACCOUNT_DEFAULT_HTTP_PROTOCOL": "https",
+        }
+        json.dump(settings_local, f)
 # from . import secrets
 # SECRET_KEY = secrets.SECRET_KEY
 
@@ -190,8 +202,9 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # Try to solve the google oauth ssl problem
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+# ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = settings_local["ACCOUNT_DEFAULT_HTTP_PROTOCOL"]
+# SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # Q_CLUSTER = {
 #     'name': 'DjangoORM',

@@ -1,5 +1,6 @@
 # Changelog
 
+* [Added] Use https if deployed
 * [Added] Preview popup image
 * [Added] Docker support
 * [Added] Order by filename, upload at and started at
