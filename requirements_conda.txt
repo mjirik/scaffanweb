@@ -1,6 +1,7 @@
-django
+python=3.6.2
+django=3
 django-allauth
-redis
+redis-py
 openslide
 pandas>=1.1
 google-api-python-client
@@ -8,3 +9,7 @@ google-auth-httplib2
 google-auth 
 # maybe not necessary
 google-auth-oauthlib
+# just to make install procedure faster
+io3d>=2.10
+imma>=0.18
+sed3=1.6

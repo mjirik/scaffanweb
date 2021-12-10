@@ -28,7 +28,7 @@ COPY scaffanweb .
 COPY requirements_conda.txt .
 COPY requirements_pip.txt .
 
-RUN conda create -n scaffanweb -c mjirik -c bioconda -c conda-forge --yes --file requirements_conda.txt openslide-python python=3.6 pip pytest pytest-cov tensorflow loguru redis-py redis scaffan
+RUN conda create -n scaffanweb -c mjirik -c bioconda -c simpleitk -c conda-forge --yes --file requirements_conda.txt openslide-python python=3.6 pip pytest pytest-cov tensorflow loguru redis-py redis scaffan
 RUN conda list
 #RUN cd /webapps/scaffanweb_django
 # Make RUN commands use the new environment:
@@ -36,10 +36,18 @@ RUN conda list
 RUN /opt/conda/condabin/conda init bash
 RUN conda run -n scaffanweb --no-capture-output pip install -r requirements_pip.txt
 
+COPY deploy/var /var/
+COPY deploy/etc /etc/
+ENV TZ="Europe/Berlin"
+
+WORKDIR /webapps/scaffanweb_django/scaffanweb
+
 CMD cd /webapps/scaffanweb_django/scaffanweb && \
-    service redis-server start && \
+    bash /webapps/scaffanweb_django/scaffanweb/run_services.sh && \
+    tail -f /dev/null
+
 #    /webapps/piglegsurgery/docker/bin/qcluster_start  & && \
 #    /webapps/piglegsurgery/docker/bin/gunicorn_start & && \
-    tail -f /dev/null
+#    service redis-server start && \
 # CMD ["cd", "/webapps/scaffanweb_django"]
 # ENTRYPOINT ["python", "manage.py", 'runserver']
