@@ -42,8 +42,8 @@ COPY deploy/var /var/
 COPY deploy/etc /etc/
 ENV TZ="Europe/Berlin"
 
-RUN curl http://mirrors.kernel.org/ubuntu/pool/main/libf/libffi/libffi6_3.2.1-8_amd64.deb -o libffi6.deb
-RUN apt --yes install ./libffi6.deb
+RUN curl -L http://mirrors.kernel.org/ubuntu/pool/main/libf/libffi/libffi6_3.2.1-8_amd64.deb -o libffi6.deb
+RUN apt-get install ./libffi6.deb
 
 WORKDIR /webapps/scaffanweb_django/scaffanweb
 
