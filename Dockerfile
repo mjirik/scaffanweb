@@ -24,11 +24,13 @@ RUN echo "source /opt/conda/etc/profile.d/conda.sh" >> /root/.bashrc
 RUN /opt/conda/condabin/conda init bash
 # RUN source /opt/conda/etc/profile.d/conda.sh
 
+# this is done before the final conda installation to make the docker build faster
+RUN conda create -n scaffanweb -c mjirik -c bioconda -c simpleitk -c conda-forge --yes openslide-python "python>=3.6.2,=3.6" pip pytest pytest-cov tensorflow loguru redis-py redis scaffan
 COPY scaffanweb .
 COPY requirements_conda.txt .
 COPY requirements_pip.txt .
 
-RUN conda create -n scaffanweb -c mjirik -c bioconda -c simpleitk -c conda-forge --yes --file requirements_conda.txt openslide-python python=3.6 pip pytest pytest-cov tensorflow loguru redis-py redis scaffan
+RUN conda create -n scaffanweb -c mjirik -c bioconda -c simpleitk -c conda-forge --yes --file requirements_conda.txt openslide-python pip pytest pytest-cov tensorflow=2.6 loguru redis-py redis scaffan
 RUN conda list
 #RUN cd /webapps/scaffanweb_django
 # Make RUN commands use the new environment:
@@ -39,6 +41,9 @@ RUN conda run -n scaffanweb --no-capture-output pip install -r requirements_pip.
 COPY deploy/var /var/
 COPY deploy/etc /etc/
 ENV TZ="Europe/Berlin"
+
+RUN curl http://mirrors.kernel.org/ubuntu/pool/main/libf/libffi/libffi6_3.2.1-8_amd64.deb -o libffi6.deb
+RUN apt --yes install ./libffi6.deb
 
 WORKDIR /webapps/scaffanweb_django/scaffanweb
 
