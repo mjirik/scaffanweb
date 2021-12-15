@@ -233,6 +233,7 @@
                                                    onclick="return confirm('Delete file {{ server_filename }}?')"
                                                 >Delete</a>
                                                 <a class="dropdown-item" href="{% url 'microimprocessing:file_log' server_filename.id %}">Log</a>
+                                                <a class="dropdown-item" href="{% url 'microimprocessing:pre_run' server_filename.id %}">Set parameters before run</a>
                                             </div>
                                         </div>
 

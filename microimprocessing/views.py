@@ -5,7 +5,7 @@ from django.template import loader
 from django.contrib.auth import logout
 from django.core.files.base import ContentFile
 from .models import get_output_dir, Tag
-from .forms import ImageQuatroForm, TagForm, RenewBookForm
+from .forms import ImageQuatroForm, TagForm, ScaffanParameters
 from .tasks import make_thumbnail
 from pathlib import Path
 from django.conf import settings
@@ -636,10 +636,19 @@ def create_report(request):
     return redirect('/microimprocessing/')
 
 
+# import datetime
+# from django.forms import formset_factory
+# from myapp.forms import ArticleForm
+# ArticleFormSet = formset_factory(ArticleForm, extra=2)
+# formset = ArticleFormSet(initial=[
+#     {'title': 'Django is now open source',
+#      'pub_date': datetime.date.today(),}
+# ])
 
 def pre_run(request, filename_id):
     # return redirect('/microimprocessing/')
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
+
     # book_instance = get_object_or_404(BookInstance, pk=pk)
 
     # If this is a POST request then process the Form data
@@ -648,7 +657,7 @@ def pre_run(request, filename_id):
         # Create a form instance and populate it with data from the request (binding):
         # RenewBookForm(request.)
 
-        form = RenewBookForm(request.POST)
+        form = ScaffanParameters(request.POST)
 
         # # Check if the form is valid:
         if form.is_valid():
@@ -666,10 +675,32 @@ def pre_run(request, filename_id):
     else:
         # proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
         # form = RenewBookForm(initial={'renewal_date': proposed_renewal_date})
-        form = RenewBookForm()
+        form = ScaffanParameters()
 
+    import scaffan.algorithm
+    mainapp = scaffan.algorithm.Scaffan()
+    parameters_as_cfg_string = mainapp.get_parameters_as_cfg_string()
+    from django.forms import formset_factory
+    # BookSet = formset_factory(RenewBookForm,
+    #                           # extra=3
+    #                           )
+    # data = {
+    # 'form-TOTAL_FORMS': '2',
+    # 'form-INITIAL_FORMS': '0',
+    # 'form-0-name': 'Test',
+    # 'form-0-value': '1904-06-16',
+    # 'form-0-value-label': 'osadfs',
+    # 'form-1-name': 'Test',
+    # 'form-1-value': '',  # <-- this date is missing but required
+    # }
+    # bforms = BookSet(data)
+
+    from django import forms
     context = {
         'form': form,
+        # 'parameters': parameters_as_cfg_string,
+        # 'fm' : bforms
+
         # 'book_instance': book_instance,
     }
 
