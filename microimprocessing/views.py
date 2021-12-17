@@ -24,6 +24,7 @@ import numpy as np
 import django_q
 import glob
 import os.path
+import pprint
 
 from .models import ServerDataFileName, LobuleCoordinates, ExampleData, User, GDriveImport
 
@@ -661,6 +662,8 @@ def pre_run(request, filename_id):
 
         # # Check if the form is valid:
         if form.is_valid():
+            logger.debug("is valid")
+            logger.debug(pprint.pformat(form.cleaned_data))
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             # book_instance.due_back = form.cleaned_data['renewal_date']
             # book_instance.save()
