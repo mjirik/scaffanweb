@@ -85,6 +85,26 @@ div.container-xl {
     opacity: .3;
 }
 
+.log-debug{
+    color: darkblue;
+}
+
+.log-info{
+    color: darkgoldenrod;
+}
+
+.log-error{
+    color: darkred;
+}
+
+.log-warning{
+    color: darkorange;
+}
+
+.log-trace{
+    color: darkgray;
+}
+
 
 .badge-pill.badge-light {
     border: 1px solid #999;

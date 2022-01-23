@@ -261,6 +261,8 @@ def file_log(request, filename_id):
         if logpath.exists():
             with open(logpath) as f:
                 lines = f.readlines()
+
+            lines = [_set_loglevel_color(line) for line in lines]
             key_value.update({
                 "Log": '<p class="text-monospace">' + "<br>".join(lines) + '</p>'
             })
@@ -271,6 +273,14 @@ def file_log(request, filename_id):
                   {'serverfile': serverfile, 'df_html':None, "image_list":None, 'key_value': key_value,
                    'download_button': opath.exists()
                    })
+
+def _set_loglevel_color(line):
+    line = line.replace("DEBUG", '<b class="log-debug">DEBUG</b>')
+    line = line.replace("ERROR", '<b class="log-error">ERROR</b>')
+    line = line.replace("INFO", '<b class="log-info">INFO</b>')
+    line = line.replace("TRACE", '<b class="log-trace">TRACE</b>')
+    line = line.replace("WARNING", '<b class="log-warning">WARNING</b>')
+    return line
 
 def _preapare_xlsx_for_rendering(filename:Path, additional_keys=None):
     logger.debug(filename)
@@ -514,43 +524,22 @@ def remove_tag_from_user(request, tag_id):
     return redirect('/microimprocessing/')
 
 
-def run_processing(request, pk):
+def run_processing(request, pk, parameters=None):
     from django_q.tasks import async_task, result
-    # import scaffan
-    # import scaffan.algorithm
-    # import scaffan.image
     serverfile:ServerDataFileName = get_object_or_404(ServerDataFileName, pk=pk)
 
-
-    # import subprocess
-    # myProc = subprocess.Popen(cli_params)
-
-
-    # to capture the output we'll need a pipe
-    # from subprocess import PIPE
-    # tid = async_task("subprocess.run", cli_params, hook="microimprocessing.views.make_thumbnail")
     serverfile.process_started = True
     serverfile.outputdir = get_output_dir()
     serverfile.started_at = datetime.now()
     serverfile.save()
 
+    logger.debug(f"parameters={parameters}")
     tid = async_task(
-        'microimprocessing.tasks.run_processing', serverfile,
+        'microimprocessing.tasks.run_processing', serverfile, parameters,
                      # hook="microimprocessing.views.make_thumbnail"
         hook='microimprocessing.tasks.finish_processing',
     )
 
-    # logger.debug("before results")
-    # res = result(tid, 500)
-    # print the output
-    # logger.debug(res)
-    # settings.CONDA_EXECUTABLE
-
-        # logger.warning("running python directly. set settings.PYTHON_EXECUTABLE")
-        # mainapp = scaffan.algorithm.Scaffan()
-        # mainapp.set_input_file(serverfile.imagefile.path)
-        # mainapp.set_output_dir(serverfile.outputdir)
-        # mainapp.run_lobuluses(seeds_mm=centers_mm)
     return redirect('/microimprocessing/')
 
 
@@ -672,7 +661,10 @@ def pre_run(request, filename_id):
         #     return HttpResponseRedirect(reverse('all-borrowed') )
 
             logger.debug("Redy to run")
-            return redirect('/microimprocessing/')
+
+            return run_processing(request, filename_id, form.cleaned_data)
+
+            # return redirect('/microimprocessing/')
 
     # If this is a GET (or any other method) create the default form.
     else:
@@ -701,6 +693,7 @@ def pre_run(request, filename_id):
     from django import forms
     context = {
         'form': form,
+        'button': "Run"
         # 'parameters': parameters_as_cfg_string,
         # 'fm' : bforms
 

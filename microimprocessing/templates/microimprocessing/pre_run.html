@@ -4,22 +4,28 @@
 <div class="container">
     {% if user.is_authenticated %}
         <p> {{ parameters|linebreaks }}</p>
-        {%  for fm0 in fm %}
-            {{ fm0.as_p }}
-        {% endfor %}
+{#        {{ form.as_table }}#}
+{#        {%  for fm0 in form %}#}
+{#            {{ fm0 }}#}
+{#        {% endfor %}#}
     <div class="container">
         <h1>{{ headline }}</h1>
         <p class="text-danger">{{error_text}}</p>
 
         <form method="post" enctype="multipart/form-data">
+            <button class="btn btn-primary has-spinner" id="btnUpload" type="submit">
+                <span class="spinner"><i class="fa fa-refresh fa-spin"></i></span>
+                {{ button }}
+            </button>
+            <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Cancel</a>
             {% csrf_token %}
-            <p>
-            {{ form }}
-            </p>------------<br>
-        <button class="btn btn-primary has-spinner" id="btnUpload" type="submit">
-            <span class="spinner"><i class="fa fa-refresh fa-spin"></i></span>
-            {{ button }}
-        </button>
+            <table>
+            {{ form.as_table }}
+            </table>
+            <button class="btn btn-primary has-spinner" id="btnUpload" type="submit">
+                <span class="spinner"><i class="fa fa-refresh fa-spin"></i></span>
+                {{ button }}
+            </button>
             <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Cancel</a>
 
         </form>

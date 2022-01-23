@@ -17,6 +17,7 @@ from scaffanweb import settings
 from microimprocessing import scaffanweb_tools, models, views
 import glob
 import sys
+from typing import Optional
 
 pth_to_scaffan = Path(__file__).parent.parent.parent / "scaffan"
 logger.debug(pth_to_scaffan)
@@ -66,7 +67,7 @@ def make_thumbnail(serverfile:ServerDataFileName):
 
     serverfile.save()
 
-def run_processing(serverfile:ServerDataFileName):
+def run_processing(serverfile:ServerDataFileName, parameters:Optional):
     import scaffan
     import scaffan.algorithm
     import scaffan.image
@@ -102,9 +103,12 @@ def run_processing(serverfile:ServerDataFileName):
     #
     # logger.debug(f"adding task to queue CLI params: {' '.join(cli_params)}")
 
-
     logger.debug("Scaffan processing init")
     mainapp = scaffan.algorithm.Scaffan()
+    logger.debug(f"parameters={parameters}")
+    if parameters:
+        for key, value  in parameters.items():
+            mainapp.set_parameter(key, value)
     mainapp.set_input_file(serverfile.imagefile.path)
     mainapp.set_output_dir(serverfile.outputdir)
     fn,_,_ = models.get_common_spreadsheet_file(serverfile.owner)
@@ -116,11 +120,16 @@ def run_processing(serverfile:ServerDataFileName):
     else:
         mainapp.set_parameter("Input;Lobulus Selection Method", "Auto")
     mainapp.run_lobuluses(seeds_mm=centers_mm)
-    serverfile.score = _clamp(mainapp.report.df["SNI area prediction"].mean() * 0.5, 0., 1.)
-    serverfile.score_skeleton_length = mainapp.report.df["Skeleton length"].mean()
-    serverfile.score_branch_number = mainapp.report.df["Branch number"].mean()
-    serverfile.score_dead_ends_number = mainapp.report.df["Dead ends number"].mean()
-    serverfile.score_area = mainapp.report.df["Area"].mean()
+    if "SNI area prediction" in mainapp.report.df:
+        serverfile.score = _clamp(mainapp.report.df["SNI area prediction"].mean() * 0.5, 0., 1.)
+    if "Skeleton length" in mainapp.report.df:
+        serverfile.score_skeleton_length = mainapp.report.df["Skeleton length"].mean()
+    if "Branch number" in mainapp.report.df:
+        serverfile.score_branch_number = mainapp.report.df["Branch number"].mean()
+    if "Dead ends number" in mainapp.report.df:
+        serverfile.score_dead_ends_number = mainapp.report.df["Dead ends number"].mean()
+    if "Area" in mainapp.report.df:
+        serverfile.score_area = mainapp.report.df["Area"].mean()
 
     add_generated_images(serverfile) # add generated images to database
 
