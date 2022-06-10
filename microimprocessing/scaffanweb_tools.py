@@ -81,5 +81,5 @@ def resize_image(img:np.ndarray, scale=None, height=None, width=None):
     if scale is None and height is not None:
         scale = height / img.shape[0]
 
-    img = skimage.transform.rescale(img, scale)
+    img = skimage.transform.rescale(img, scale, multichannel=True, preserve_range=True)
     return img
