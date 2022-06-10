@@ -109,6 +109,7 @@ class ServerDataFileName(models.Model):
     annotationfile = models.FileField("Annotation File", upload_to=upload_to_unqiue_folder, blank=True, null=True, max_length=500)
     # thumbnail = models.CharField("Thumbnail File", max_length=255, blank=True)
     preview = models.ImageField(upload_to="cellimage/", blank=True)
+    thumbnail = models.ImageField(upload_to="cellimage/", blank=True)
     zip_file = models.FileField(upload_to="cellimage/", blank=True, null=True)
     preview_pixelsize_mm = models.FloatField("Preview Pixelsize [mm]", blank=True, null=True)
     description = models.CharField(max_length=255, blank=True)

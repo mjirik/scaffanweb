@@ -18,6 +18,7 @@ from microimprocessing import scaffanweb_tools, models, views
 import glob
 import sys
 from typing import Optional
+from .scaffanweb_tools import resize_image, crop_square
 
 pth_to_scaffan = Path(__file__).parent.parent.parent / "scaffan"
 logger.debug(pth_to_scaffan)
@@ -50,20 +51,29 @@ def make_thumbnail(serverfile:ServerDataFileName):
     view_corner = full_view.to_pixelsize(pixelsize_mm=[pxsz_mm, pxsz_mm])
     img = view_corner.get_region_image(as_gray=False)
     pth = str(Path(settings.MEDIA_ROOT) / (nm + ".preview.jpg"))
+    ptht = str(Path(settings.MEDIA_ROOT) / (nm + ".thumbnail.jpg"))
     # pth = serverfile.outputdir + nm + ".preview.jpg"
 
     # pth = serverfile.imagefile.path + ".thumbnail.jpg"
-    logger.debug("thumbnail path")
-    logger.debug(pth)
+    logger.debug("")
+    logger.debug(f"preview={pth}")
+    logger.debug(f"thumbnail={ptht}")
     pth_rel = op.relpath(pth, settings.MEDIA_ROOT)
+    ptht_rel = op.relpath(ptht, settings.MEDIA_ROOT)
     logger.debug(pth_rel)
     serverfile.preview = pth_rel
+    serverfile.thumbnail = ptht_rel
     serverfile.preview_pixelsize_mm = pxsz_mm
     import skimage.io
     logger.debug(f"img max: {np.max(img)}, img.dtype={img.dtype}")
     if img.dtype != np.uint8:
         img = (img*255).astype(np.uint8)
     skimage.io.imsave(pth, img[:,:,:3])
+    imgt = resize_image(img[:,:,:3], height=300)
+    imgt = crop_square(imgt)
+
+    skimage.io.imsave(pth, img[:,:,:3])
+    skimage.io.imsave(ptht, imgt[:,:,:3])
 
     serverfile.save()
 

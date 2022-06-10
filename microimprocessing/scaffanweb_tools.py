@@ -18,6 +18,8 @@ import zipfile
 
 import random
 import string
+import numpy as np
+import skimage.transform
 
 import random
 try:
@@ -54,3 +56,30 @@ def generate_sha1(string, salt=None):
 def randomString(stringLength=8):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
+
+
+def crop_square(frame:np.ndarray) -> np.ndarray:
+
+    mn = np.min(frame.shape[:2])
+    sh0 = frame.shape[0]
+    sh1 = frame.shape[1]
+    if sh0 > sh1:
+        st0 = int((sh0/2) - (sh1/2))
+        st1 = 0
+    else:
+        st0 = 0
+        st1 = int((sh1/2) - (sh0/2))
+
+    frame = frame[st0:st0+mn, st1:st1+mn]
+
+    return frame
+
+def resize_image(img:np.ndarray, scale=None, height=None, width=None):
+
+    if scale is None and width is not None:
+        scale = width / img.shape[1]
+    if scale is None and height is not None:
+        scale = height / img.shape[0]
+
+    img = skimage.transform.rescale(img, scale)
+    return img

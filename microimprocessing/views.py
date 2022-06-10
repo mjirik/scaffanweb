@@ -209,12 +209,16 @@ def force_update(request):
     :return:
     """
     logger.debug("Force update")
+
     # prepare images
     latest_filenames = ServerDataFileName.objects.all()
+
+
     for serverfile in latest_filenames:
         logger.debug(serverfile)
         tasks.delete_generated_images(serverfile)
         tasks.add_generated_images(serverfile)
+        tasks.make_thumbnail(serverfile)
 
     # finish run by creating zip file if xlsx file exists
     for serverfile in latest_filenames:
