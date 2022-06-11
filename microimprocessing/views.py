@@ -218,7 +218,10 @@ def force_update(request):
         logger.debug(serverfile)
         tasks.delete_generated_images(serverfile)
         tasks.add_generated_images(serverfile)
-        tasks.make_thumbnail(serverfile)
+        try:
+            tasks.make_thumbnail(serverfile)
+        except Exception as e:
+            logger.warning(e)
 
     # finish run by creating zip file if xlsx file exists
     for serverfile in latest_filenames:
