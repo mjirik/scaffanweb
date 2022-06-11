@@ -33,6 +33,58 @@ def create_html_report(user):
     return html_report
 
 
+def get_zip_fn(serverfile:ServerDataFileName):
+    logger.trace(f"serverfile.imagefile={serverfile.imagefile.name}")
+    if not serverfile.imagefile.name:
+        logger.debug(f"No file uploaded for {serverfile.imagefile}")
+        return None
+        # file is not uploaded
+
+    nm = str(Path(serverfile.imagefile.path).name)
+    # prepare output zip file path
+    pth_zip = serverfile.outputdir + nm + ".zip"
+    return pth_zip
+
+
+def make_zip(serverfile:ServerDataFileName):
+    pth_zip = get_zip_fn(serverfile)
+    if pth_zip:
+        import shutil
+        # remove last letters.because of .zip is added by make_archive
+        shutil.make_archive(pth_zip[:-4], "zip", serverfile.outputdir)
+
+        serverfile.processed = True
+        pth_rel = op.relpath(pth_zip, settings.MEDIA_ROOT)
+        serverfile.zip_file = pth_rel
+        serverfile.save()
+
+def force_update_task():
+    logger.debug("Force update")
+
+    # prepare images
+    latest_filenames = ServerDataFileName.objects.all()
+
+
+    for serverfile in latest_filenames:
+        logger.debug(serverfile)
+        delete_generated_images(serverfile)
+        add_generated_images(serverfile)
+        try:
+            make_thumbnail(serverfile)
+        except Exception as e:
+            logger.warning(e)
+
+    # finish run by creating zip file if xlsx file exists
+    for serverfile in latest_filenames:
+        if (Path(serverfile.outputdir) / "data.xlsx").exists():
+            logger.debug(f"output exists: {serverfile.outputdir}")
+            zip_fn = get_zip_fn(serverfile)
+            if zip_fn:
+                if not Path(zip_fn).exists():
+                    make_zip(serverfile)
+                    serverfile.process_started = False
+                    serverfile.save()
+
 def make_thumbnail(serverfile:ServerDataFileName):
     import scaffan
     import scaffan.algorithm

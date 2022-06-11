@@ -6,7 +6,7 @@ from django.contrib.auth import logout
 from django.core.files.base import ContentFile
 from .models import get_output_dir, Tag
 from .forms import ImageQuatroForm, TagForm, ScaffanParameters
-from .tasks import make_thumbnail
+from .tasks import make_thumbnail, get_zip_fn, make_zip
 from pathlib import Path
 from django.conf import settings
 from django.views.generic import ListView
@@ -208,31 +208,14 @@ def force_update(request):
     :param request:
     :return:
     """
-    logger.debug("Force update")
+    from django_q.tasks import async_task
+    # logger.debug(f"parameters={parameters}")
+    tid = async_task(
+        'microimprocessing.tasks.force_update_task', request,
+        # hook="microimprocessing.views.make_thumbnail"
+        # hook='microimprocessing.tasks.finish_processing',
+    )
 
-    # prepare images
-    latest_filenames = ServerDataFileName.objects.all()
-
-
-    for serverfile in latest_filenames:
-        logger.debug(serverfile)
-        tasks.delete_generated_images(serverfile)
-        tasks.add_generated_images(serverfile)
-        try:
-            tasks.make_thumbnail(serverfile)
-        except Exception as e:
-            logger.warning(e)
-
-    # finish run by creating zip file if xlsx file exists
-    for serverfile in latest_filenames:
-        if (Path(serverfile.outputdir) / "data.xlsx").exists():
-            logger.debug(f"output exists: {serverfile.outputdir}")
-            zip_fn = get_zip_fn(serverfile)
-            if zip_fn:
-                if not Path(zip_fn).exists():
-                    make_zip(serverfile)
-                    serverfile.process_started = False
-                    serverfile.save()
     return redirect('/microimprocessing/')
 
 
@@ -550,30 +533,6 @@ def run_processing(request, pk, parameters=None):
     return redirect('/microimprocessing/')
 
 
-def get_zip_fn(serverfile:ServerDataFileName):
-    logger.trace(f"serverfile.imagefile={serverfile.imagefile.name}")
-    if not serverfile.imagefile.name:
-        logger.debug(f"No file uploaded for {serverfile.imagefile}")
-        return None
-        # file is not uploaded
-
-    nm = str(Path(serverfile.imagefile.path).name)
-    # prepare output zip file path
-    pth_zip = serverfile.outputdir + nm + ".zip"
-    return pth_zip
-
-
-def make_zip(serverfile:ServerDataFileName):
-    pth_zip = get_zip_fn(serverfile)
-    if pth_zip:
-        import shutil
-        # remove last letters.because of .zip is added by make_archive
-        shutil.make_archive(pth_zip[:-4], "zip", serverfile.outputdir)
-
-        serverfile.processed = True
-        pth_rel = op.relpath(pth_zip, settings.MEDIA_ROOT)
-        serverfile.zip_file = pth_rel
-        serverfile.save()
 
 
 def add_example_data(request):
