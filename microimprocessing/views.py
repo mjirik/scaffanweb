@@ -211,7 +211,7 @@ def force_update(request):
     from django_q.tasks import async_task
     # logger.debug(f"parameters={parameters}")
     tid = async_task(
-        'microimprocessing.tasks.force_update_task', request,
+        'microimprocessing.tasks.force_update_task',
         # hook="microimprocessing.views.make_thumbnail"
         # hook='microimprocessing.tasks.finish_processing',
     )
