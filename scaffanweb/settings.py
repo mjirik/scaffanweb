@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import json
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,9 +21,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
+PRIVATE_DIR = Path(__file__).parent
+
 # SECURITY WARNING: keep the secret key used in production secret!
-from pathlib import Path
-scpath = Path(__file__).parent / "secretkey.txt"
+scpath =  PRIVATE_DIR / "secretkey.txt"
 if scpath.exists():
     with open(scpath, "r") as f:
         SECRET_KEY = f.read().strip()
@@ -32,7 +34,7 @@ else:
         SECRET_KEY = f.write(
             get_random_secret_key()
         )
-settings_local_json = Path(__file__).parent / "settings_local.json"
+settings_local_json = PRIVATE_DIR / "settings_local.json"
 if settings_local_json.exists():
     with open(settings_local_json, "r") as f:
         settings_local = json.load(f)
@@ -46,6 +48,7 @@ else:
 # from . import secrets
 # SECRET_KEY = secrets.SECRET_KEY
 
+CREDS_JSON_FILE = Path(PRIVATE_DIR) / 'piglegsurgery-creds.json'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

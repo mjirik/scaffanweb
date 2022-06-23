@@ -28,7 +28,7 @@ RUN /opt/conda/condabin/conda init bash
 RUN curl -L http://mirrors.kernel.org/ubuntu/pool/main/libf/libffi/libffi6_3.2.1-8_amd64.deb -o libffi6.deb
 RUN apt-get install ./libffi6.deb
 
-# this is done before the final conda installation to make the docker build faster
+# this is done before the final conda installation to make the docker re-build faster
 RUN conda create -n scaffanweb -c mjirik -c bioconda -c simpleitk -c conda-forge --yes openslide-python "python>=3.6.2,=3.6" pip pytest pytest-cov tensorflow=2.2 loguru redis-py redis scaffan
 COPY scaffanweb .
 COPY requirements_conda.txt .

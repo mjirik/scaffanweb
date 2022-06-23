@@ -1,9 +1,11 @@
+import pandas
 from loguru import logger
 import loguru
 from pathlib import Path
 import numpy as np
 from .models import ServerDataFileName, LobuleCoordinates, ExampleData
 from .models import get_output_dir, get_tag_by_name
+from .data_tools import google_spreadsheet_append
 import os.path as op
 import os.path
 from googleapiclient.discovery import build
@@ -19,6 +21,7 @@ import glob
 import sys
 from typing import Optional
 import django_q
+from oauth2client.service_account import ServiceAccountCredentials
 
 pth_to_scaffan = Path(__file__).parent.parent.parent / "scaffan"
 logger.debug(pth_to_scaffan)
@@ -215,6 +218,8 @@ def run_processing(serverfile:ServerDataFileName, parameters:Optional):
     if "Area" in mainapp.report.df:
         serverfile.score_area = mainapp.report.df["Area"].mean()
 
+    _add_rows_to_spreadsheet(mainapp.report.df)
+
     add_generated_images(serverfile) # add generated images to database
 
     serverfile.processed_in_version = scaffan.__version__
@@ -227,6 +232,23 @@ def run_processing(serverfile:ServerDataFileName, parameters:Optional):
     serverfile.save()
     logger.remove(logger_id)
 
+def _add_rows_to_spreadsheet(df:pandas.DataFrame):
+    """
+    Append rows to spreadsheet
+    """
+
+    creds_file = Path(settings.CREDS_JSON_FILE)  # 'piglegsurgery-1987db83b363.json'
+    if not creds_file.exists():
+        logger.error(f"Credetials file does not exist. Expected path: {creds_file}")
+        return
+    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+    creds = ServiceAccountCredentials.from_json_keyfile_name(creds_file, scope)
+
+    google_spreadsheet_append(
+        title="ScaffAn Stats",
+        creds=creds,
+        data=df
+    )
 
 def finish_processing(task):
     logger.debug("run processing finish")

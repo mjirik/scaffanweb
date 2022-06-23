@@ -7,6 +7,7 @@ pandas=1.1
 google-api-python-client
 google-auth-httplib2
 google-auth 
+gspread
 # maybe not necessary
 google-auth-oauthlib
 # just to make install procedure faster
