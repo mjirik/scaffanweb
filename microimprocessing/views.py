@@ -183,13 +183,13 @@ def _find_error(serverfile:ServerDataFileName):
     #     last_task = tasks_of_file[0]
     if serverfile.last_task_uuid:
         last_task = django_q.models.Task.get_task(serverfile.last_task_uuid)
+        if last_task.success:
+            pass
+        else:
+            msg += f"Failed task. Func: {last_task.func}, Short result: {last_task.short_result}"
     else:
         last_task = None
 
-    if last_task.success:
-        pass
-    else:
-        msg += f"Failed task. Func: {last_task.func}, Short result: {last_task.short_result}"
 
 
     return msg, last_task
