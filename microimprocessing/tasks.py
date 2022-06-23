@@ -18,6 +18,7 @@ from microimprocessing import scaffanweb_tools, models, views
 import glob
 import sys
 from typing import Optional
+import django_q
 
 pth_to_scaffan = Path(__file__).parent.parent.parent / "scaffan"
 logger.debug(pth_to_scaffan)
@@ -86,6 +87,9 @@ def force_update_task():
                     serverfile.process_started = False
                     serverfile.save()
 
+    logger.debug("updating last tasks...")
+    update_last_tasks()
+
 def make_thumbnail(serverfile:ServerDataFileName):
     import scaffan
     import scaffan.algorithm
@@ -129,6 +133,22 @@ def make_thumbnail(serverfile:ServerDataFileName):
     skimage.io.imsave(ptht, imgt[:,:,:3])
 
     serverfile.save()
+
+
+def update_last_tasks():
+    for serverfile in models.ServerDataFileName.objects.all():
+        _update_last_task(serverfile)
+
+
+def _update_last_task(serverfile:ServerDataFileName):
+    tasks_of_file = [tsk for tsk in django_q.models.Task.objects.all().order_by('-started') if
+                         ((len(tsk.args) > 0) and (tsk.args[0] == serverfile))]
+
+    last_task:django_q.models.Task = tasks_of_file[0] if len(tasks_of_file) > 0 else None
+
+    serverfile.last_task_uuid = last_task.id
+    serverfile.save()
+
 
 def run_processing(serverfile:ServerDataFileName, parameters:Optional):
     import scaffan
@@ -208,11 +228,18 @@ def run_processing(serverfile:ServerDataFileName, parameters:Optional):
 
 
 def finish_processing(task):
+    logger.debug("run processing finish")
+    serverfile: ServerDataFileName = task.args[0]
+    serverfile.process_started = False
+    serverfile.save()
+
+    # absolute uri is http://127.0.0.1:8000/. We have to remove last '/' because the url already contains it.
+    # absolute_uri = task.args[1][:-1]
+    # logger.debug(dir(task))
     # this does not work
+
     if task.args and len(task.args) > 0:
         serverfile = task.args[0]
-        serverfile.process_started = False
-        serverfile.save()
 
     if task.success:
         pass

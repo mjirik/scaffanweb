@@ -176,22 +176,22 @@ def _find_error(serverfile:ServerDataFileName):
     if (not Path(serverfile.imagefile.path).exists()) and get_zip_fn( serverfile):
         msg += "File not found on the server. "
         # is_failed = [fn in first_arg_of_failed_tasks for fn in latest_filenames]
-    tasks_of_file = [tsk for tsk in django_q.models.Task.objects.all().order_by('-started') if
-                         ((len(tsk.args) > 0) and (tsk.args[0] == serverfile))]
+    # tasks_of_file = [tsk for tsk in django_q.models.Task.objects.all().order_by('-started') if
+    #                      ((len(tsk.args) > 0) and (tsk.args[0] == serverfile))]
 
-    last_task = None
-    if len(tasks_of_file) > 0:
-        last_task = tasks_of_file[0]
-        if last_task.success:
-            pass
-        else:
-            msg += f"Failed task. Func: {last_task.func}, Short result: {last_task.short_result}"
-            # import django_q.models as qmodels
-            # query = models.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(serverfile,))
-            # if len(query) > 0:
-            #     if not query.latest("started").success:
-            #         return str(query.latest("started").result)
-            # qmodels.Task.objects.filter(func="microimprocessing.tasks.run_processing", args=(sn,)).latest("started")
+    # if len(tasks_of_file) > 0:
+    #     last_task = tasks_of_file[0]
+    if serverfile.last_task_uuid:
+        last_task = django_q.models.Task.get_task(serverfile.last_task_uuid)
+    else:
+        last_task = None
+
+    if last_task.success:
+        pass
+    else:
+        msg += f"Failed task. Func: {last_task.func}, Short result: {last_task.short_result}"
+
+
     return msg, last_task
 
 
@@ -540,6 +540,7 @@ def run_processing(request, pk, parameters=None):
                      # hook="microimprocessing.views.make_thumbnail"
         hook='microimprocessing.tasks.finish_processing',
     )
+    serverfile.last_task_uuid = tid
 
     return redirect('/microimprocessing/')
 

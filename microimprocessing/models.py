@@ -135,6 +135,7 @@ class ServerDataFileName(models.Model):
     score_dead_ends_number = models.FloatField(blank=True, null=True)
     score_area = models.FloatField(blank=True, null=True)
     outputdir = models.CharField(max_length=255, blank=True, default=get_output_dir)
+    last_task_uuid = models.CharField(max_length=1000, blank=True, null=True)
     last_error_message = models.CharField(max_length=10000, blank=True, null=True)
     scaffan_parameter_setup = models.ForeignKey(ScaffanParameterSetup, on_delete=models.CASCADE, blank=True, null=True)
     # last_task_uuid = models.CharField(max_length=255, blank=True, null=True)
