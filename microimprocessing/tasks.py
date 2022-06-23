@@ -63,10 +63,13 @@ def make_zip(serverfile:ServerDataFileName):
 def force_update_task():
     logger.debug("Force update")
 
+    logger.debug("updating last tasks...")
+    update_last_tasks()
     # prepare images
     latest_filenames = ServerDataFileName.objects.all()
 
 
+    logger.debug("updating generated images...")
     for serverfile in latest_filenames:
         logger.debug(serverfile)
         delete_generated_images(serverfile)
@@ -76,6 +79,7 @@ def force_update_task():
         except Exception as e:
             logger.warning(e)
 
+    logger.debug("updating ZIP files...")
     # finish run by creating zip file if xlsx file exists
     for serverfile in latest_filenames:
         if (Path(serverfile.outputdir) / "data.xlsx").exists():
@@ -87,8 +91,6 @@ def force_update_task():
                     serverfile.process_started = False
                     serverfile.save()
 
-    logger.debug("updating last tasks...")
-    update_last_tasks()
 
 def make_thumbnail(serverfile:ServerDataFileName):
     import scaffan
@@ -144,9 +146,8 @@ def _update_last_task(serverfile:ServerDataFileName):
     tasks_of_file = [tsk for tsk in django_q.models.Task.objects.all().order_by('-started') if
                          ((len(tsk.args) > 0) and (tsk.args[0] == serverfile))]
 
-    last_task:django_q.models.Task = tasks_of_file[0] if len(tasks_of_file) > 0 else None
+    serverfile.last_task_uuid = tasks_of_file[0].id if len(tasks_of_file) > 0 else None
 
-    serverfile.last_task_uuid = last_task.id
     serverfile.save()
 
 
