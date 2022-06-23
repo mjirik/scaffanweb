@@ -218,6 +218,7 @@ def run_processing(serverfile:ServerDataFileName, parameters:Optional):
     if "Area" in mainapp.report.df:
         serverfile.score_area = mainapp.report.df["Area"].mean()
 
+    logger.debug("Appending to Google Spreadsheet")
     _add_rows_to_spreadsheet(mainapp.report.df)
 
     add_generated_images(serverfile) # add generated images to database
