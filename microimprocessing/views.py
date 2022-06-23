@@ -64,11 +64,13 @@ def index(request):
         ])
 
     # logger.warning(order_by_items)
+    logger.debug("getting filenames")
     qs_latest_filenames = ServerDataFileName.objects.filter(
         owner=request.user,
         ).exclude(
         tag__in=hide_tags
     )
+    logger.debug("preparing tags")
     if len(show_tags) > 0:
         qs_latest_filenames = qs_latest_filenames.filter(tag__in=request.session.get("show_tags", []))
 
@@ -79,6 +81,7 @@ def index(request):
     else:
         latest_filenames = qs_latest_filenames.order_by(order_by)
 
+    logger.debug("getting number of points ...")
     number_of_points = [
         len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
         for serverfile in latest_filenames
@@ -97,15 +100,18 @@ def index(request):
     #                 make_zip(serverfile)
     #                 serverfile.process_started = False
     #                 serverfile.save()
+    logger.debug("check zip exists")
     zip_exists = [
         Path(get_zip_fn(serverfile)).exists() if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
+    logger.debug("collect error")
     file_error = [
         _find_error(serverfile)[0]
         # None if Path(serverfile.imagefile.path).exists() else "File not found on the server" if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
+    logger.debug("setting tags...")
     files_tags = [serverfile.tag_set.all()
         for serverfile in latest_filenames
     ]
