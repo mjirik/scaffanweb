@@ -36,6 +36,7 @@ def index(request):
     show_tags = request.session.get("show_tags", [])
     logger.trace(f"hide_tags={hide_tags}")
     logger.trace(f"show_tags={show_tags}")
+    logger.debug(f"preparing view for {request.user}")
     order_by = request.session.get("order_by", '-uploaded_at')
     order_by_items_input = [
         "uploaded_at",
@@ -109,6 +110,7 @@ def index(request):
         for serverfile in latest_filenames
     ]
 
+    logger.debug("getting common spreadsheet file")
     fn, spreadsheet_url, name = models.get_common_spreadsheet_file(request.user)
     spreadsheet_exists = fn.exists()
 
@@ -117,6 +119,8 @@ def index(request):
     #     ]
     # template = loader.get_template('microimprocessing/index.html')
     # if request.user in gdriveimport.user.all():
+
+    logger.debug("preparing gdrive import")
     user_has_gdrive_import = (len(models.GDriveImport.objects.filter(user=request.user)) > 0)
 
     user_tags = [
@@ -144,6 +148,7 @@ def index(request):
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
+    logger.debug("rendering...")
     return render(request, 'microimprocessing/index.html', context)
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")

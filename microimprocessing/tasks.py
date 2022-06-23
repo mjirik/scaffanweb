@@ -18,13 +18,14 @@ from microimprocessing import scaffanweb_tools, models, views
 import glob
 import sys
 from typing import Optional
-from .scaffanweb_tools import resize_image, crop_square
 
 pth_to_scaffan = Path(__file__).parent.parent.parent / "scaffan"
 logger.debug(pth_to_scaffan)
 logger.debug(pth_to_scaffan.exists())
 if pth_to_scaffan.exists():
     sys.path.insert(0, str(pth_to_scaffan))
+
+from .scaffanweb_tools import resize_image, crop_square
 
 # report generator
 def create_html_report(user):
