@@ -191,7 +191,7 @@ def run_processing(serverfile:ServerDataFileName, parameters:Optional):
     # logger.debug(f"adding task to queue CLI params: {' '.join(cli_params)}")
 
     logger.debug("Scaffan processing init")
-    mainapp = scaffan.algorithm.Scaffan()
+    mainapp:scaffan.algorithm.Scaffan = scaffan.algorithm.Scaffan()
     logger.debug(f"parameters={parameters}")
     if parameters:
         for key, value  in parameters.items():
@@ -206,6 +206,8 @@ def run_processing(serverfile:ServerDataFileName, parameters:Optional):
         mainapp.set_parameter("Input;Lobulus Selection Method", "Manual")
     else:
         mainapp.set_parameter("Input;Lobulus Selection Method", "Auto")
+
+    mainapp.report.set_persistent_cols({"username": serverfile.owner.username})
     mainapp.run_lobuluses(seeds_mm=centers_mm)
     if "SNI area prediction" in mainapp.report.df:
         serverfile.score = _clamp(mainapp.report.df["SNI area prediction"].mean() * 0.5, 0., 1.)
