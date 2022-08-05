@@ -8,3 +8,15 @@ scaffanweb
 
 Web application for scaffold analysis from H&E stained images
 
+
+# Install with docker
+
+```bash
+
+cd scaffanweb
+docker build -t scaffan:0.1 .
+```
+
+```bash
+docker run -d -v "C:/Users/Jirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/" -v "C:/Users/Jirik/projects/scaffan:/webapps/scaffanweb_django/scaffan/" -p 8000:8000 -p 8080:80 --name scaffan scaffan:0.1
+```

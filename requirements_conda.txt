@@ -1,12 +1,15 @@
 python>=3.6.2,=3.6
 django=3
 django-allauth
+# higher version of asgiref requre pyton=3.7
+asgiref=3.3
 redis-py
 openslide
 pandas=1.1
 google-api-python-client
 google-auth-httplib2
-google-auth 
+google-auth
+oauth2client
 gspread
 # maybe not necessary
 google-auth-oauthlib

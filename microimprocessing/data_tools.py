@@ -1,6 +1,5 @@
 import gspread
 import pandas as pd
-from oauth2client.service_account import ServiceAccountCredentials
 from pathlib import Path
 from typing import Optional, Union
 from loguru import logger
@@ -8,6 +7,7 @@ from loguru import logger
 
 
 def google_spreadsheet_append(title: str, creds, data:Union[pd.DataFrame, dict], scope=None, sheet_index=0) -> pd.DataFrame:
+    from oauth2client.service_account import ServiceAccountCredentials
     # define the scope
 
     # https://www.analyticsvidhya.com/blog/2020/07/read-and-update-google-spreadsheets-with-python/
