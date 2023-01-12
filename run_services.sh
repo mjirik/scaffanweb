@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Preparing log dir..."
+mkdir -p logs
 
 echo "Starting services..."
 #sudo service redis-server start &>> logs/redis_log.txt
