@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Preparing log dir..."
+echo "Preparing log dir...
 mkdir -p logs
 
 echo "Starting services..."
