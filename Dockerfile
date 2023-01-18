@@ -34,7 +34,7 @@ COPY scaffanweb .
 COPY requirements_conda.txt .
 COPY requirements_pip.txt .
 
-RUN conda install -n scaffanweb -c mjirik -c bioconda -c simpleitk -c conda-forge --yes --file requirements_conda.txt openslide-python pip pytest pytest-cov tensorflow=2.2 loguru redis-py redis scaffan
+RUN conda install -n scaffanweb -c mjirik -c conda-forge -c bioconda -c simpleitk --yes --file requirements_conda.txt openslide-python pip pytest pytest-cov tensorflow=2.2 loguru redis-py redis scaffan
 RUN conda list
 #RUN cd /webapps/scaffanweb_django
 # Make RUN commands use the new environment:
