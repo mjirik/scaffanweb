@@ -17,10 +17,21 @@ cd scaffanweb
 docker build -t scaffan:0.1 .
 ```
 
+You might want to copy secret keys and database:
+
+* `scaffanweb/db.sqlite3`
+* `scaffanweb/scaffanweb/piglegsurgery-creds.json`
+* `scaffanweb/scaffanweb/secreetkey.json`
+* `scaffanweb/scaffanweb/settings_local.json`
+* `scaffanweb/scaffanweb/piglegsurgery-creds.json`
+* `scaffanweb/media`
+
 ```bash
 docker run -d -v "C:/Users/Jirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/" -v "C:/Users/Jirik/projects/scaffan:/webapps/scaffanweb_django/scaffan/" -p 8080:80 -p 8000:8000  --name scaffan scaffan:0.1
 ```
 
 ```bash
-docker run -d -v "/home/mjirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/" -v "/home/mjirik/projects/scaffan:/webapps/scaffanweb_django/scaffan/" -p 8080:80 -p 8000:8000  --name scaffan scaffan:0.1
-``***`
+docker run -d -v "/home/mjirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/" -v "/home/mjirik/projects/scaffan:/webapps/scaffanweb_django/scaffan/" -p 8080:8080 -p 80:8000  --name scaffan scaffan:0.1
+```
+
+

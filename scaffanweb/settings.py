@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PRIVATE_DIR = Path(__file__).parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-scpath =  PRIVATE_DIR / "secretkey.txt"
+scpath = Path(os.environ.get("SECRET_KEY_PATH", default=PRIVATE_DIR / "secretkey.txt"))
 if scpath.exists():
     with open(scpath, "r") as f:
         SECRET_KEY = f.read().strip()
@@ -34,31 +34,46 @@ else:
         SECRET_KEY = f.write(
             get_random_secret_key()
         )
-settings_local_json = PRIVATE_DIR / "settings_local.json"
-if settings_local_json.exists():
-    with open(settings_local_json, "r") as f:
-        settings_local = json.load(f)
-else:
-    with open(settings_local_json, "w") as f:
-        settings_local = {
-            "ACCOUNT_DEFAULT_HTTP_PROTOCOL": "http",
-            # "ACCOUNT_DEFAULT_HTTP_PROTOCOL": "https",
-        }
-        json.dump(settings_local, f)
+# settings_local_json = PRIVATE_DIR / "settings_local.json"
+# if settings_local_json.exists():
+#     with open(settings_local_json, "r") as f:
+#         settings_local = json.load(f)
+# else:
+#     with open(settings_local_json, "w") as f:
+#         settings_local = {
+#             "ACCOUNT_DEFAULT_HTTP_PROTOCOL": "http",
+#             # "ACCOUNT_DEFAULT_HTTP_PROTOCOL": "https",
+#         }
+#         json.dump(settings_local, f)
+
+# Try to solve the google oauth ssl problem
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = os.environ.get("ACCOUNT_DEFAULT_HTTP_PROTOCOL", default="http")
+# ACCOUNT_DEFAULT_HTTP_PROTOCOL = settings_local["ACCOUNT_DEFAULT_HTTP_PROTOCOL"]
 # from . import secrets
 # SECRET_KEY = secrets.SECRET_KEY
 
 CREDS_JSON_FILE = Path(PRIVATE_DIR) / 'piglegsurgery-creds.json'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get("DEBUG", default=1))
+# DEBUG = True
 
-ALLOWED_HOSTS = [
-    # "0.0.0.0:8000",
-    "147.228.47.162",
-    "127.0.0.1",
-    "scaffan.kky.zcu.cz",
-    # "*",
-]
+# ALLOWED_HOSTS = [
+#     # "0.0.0.0:8000",
+#     "147.228.47.162",
+#     "127.0.0.1",
+#     "scaffan.kky.zcu.cz",
+#     # "*",
+# ]
+ALLOWED_HOSTS = os.environ.get(
+    "DJANGO_ALLOWED_HOSTS",
+    default=[
+        "147.228.47.162",
+        "127.0.0.1",
+        "scaffan.kky.zcu.cz",
+    ]
+)
+if type(ALLOWED_HOSTS) == str:
+    ALLOWED_HOSTS = ALLOWED_HOSTS.split(" ")
 
 SITE_ID = 2 # because in my database is in table Sites my 127.0.0.1 on second place
 LOGIN_REDIRECT_URL = '/'
@@ -204,9 +219,6 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# Try to solve the google oauth ssl problem
-# ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = settings_local["ACCOUNT_DEFAULT_HTTP_PROTOCOL"]
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # Q_CLUSTER = {

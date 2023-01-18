@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+#    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+#      - ./app/:/usr/src/app/
+      - /home/mjirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/
+      - /home/mjirik/projects/scaffan:/webapps/scaffanweb_django/scaffan/
+    ports:
+      - 80:8000
+      - 443:443
+      -
+    env_file:
+      - ./.env.dev
