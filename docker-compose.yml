@@ -11,6 +11,5 @@ services:
     ports:
       - 80:8000
       - 443:443
-      -
     env_file:
       - ./.env.dev
