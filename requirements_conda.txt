@@ -13,6 +13,9 @@ oauth2client=4.1
 gspread
 # maybe not necessary
 google-auth-oauthlib
+# for deplyment
+gunicorn=20.1.0
+psycopg2-binary=2.9
 # just to make install procedure faster
 io3d>=2.10
 imma>=0.18

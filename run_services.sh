@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Preparing log dir...
+echo "Preparing log dir..."
 mkdir -p logs
 
 echo "Starting services..."
@@ -10,3 +10,4 @@ echo "  Redis started"
 conda run --no-capture-output -n scaffanweb python manage.py qcluster |& tee -a logs/qcluster_log.txt &
 conda run --no-capture-output -n scaffanweb python manage.py runserver 0.0.0.0:8000 |& tee -a logs/runserver_log.txt &
 echo "Services started"
+
