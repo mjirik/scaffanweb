@@ -1,0 +1,22 @@
+python>=3.6.2,=3.6
+django=3
+django-allauth>=0.51
+# higher version of asgiref requre pyton=3.7
+asgiref=3.3
+redis-py
+openslide
+pandas=1.1
+google-api-python-client
+google-auth-httplib2
+google-auth
+oauth2client=4.1
+gspread
+# maybe not necessary
+google-auth-oauthlib
+# for deplyment
+gunicorn=20.1.0
+psycopg2-binary=2.9
+# just to make install procedure faster
+io3d>=2.10.6
+imma>=0.18.5
+sed3>=1.6.3

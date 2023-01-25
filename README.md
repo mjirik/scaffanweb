@@ -7,7 +7,19 @@
 scaffanweb
 
 Web application for scaffold analysis from H&E stained images
+# Install with docker-compose
 
+```bash
+cd scaffanweb
+docker-compose up -d --build 
+docker-compose -f docker-compose.yml exec web python manage.py migrate --noinput
+docker-compose -f docker-compose.yml exec web python manage.py collectstatic --no-input --clear
+```
+
+get inside docker image
+```bash
+docker-compose exec web bash
+```
 
 # Install with docker
 
