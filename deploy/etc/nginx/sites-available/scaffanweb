@@ -1,6 +1,18 @@
+upstream scaffanweb_app_server {
+  server unix:/webapps/scaffanweb_django/run/gunicorn.sock fail_timeout=0;
+}
+
 server {
     listen   80;
     server_name scaffan.kky.zcu.cz;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    server_name scaffan.kky.zcu.cz;
+    listen   443 ssl default_server;
+    ssl_certificate /etc/nginx/certificate/scaffan.kky.zcu.cz.cert.pem;
+    ssl_certificate_key /etc/nginx/certificate/scaffan.kky.zcu.cz.key.pem;
 
     client_max_body_size 4G;
 

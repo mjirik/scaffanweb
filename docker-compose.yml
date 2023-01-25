@@ -8,9 +8,31 @@ services:
 #      - ./app/:/usr/src/app/
       - /home/mjirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/
       - /home/mjirik/projects/scaffan:/webapps/scaffanweb_django/scaffan/
+      - static_volume:/webapps/scaffanweb_django/static/
     ports:
-      - 80:8000
-#      - 443:8000
-#      - 443:443
+      - 8000:8000
     env_file:
       - ./.env.dev
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /home/mjirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/
+      - static_volume:/webapps/scaffanweb_django/static/
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+    restart: always
+    depends_on:
+      - web
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+
+volumes:
+  static_volume:

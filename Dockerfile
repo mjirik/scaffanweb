@@ -49,6 +49,11 @@ ENV TZ="Europe/Berlin"
 
 WORKDIR /webapps/scaffanweb_django/scaffanweb
 
+RUN mkdir -p /webapps/scaffanweb_django/static
+
+# Make RUN commands use the new environment:
+# SHELL ["conda", "run", "-n", "scaffanweb", "/bin/bash", "-c"]
+
 CMD cd /webapps/scaffanweb_django/scaffanweb && \
     bash /webapps/scaffanweb_django/scaffanweb/run_services.sh && \
     tail -f /dev/null
