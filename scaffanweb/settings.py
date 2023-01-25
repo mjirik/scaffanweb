@@ -187,10 +187,11 @@ USE_TZ = True
 
 # STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT", default=os.path.join(BASE_DIR, "media"))
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 # use python manage.py collectstatic
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.environ.get("STATIC_ROOT", default=os.path.join(BASE_DIR, "static"))
 # STATIC_ROOT = "static"
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, "static"),

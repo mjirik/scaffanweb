@@ -8,9 +8,21 @@ services:
 #      - ./app/:/usr/src/app/
       - /home/mjirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/
       - /home/mjirik/projects/scaffan:/webapps/scaffanweb_django/scaffan/
+      - static_volume:/webapps/scaffanweb_django/static/
     ports:
       - 8000:8000
-#      - 80:80
-#      - 443:443
     env_file:
       - ./.env.dev
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    volumes:
+      - /home/mjirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/
+      - static_volume:/webapps/scaffanweb_django/static/
+    depends_on:
+      - web
+
+volumes:
+  static_volume:
