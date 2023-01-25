@@ -11,9 +11,9 @@ Web application for scaffold analysis from H&E stained images
 
 ```bash
 cd scaffanweb
-docker-compose up -d --build 
-docker-compose -f docker-compose.yml exec web python manage.py migrate --noinput
-docker-compose -f docker-compose.yml exec web python manage.py collectstatic --no-input --clear
+docker-compose up --build 
+docker-compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py migrate --noinput
+docker-compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py collectstatic --no-input --clear
 ```
 
 get inside docker image
