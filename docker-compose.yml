@@ -22,9 +22,9 @@ services:
     volumes:
       - /home/mjirik/projects/scaffanweb:/webapps/scaffanweb_django/scaffanweb/
       - static_volume:/webapps/scaffanweb_django/static/
-      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/www/:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
-      - .logs/:/webapps/scaffanweb_django/logs/
+      - ./logs/:/webapps/scaffanweb_django/logs/
     restart: always
     depends_on:
       - web
@@ -34,6 +34,7 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
+      - ./logs/:/var/log/letsencrypt/
 
 volumes:
   static_volume:
