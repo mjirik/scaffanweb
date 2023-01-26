@@ -20,3 +20,5 @@ psycopg2-binary=2.9
 io3d>=2.10.6
 imma>=0.18.5
 sed3>=1.6.3
+# missing dependency of something in preview processing
+pcre>=8.44
