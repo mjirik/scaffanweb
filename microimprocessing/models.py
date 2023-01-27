@@ -79,17 +79,20 @@ def _prepare_filename():
     return ""
 
 class ServerDatasetPath(models.Model):
+    id = models.AutoField(primary_key=True)
     comment = models.CharField(max_length=200)
     server_dataset_path = models.FilePathField("Path to dataset on server", path=str(pth), allow_files=False, allow_folders=True)
 
 
 class ScaffanParameterSetup(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text_parameters = models.TextField(max_length=4000, default="{}")
     name = models.CharField(max_length=200, default="My Setting 1")
 
 
 class ServerDataFileName(models.Model):
+    id = models.AutoField(primary_key=True)
 
     # server_dataset_path= models.ForeignKey(ServerDatasetPath, on_delete=models.CASCADE)
     # choice_text = models.CharField(max_length=200)
@@ -158,6 +161,7 @@ class ServerDataFileName(models.Model):
             return self.description
 
 class BitmapImage(models.Model):
+    id = models.AutoField(primary_key=True)
     server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)
     bitmap_image = models.ImageField()
 
@@ -167,6 +171,7 @@ class BitmapImage(models.Model):
 
 
 class LobuleCoordinates(models.Model):
+    id = models.AutoField(primary_key=True)
     server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)
     x_mm = models.FloatField("X [mm]")
     y_mm = models.FloatField("Y [mm]")
@@ -181,9 +186,11 @@ class LobuleCoordinates(models.Model):
 
 
 class ExampleData(models.Model):
+    id = models.AutoField(primary_key=True)
     server_datafile = models.ForeignKey(ServerDataFileName, on_delete=models.CASCADE)
 
 class Tag(models.Model):
+    id = models.AutoField(primary_key=True)
     users = models.ManyToManyField(User)
     # user = models.ForeignKey(
     #     User,
@@ -214,6 +221,7 @@ def get_tag_by_name(
 
 
 class Profile(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # bio = models.TextField(max_length=500, blank=True)
     # location = models.CharField(max_length=30, blank=True)
@@ -245,6 +253,7 @@ class Profile(models.Model):
 
 
 class GDriveImport(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ManyToManyField(User)
     gdrive_id = models.CharField(max_length=35)
     gdir_id = models.CharField(max_length=35)
