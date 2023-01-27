@@ -36,7 +36,7 @@ def index(request):
     show_tags = request.session.get("show_tags", [])
     logger.trace(f"hide_tags={hide_tags}")
     logger.trace(f"show_tags={show_tags}")
-    logger.debug(f"preparing view for {request.user}")
+    logger.debug(f"Preparing index view for {request.user}")
     order_by = request.session.get("order_by", '-uploaded_at')
     order_by_items_input = [
         "uploaded_at",
@@ -105,13 +105,13 @@ def index(request):
         Path(get_zip_fn(serverfile)).exists() if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
-    logger.debug("collecting possible errors")
+    logger.trace("collecting possible errors")
     file_error = [
         _find_error(serverfile)[0]
         # None if Path(serverfile.imagefile.path).exists() else "File not found on the server" if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
-    logger.debug("setting tags...")
+    logger.trace("setting tags...")
     files_tags = [serverfile.tag_set.all()
         for serverfile in latest_filenames
     ]
@@ -126,7 +126,7 @@ def index(request):
     # template = loader.get_template('microimprocessing/index.html')
     # if request.user in gdriveimport.user.all():
 
-    logger.debug("preparing gdrive import")
+    logger.trace("preparing gdrive import")
     user_has_gdrive_import = (len(models.GDriveImport.objects.filter(user=request.user)) > 0)
 
     user_tags = [
