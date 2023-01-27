@@ -10,7 +10,7 @@ google-api-python-client
 google-auth-httplib2
 google-auth
 oauth2client=4.1
-gspread
+gspread>=4
 # maybe not necessary
 google-auth-oauthlib
 # for deplyment

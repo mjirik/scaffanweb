@@ -64,13 +64,13 @@ def index(request):
         ])
 
     # logger.warning(order_by_items)
-    logger.debug("getting filenames")
+    logger.trace("getting filenames")
     qs_latest_filenames = ServerDataFileName.objects.filter(
         owner=request.user,
         ).exclude(
         tag__in=hide_tags
     )
-    logger.debug("preparing tags")
+    logger.trace("preparing tags")
     if len(show_tags) > 0:
         qs_latest_filenames = qs_latest_filenames.filter(tag__in=request.session.get("show_tags", []))
 
@@ -81,7 +81,7 @@ def index(request):
     else:
         latest_filenames = qs_latest_filenames.order_by(order_by)
 
-    logger.debug("getting number of points ...")
+    logger.trace("getting number of points ...")
     number_of_points = [
         len(LobuleCoordinates.objects.filter(server_datafile=serverfile))
         for serverfile in latest_filenames
@@ -100,12 +100,12 @@ def index(request):
     #                 make_zip(serverfile)
     #                 serverfile.process_started = False
     #                 serverfile.save()
-    logger.debug("check zip exists")
+    logger.trace("check zip exists")
     zip_exists = [
         Path(get_zip_fn(serverfile)).exists() if get_zip_fn(serverfile) else False
         for serverfile in latest_filenames
     ]
-    logger.debug("collect error")
+    logger.debug("collecting possible errors")
     file_error = [
         _find_error(serverfile)[0]
         # None if Path(serverfile.imagefile.path).exists() else "File not found on the server" if get_zip_fn(serverfile) else False
@@ -116,7 +116,7 @@ def index(request):
         for serverfile in latest_filenames
     ]
 
-    logger.debug("getting common spreadsheet file")
+    logger.trace("getting common spreadsheet file")
     fn, spreadsheet_url, name = models.get_common_spreadsheet_file(request.user)
     spreadsheet_exists = fn.exists()
 
@@ -154,7 +154,7 @@ def index(request):
         # "n_points": number_of_points,
     }
     # return HttpResponse(template.render(context, request))
-    logger.debug("rendering...")
+    logger.debug("Index view almost finished. Rendering...")
     return render(request, 'microimprocessing/index.html', context)
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")
