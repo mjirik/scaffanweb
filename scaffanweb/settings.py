@@ -22,6 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 PRIVATE_DIR = Path(os.environ.get("SCAFFAN_PRIVATE_DIR", default=Path(__file__).parent))
+SCAFFAN_REDIS_HOST = Path(os.environ.get("SCAFFAN_REDIS_HOST", default='localhost'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 scpath = Path(os.environ.get("SECRET_KEY_PATH", default=PRIVATE_DIR / "secretkey.txt"))
@@ -330,5 +331,9 @@ else:
             'unix_socket_path': None
         },
         'timeout': 3600,
-        'retry': 4000
+        'retry': 4000,
+        'ack_failures': True,
+        'max_attempts': 1,
+        'attempt_count': 1
+
     }

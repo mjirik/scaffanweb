@@ -191,6 +191,7 @@ def run_processing(serverfile:ServerDataFileName, parameters:Optional):
     # logger.debug(f"adding task to queue CLI params: {' '.join(cli_params)}")
 
     logger.debug("Scaffan processing init")
+    logger.debug(f"image path: {serverfile.imagefile.path}")
     mainapp:scaffan.algorithm.Scaffan = scaffan.algorithm.Scaffan()
     logger.debug(f"parameters={parameters}")
     if parameters:
