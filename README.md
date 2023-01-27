@@ -7,16 +7,37 @@
 scaffanweb
 
 Web application for scaffold analysis from H&E stained images
+
 # Install with docker-compose
 
 ```bash
+git clone git@github.com:mjirik/scaffan.git
+git clone git@github.com:mjirik/scaffanweb.git
 cd scaffanweb
+```
+
+ * in `nginx/nginx.conf` comment the server listening on 443
+ * copy database file 
+ * copy file with secrets
+ * copy google drive key
+ * copy google spreadsheet key
+
+Create certifiace by:
+```bash
+docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d scaffan.kky.zcu.cz
+```
+
+* in `nginx/nginx.conf` uncomment the server listening on 443
+
+Make migrations and get static files
+```bash
 docker-compose up --build 
-docker-compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py migrate --noinput
+docker-compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py makemigrations
+docker-compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py migrate
 docker-compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py collectstatic --no-input --clear
 ```
 
-get inside docker image
+Get inside docker image
 ```bash
 docker-compose exec web bash
 ```
