@@ -30,6 +30,9 @@ RUN apt-get install ./libffi6.deb
 
 # this is done before the final conda installation to make the docker re-build faster
 RUN conda create -n scaffanweb -c mjirik -c bioconda -c simpleitk -c conda-forge --yes openslide-python "python>=3.6.2,=3.6" pip pytest pytest-cov tensorflow=2.2 loguru redis-py redis
+# Make RUN commands use the new environment:
+SHELL ["conda", "run", "-n", "scaffanweb", "/bin/bash", "-c"]
+
 # the next line is probably not necessary and causing the rebuild of docker on every change
 # COPY scaffanweb .
 COPY requirements_conda_pinned.txt .
@@ -38,7 +41,7 @@ RUN conda install -n scaffanweb -c mjirik -c bioconda -c simpleitk -c conda-forg
 #RUN cd /webapps/scaffanweb_django
 # Make RUN commands use the new environment:
 # SHELL ["conda", "run", "-n", "scaffanweb", "/bin/bash", "--login", "-c"]
-RUN /opt/conda/condabin/conda init bash
+# RUN /opt/conda/condabin/conda init bash
 COPY requirements_pip.txt .
 RUN conda run -n scaffanweb --no-capture-output pip install -r requirements_pip.txt
 
