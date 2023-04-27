@@ -3,8 +3,8 @@ version: '3.8'
 services:
   redis:
     image: redis:alpine
-  ports:
-    - 6379
+    ports:
+      - 6379
 #      - 6379:6379 # this was not secured
 #
 #    expose: 
@@ -37,7 +37,7 @@ services:
       - ./certbot/www/:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
       - ./logs/:/webapps/scaffanweb_django/logs/
-    # load new ssh certificate from certbot every 6 hours
+    # load new ssh certificate from certbot every  6 hours
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     restart: always
     depends_on:
