@@ -135,7 +135,7 @@
                 <!--            <div class="container">-->
                 <div class="row pt-3">
                     {#                        <div class="card-columns pt-3">#}
-                    <div class="col-md-4">
+                    <div class="col-md-4 pt-3">
                         <div class="card bg-light">
                             <div class="card-body text-center">
                                 <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload
@@ -149,7 +149,7 @@
 
                     {% for server_filename, n_pts, output_exists, zip_exists, file_tags, file_error in latest_filenames %}
                         {% if server_filename.imagefile %}
-                            <div class="col-md-4">
+                            <div class="col-md-4 pt-3">
                                 <div class="card">
                                     <!--                            <div class="card" style="width:400px">-->
                                     {% if server_filename.thumbnail %}
