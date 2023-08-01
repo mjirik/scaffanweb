@@ -1,66 +1,60 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block head %}
-<!--refresh every 120 s-->
-<meta http-equiv="refresh" content="120">
+    <!--refresh every 120 s-->
+    <meta http-equiv="refresh" content="120">
 {% endblock %}
 {% block body %}
     {% if user.is_authenticated %}
-<!--        <div class="container">-->
-<!--            <h2>Image List</h2>-->
-<!--        </div>-->
-<!--        <div class="container">-->
-<!--            <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>-->
-<!--            <a class="btn btn-secondary" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>-->
-<!--            <a class="btn btn-secondary" href="{% url 'microimprocessing:index' %}">Refresh</a>-->
-<!--        </div>-->
         {% if latest_filenames %}
             <div class="container">
-<!--                <div class="row">-->
-<!--                    <div class="col-sm-3">-->
+                <!--                <div class="row">-->
+                <!--                    <div class="col-sm-3">-->
 
-    <!--                </div>-->
-    <!--                <div class="card-columns">-->
-                    <div class="card-deck">
+                <!--                </div>-->
+                <!--                <div class="card-columns">-->
+                <div class="card-deck">
 
-                        <div class="card bg-light">
-                            <div class="card-body text-center">
-                                <div class="pt-4">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <div class="pt-4">
 
-    <!--                            <p>-->
-                                    Moulisová V, Jiřík M, Schindler C, et al. <em>Novel morphological multi-scale evaluation system for quality assessment of decellularized liver scaffolds.</em> Journal of Tissue Engineering. January 2020.
-                                    <a href="https://doi.org/10.1177/2041731420921121" class="stretched-link">doi:10.1177/2041731420921121</a>
-    <!--                            </p>-->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card bg-light">
-                            <img class="card-img-top" src="{% static 'microimprocessing/bc-wide.jpg' %}">
-                            <div class="card-body text-center">
-                                <h5>
-                                    Charles University
-                                </h5>
-                                Faculty of Medicine in Pilsen<br>
-                                Biomedical Center<br>
                                 <!--                            <p>-->
-                                <a href="https://www.liskalab.eu/" class="stretched-link">Liska Lab</a>
-                                <!--                            </p>-->
-                            </div>
-                        </div>
-                        <div class="card bg-light">
-                            <img class="card-img-top" src="{% static 'microimprocessing/ntis-wide.jpg' %}">
-                            <div class="card-body text-center">
-                                <h5>
-                                    University of West Bohemia
-                                </h5>
-                                Faculty of Applied Sciences<br>
-                                NTIS Research Centre<br>
-                                <!--                            <p>-->
-                                <a href="http://eyes.zcu.cz/" class="stretched-link">Pilsen Eyes Lab</a>
+                                Moulisová V, Jiřík M, Schindler C, et al. <em>Novel morphological multi-scale evaluation
+                                system for quality assessment of decellularized liver scaffolds.</em> Journal of Tissue
+                                Engineering. January 2020.
+                                <a href="https://doi.org/10.1177/2041731420921121" class="stretched-link">doi:10.1177/2041731420921121</a>
                                 <!--                            </p>-->
                             </div>
                         </div>
                     </div>
+                    <div class="card bg-light">
+                        <img class="card-img-top" src="{% static 'microimprocessing/bc-wide.jpg' %}">
+                        <div class="card-body text-center">
+                            <h5>
+                                Charles University
+                            </h5>
+                            Faculty of Medicine in Pilsen<br>
+                            Biomedical Center<br>
+                            <!--                            <p>-->
+                            <a href="https://www.liskalab.eu/" class="stretched-link">Liska Lab</a>
+                            <!--                            </p>-->
+                        </div>
+                    </div>
+                    <div class="card bg-light">
+                        <img class="card-img-top" src="{% static 'microimprocessing/ntis-wide.jpg' %}">
+                        <div class="card-body text-center">
+                            <h5>
+                                University of West Bohemia
+                            </h5>
+                            Faculty of Applied Sciences<br>
+                            NTIS Research Centre<br>
+                            <!--                            <p>-->
+                            <a href="http://eyes.zcu.cz/" class="stretched-link">Pilsen Eyes Lab</a>
+                            <!--                            </p>-->
+                        </div>
+                    </div>
+                </div>
                 <div class="pt-3">
                     <nav class="navbar navbar-expand-sm bg-light pt-3">
                         <h2>
@@ -70,46 +64,64 @@
                             {% for user_tag, user_tag_status in user_tags %}
                                 <li class="nav-item">
                                     <div class="dropdown px-1">
-<!--                                        <div class="badge badge-pill {% if user_tag_status == 'show' %} badge-success {% elif user_tag_status == 'hide' %} badge-danger{% else %} badge-secondary{% endif %}" data-toggle="dropdown">{{ user_tag }} {{ user_tag_status }} </div>-->
-                                        <div class="badge badge-pill {% if user_tag_status == 'show' %} badge-dark {% elif user_tag_status == 'hide' %} badge-light {% else %} badge-secondary{% endif %}" data-toggle="dropdown">{{ user_tag }}</div>
+                                        <!--                                        <div class="badge badge-pill
+                                                {% if user_tag_status == 'show' %}
+                                                     badge-success {% elif user_tag_status == 'hide' %}
+                                                     badge-danger{% else %}
+                                                     badge-secondary{% endif %}" data-toggle="dropdown">{{ user_tag }} {{ user_tag_status }} </div>-->
+                                        <div class="badge badge-pill {% if user_tag_status == 'show' %} badge-dark {% elif user_tag_status == 'hide' %} badge-light {% else %} badge-secondary{% endif %}"
+                                             data-toggle="dropdown">{{ user_tag }}</div>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="{% url 'microimprocessing:show_tag' user_tag.id %}" data-toggle="tooltip" title="Show data with this tag. Hide other data.">Show</a>
-                                            <a class="dropdown-item" href="{% url 'microimprocessing:ignore_tag' user_tag.id %}" data-toggle="tooltip" title="Remove from filters">Ignore</a>
-                                            <a class="dropdown-item" href="{% url 'microimprocessing:hide_tag' user_tag.id %}" data-toggle="tooltip" title="Hide data with this tag.">Hide</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'microimprocessing:show_tag' user_tag.id %}"
+                                               data-toggle="tooltip" title="Show data with this tag. Hide other data.">Show</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'microimprocessing:ignore_tag' user_tag.id %}"
+                                               data-toggle="tooltip" title="Remove from filters">Ignore</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'microimprocessing:hide_tag' user_tag.id %}"
+                                               data-toggle="tooltip" title="Hide data with this tag.">Hide</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="{% url 'microimprocessing:remove_tag_from_user' user_tag.id %}" onclick="return confirm('Delete tag {{ user_tag }}?')" data-toggle="tooltip" title="Delete the tag and remove it from all data.">Delete</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'microimprocessing:remove_tag_from_user' user_tag.id %}"
+                                               onclick="return confirm('Delete tag {{ user_tag }}?')"
+                                               data-toggle="tooltip"
+                                               title="Delete the tag and remove it from all data.">Delete</a>
                                         </div>
                                     </div>
                                 </li>
                             {% endfor %}
                             <li class="nav-item px-1">
                                 {% if spreadsheet_exists %}
-                                <a class="btn btn-secondary" href="{% url 'microimprocessing:common_spreadsheet' %}"
-                                   data-toggle="tooltip" data-placement="top"
-                                   title="View Common Spreadsheet"
-                                >
-                                    <i class="fas fa-table"></i>
-                                </a>
+                                    <a class="btn btn-secondary" href="{% url 'microimprocessing:common_spreadsheet' %}"
+                                       data-toggle="tooltip" data-placement="top"
+                                       title="View Common Spreadsheet"
+                                    >
+                                        <i class="fas fa-table"></i>
+                                    </a>
                                 {% endif %}
                             </li>
                             <li class="nav-item px-1">
                                 {% if user_has_gdrive_import %}
-                                <a class="btn btn-secondary" href="{% url 'microimprocessing:gdrive_import' %}"
-                                   data-toggle="tooltip" data-placement="top"
-                                   title="Run the import now. Regular imports are done every hour."
-                                >
-                                    <i class="fas fa-sync-alt"></i>
-                                </a>
+                                    <a class="btn btn-secondary" href="{% url 'microimprocessing:gdrive_import' %}"
+                                       data-toggle="tooltip" data-placement="top"
+                                       title="Run the import now. Regular imports are done every hour."
+                                    >
+                                        <i class="fas fa-sync-alt"></i>
+                                    </a>
                                 {% endif %}
                             </li>
                             <li class="nav-item">
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Order By
+                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        Order By
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {% for order_item in order_by_items %}
-                                            <a class="dropdown-item" href="{% url 'microimprocessing:set_order_by' order_item.0 %}">{{ order_item.1 }}</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'microimprocessing:set_order_by' order_item.0 %}">{{ order_item.1 }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -119,57 +131,72 @@
                 </div>
                 {% if spreadsheet_exists %}
                 {% endif %}
-<!--            </div>-->
-<!--            <div class="container">-->
-<!--                    <div class="col-sm-9">-->
-                        <div class="card-columns pt-3">
-                            <div class="card bg-light">
-                                <div class="card-body text-center">
-                                    <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload new data</a>
-                                    <br>or<br>
-                                    <a class="btn btn-link" href="{% url 'microimprocessing:add_example_data' %}">Add example data</a>
-                                </div>
+                <!--            </div>-->
+                <!--            <div class="container">-->
+                <div class="row pt-3">
+                    {#                        <div class="card-columns pt-3">#}
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <a class="btn btn-primary" href="{% url 'microimprocessing:model_form_upload' %}">Upload
+                                    new data</a>
+                                <br>or<br>
+                                <a class="btn btn-link" href="{% url 'microimprocessing:add_example_data' %}">Add
+                                    example data</a>
                             </div>
+                        </div>
+                    </div>
 
-                        {% for server_filename, n_pts, output_exists, zip_exists, file_tags, file_error in latest_filenames %}
-                            {% if server_filename.imagefile %}
+                    {% for server_filename, n_pts, output_exists, zip_exists, file_tags, file_error in latest_filenames %}
+                        {% if server_filename.imagefile %}
+                            <div class="col-md-3">
                                 <div class="card">
-        <!--                            <div class="card" style="width:400px">-->
-                                    {% if server_filename.thumbnail%}
-            <!--                            <img id="multicellimg" class="rounded" src='{{server_filename.thumbnail.url}}' width="100">-->
-<!--                                    <div class="card-image">-->
-                                        <img id="multicellimg" class="card-img-top" src='{{server_filename.thumbnail.url}}'>
-                                        <div  style="position: absolute; top: 0; left: 0; right: 0; padding:1.25rem;">
+                                    <!--                            <div class="card" style="width:400px">-->
+                                    {% if server_filename.thumbnail %}
+                                        <!--                            <img id="multicellimg" class="rounded" src='{{server_filename.thumbnail.url}}' width="100">-->
+                                        <!--                                    <div class="card-image">-->
+                                        <img id="multicellimg" class="card-img-top"
+                                             src='{{ server_filename.thumbnail.url }}'>
+                                        <div style="position: absolute; top: 0; left: 0; right: 0; padding:1.25rem;">
                                             {% if output_exists %}
                                                 {% if server_filename.score %}
                                                     <i class="fas fa-star-half-alt"></i>
                                                     <b>
                                                         {{ server_filename.score |floatformat:3 }}
                                                     </b><br>
-                                                    Avg. Skeleton Length = {{ server_filename.score_skeleton_length|floatformat:1 }}<br>
-                                                    Avg. Branch Number = {{ server_filename.score_branch_number|floatformat:1 }}<br>
+                                                    Avg. Skeleton Length =
+                                                    {{ server_filename.score_skeleton_length|floatformat:1 }}<br>
+                                                    Avg. Branch Number =
+                                                    {{ server_filename.score_branch_number|floatformat:1 }}<br>
                                                 {% endif %}
                                             {% endif %}
                                         </div>
-<!--                                    </div>-->
+                                        <!--                                    </div>-->
                                     {% endif %}
                                     <div class="card-body">
                                         <div class="card-text">
                                             {% for file_tag in file_tags %}
-                                            <a class="badge badge-pill badge-secondary" href="{% url 'microimprocessing:remove_tag' server_filename.id file_tag.id %}">{{ file_tag }} ×</a>
+                                                <a class="badge badge-pill badge-secondary"
+                                                   href="{% url 'microimprocessing:remove_tag' server_filename.id file_tag.id %}">{{ file_tag }}
+                                                    ×</a>
                                             {% endfor %}
-                                                <div type="button" class="badge  badge-pill badge-secondary" data-toggle="dropdown">+</div>
-                                                <div class="dropdown-menu">
-                                                    {% for user_tag, user_tag_status in user_tags %}
-                                                        <a class="dropdown-item" href="{% url 'microimprocessing:add_tag' server_filename.id user_tag.id %}">{{ user_tag }}</a>
-                                                    {% endfor %}
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="{% url 'microimprocessing:create_and_add_tag' server_filename.id %}">+</a>
-                                                </div >
+                                            <div type="button" class="badge  badge-pill badge-secondary"
+                                                 data-toggle="dropdown">+
+                                            </div>
+                                            <div class="dropdown-menu">
+                                                {% for user_tag, user_tag_status in user_tags %}
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'microimprocessing:add_tag' server_filename.id user_tag.id %}">{{ user_tag }}</a>
+                                                {% endfor %}
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item"
+                                                   href="{% url 'microimprocessing:create_and_add_tag' server_filename.id %}">+</a>
+                                            </div>
                                             {% if file_error %}
-                                            <a class="fas fa-exclamation-triangle text-warning" data-toggle="tooltip" title="{{ file_error }}"
-                                               href="{% url 'microimprocessing:file_log' server_filename.id %}"
-                                            ></a>
+                                                <a class="fas fa-exclamation-triangle text-warning"
+                                                   data-toggle="tooltip" title="{{ file_error }}"
+                                                   href="{% url 'microimprocessing:file_log' server_filename.id %}"
+                                                ></a>
                                             {% endif %}
                                         </div>
                                         <h5 class="card-title">
@@ -177,25 +204,25 @@
                                         </h5>
                                         <p>{{ server_filename.description }}</p>
                                         <a
-                                           class="btn btn-secondary"
-                                           href="{% url 'microimprocessing:set_lobules_seeds' server_filename.id %}"
-                                           data-toggle="tooltip" data-placement="top"
-                                           title="Set lobules manually ({{ n_pts }} points)"
+                                                class="btn btn-secondary"
+                                                href="{% url 'microimprocessing:set_lobules_seeds' server_filename.id %}"
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="Set lobules manually ({{ n_pts }} points)"
                                         >
                                             <i class="fas fa-mouse-pointer"></i>
                                         </a>
-        <!--                                <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}"-->
+                                        <!--                                <a class="btn btn-primary" href="{% url 'microimprocessing:run_processing' server_filename.id %}"-->
                                         <a
-                                           class="btn
+                                                class="btn
                                            {% if output_exists %}
                                            btn-secondary
                                            {% else %}
                                            btn-primary
                                            {% endif %}"
-                                           href="{% url 'microimprocessing:run_processing' server_filename.id %}"
-                                           data-toggle="tooltip" data-placement="top"
+                                                href="{% url 'microimprocessing:run_processing' server_filename.id %}"
+                                                data-toggle="tooltip" data-placement="top"
 
-                                           title="Run processing with
+                                                title="Run processing with
                                            {% if n_pts == 0 %}
                                              automatic lobules selection
                                            {% else %}
@@ -209,7 +236,8 @@
                                             <i class="fas fa-play"></i>
                                         </a>
                                         {% if output_exists %}
-                                            <a class="btn btn-primary" href="{% url 'microimprocessing:detail' server_filename.id %}"
+                                            <a class="btn btn-primary"
+                                               href="{% url 'microimprocessing:detail' server_filename.id %}"
                                                data-toggle="tooltip" data-placement="top"
                                                title="View detail"
                                             >
@@ -225,15 +253,21 @@
                                             </a>
                                         {% endif %}
                                         <div class="dropdown d-inline">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
                                                 <i class="fas fa-ellipsis-h"></i>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="{% url 'microimprocessing:delete_file' server_filename.id %}"
+                                                <a class="dropdown-item"
+                                                   href="{% url 'microimprocessing:delete_file' server_filename.id %}"
                                                    onclick="return confirm('Delete file {{ server_filename }}?')"
                                                 >Delete</a>
-                                                <a class="dropdown-item" href="{% url 'microimprocessing:file_log' server_filename.id %}">Log</a>
-                                                <a class="dropdown-item" href="{% url 'microimprocessing:pre_run' server_filename.id %}">Set parameters before run</a>
+                                                <a class="dropdown-item"
+                                                   href="{% url 'microimprocessing:file_log' server_filename.id %}">Log</a>
+                                                <a class="dropdown-item"
+                                                   href="{% url 'microimprocessing:pre_run' server_filename.id %}">Set
+                                                    parameters before run</a>
                                             </div>
                                         </div>
 
@@ -248,27 +282,29 @@
 
                                     </div>
                                 </div>
+                            </div>
 
-                            {% else %}
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title">
-                                            No file
-                                        </h4>
-                                        <a class="btn btn-secondary" href="{% url 'microimprocessing:delete_file' server_filename.id %}"
-                                           data-toggle="tooltip" data-placement="top"
-                                           title="Delete"
-                                        >
-                                            <i class="fas fa-spinner fa-trash"></i>
-                                        </a>
-                                    </div>
+                        {% else %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        No file
+                                    </h4>
+                                    <a class="btn btn-secondary"
+                                       href="{% url 'microimprocessing:delete_file' server_filename.id %}"
+                                       data-toggle="tooltip" data-placement="top"
+                                       title="Delete"
+                                    >
+                                        <i class="fas fa-spinner fa-trash"></i>
+                                    </a>
                                 </div>
-                            {% endif %}
+                            </div>
+                        {% endif %}
 
-                        {% endfor %}
-                        </div>
-<!--                    </div>-->
-<!--                </div>-->
+                    {% endfor %}
+                </div>
+                <!--                    </div>-->
+                <!--                </div>-->
             </div>
         {% else %}
             <p>No data available.</p>
