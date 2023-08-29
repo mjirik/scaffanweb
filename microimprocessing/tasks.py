@@ -22,6 +22,7 @@ import sys
 from typing import Optional
 import django_q
 from oauth2client.service_account import ServiceAccountCredentials
+import traceback
 
 pth_to_scaffan = Path(__file__).parent.parent.parent / "scaffan"
 logger.debug(pth_to_scaffan)
@@ -209,7 +210,12 @@ def run_processing(serverfile:ServerDataFileName, parameters:Optional):
         mainapp.set_parameter("Input;Lobulus Selection Method", "Auto")
 
     mainapp.report.set_persistent_cols({"username": serverfile.owner.username})
-    mainapp.run_lobuluses(seeds_mm=centers_mm)
+    try:
+        mainapp.run_lobuluses(seeds_mm=centers_mm)
+    except Exception as e:
+        logger.error("Unexpected problem in run_lobuluses()")
+        logger.error(traceback.format_exc())
+
     if "SNI area prediction" in mainapp.report.df:
         serverfile.score = _clamp(mainapp.report.df["SNI area prediction"].mean() * 0.5, 0., 1.)
     if "Skeleton length" in mainapp.report.df:
