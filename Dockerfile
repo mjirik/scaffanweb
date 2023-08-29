@@ -48,14 +48,15 @@ SHELL ["conda", "run", "-n", "scaffanweb", "/bin/bash", "-c"]
 COPY requirements_conda_pinned.txt .
 
 RUN /opt/conda/condabin/conda install -n scaffanweb -c mjirik -c bioconda -c simpleitk -c conda-forge --yes --file requirements_conda_pinned.txt openslide-python pip pytest pytest-cov tensorflow=2.2 loguru redis-py redis scaffan>=0.32
+RUN /opt/conda/condabin/conda install -n scaffanweb -c conda-forge --yes pcre
 #RUN cd /webapps/scaffanweb_django
 # Make RUN commands use the new environment:
 # SHELL ["conda", "run", "-n", "scaffanweb", "/bin/bash", "--login", "-c"]
 # RUN /opt/conda/condabin/conda init bash
 COPY requirements_pip.txt .
-RUN conda run -n scaffanweb --no-capture-output pip install -r requirements_pip.txt
+RUN /opt/conda/condabin/conda run -n scaffanweb --no-capture-output pip install -r requirements_pip.txt
 
-RUN conda list -n scaffanweb
+RUN /opt/conda/condabin/conda list -n scaffanweb
 
 COPY deploy/var /var/
 COPY deploy/etc /etc/
