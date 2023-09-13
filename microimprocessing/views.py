@@ -234,6 +234,7 @@ def file_log(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     msg, task = _find_error(serverfile)
     logger.debug(f"task={task}")
+    logger.debug(f"serverfile.last_task_uuid={serverfile.last_task_uuid}")
     key_value = {}
     if task:
         key_value = {
