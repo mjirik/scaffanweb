@@ -2,6 +2,7 @@
 
 echo "Preparing log dir..."
 mkdir -p logs
+chmod a+rw logs
 
 echo "Starting services..."
 #sudo service redis-server start &>> logs/redis_log.txt
