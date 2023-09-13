@@ -526,6 +526,7 @@ def remove_tag_from_user(request, tag_id):
 
 
 def run_processing(request, pk, parameters=None):
+    logger.debug("run processing view")
     from django_q.tasks import async_task, result
     serverfile:ServerDataFileName = get_object_or_404(ServerDataFileName, pk=pk)
 

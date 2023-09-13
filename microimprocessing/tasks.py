@@ -156,6 +156,7 @@ def _update_last_task(serverfile:ServerDataFileName):
 
 
 def run_processing(serverfile:ServerDataFileName, parameters:Optional):
+    logger.debug("run processing")
     import scaffan
     import scaffan.algorithm
     import scaffan.image
