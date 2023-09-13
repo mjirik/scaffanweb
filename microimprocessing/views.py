@@ -233,6 +233,7 @@ def force_update(request):
 def file_log(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     msg, task = _find_error(serverfile)
+    logger.debug(f"task={task}")
     key_value = {}
     if task:
         key_value = {
