@@ -565,6 +565,7 @@ def run_processing(request, pk, parameters=None):
         hook='microimprocessing.tasks.finish_processing',
     )
     serverfile.last_task_uuid = tid
+    serverfile.save()
 
     return redirect('/microimprocessing/')
 
