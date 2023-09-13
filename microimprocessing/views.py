@@ -246,7 +246,7 @@ def file_log(request, filename_id):
             'Hook': task.hook,
             'Args': ", ".join(map(str, task.args)),
             'Kwargs': ", ".join(map(str, task.kwargs)),
-            'Result': task.result.replace('\n', '<br>'),
+            'Result': "None" if task.result is None else task.result.replace('\n', '<br>'),
             'Group': task.group,
             "Started by user": serverfile.started_at,
             "Added to queue": task.added,
