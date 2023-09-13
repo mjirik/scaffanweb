@@ -234,7 +234,7 @@ def file_log(request, filename_id):
     serverfile = get_object_or_404(ServerDataFileName, pk=filename_id)
     msg, task = _find_error(serverfile)
     key_value = {}
-    if task and not task.success:
+    if task:
         key_value = {
             'Id': task.id,
             'Name': task.name,
@@ -244,10 +244,31 @@ def file_log(request, filename_id):
             'Kwargs': ", ".join(map(str, task.kwargs)),
             'Result': task.result.replace('\n', '<br>'),
             'Group': task.group,
+            "Started by user": serverfile.started_at,
+            "Added to queue": task.added,
             'Started': task.started,
             'Stopped': task.stopped,
             "Success": task.success,
+            "Queue size": django_q.tasks.queue_size(),
+            "Queue length": len(django_q.models.Task.objects.all()),
+            "Queue tasks": pprint.pformat(django_q.models.Task.objects.all().order_by('-started')[:10]),
         }
+
+        # if not task.success:
+        #     key_value = {
+        #         'Id': task.id,
+        #         'Name': task.name,
+        #         'Func': task.func,
+        #         'Hook': task.hook,
+        #         'Args': ", ".join(map(str, task.args)),
+        #         'Kwargs': ", ".join(map(str, task.kwargs)),
+        #         'Result': task.result.replace('\n', '<br>'),
+        #         'Group': task.group,
+        #         'Started': task.started,
+        #         'Stopped': task.stopped,
+        #         "Success": task.success,
+        #     }
+
     if (len(msg) > 0) and ((task is None) or task.success):
         key_value = {"Error": msg}
 
