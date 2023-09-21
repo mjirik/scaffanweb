@@ -31,10 +31,10 @@ docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/cert
 
 Make migrations and get static files
 ```bash
-docker-compose up --build 
-docker-compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py makemigrations
-docker-compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py migrate
-docker-compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py collectstatic --no-input --clear
+docker compose up --build -d
+docker compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py makemigrations
+docker compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py migrate
+docker compose exec web /opt/conda/bin/conda run -n scaffanweb python manage.py collectstatic --no-input --clear
 ```
 
 Get inside docker image
