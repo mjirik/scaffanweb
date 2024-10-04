@@ -1,6 +1,6 @@
 python>=3.6.2,=3.6
-django=3
-django-allauth
+django=3.2
+django-allauth=0.53
 # higher version of asgiref requre pyton=3.7
 asgiref=3.3
 redis-py
